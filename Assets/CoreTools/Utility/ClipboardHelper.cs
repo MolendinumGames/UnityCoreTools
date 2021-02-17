@@ -4,26 +4,18 @@ using UnityEngine;
 
 public static class ClipboardHelper
 {
-    private static PropertyInfo m_systemCopyBufferProperty = null;
-    private static PropertyInfo GetSystemCopyBufferProperty()
-    {
-        if (m_systemCopyBufferProperty == null)
-        {
-            Type T = typeof(GUIUtility);
-            m_systemCopyBufferProperty = T.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
-            if (m_systemCopyBufferProperty == null)
-                throw new Exception("Can't access internal member 'GUIUtility.systemCopyBuffer' it may have been removed / renamed");
-        }
-        return m_systemCopyBufferProperty;
-    }
     public static string ReadClipboard()
     {
-        PropertyInfo P = GetSystemCopyBufferProperty();
-        return (string)P.GetValue(null, null);
+        return GUIUtility.systemCopyBuffer;
     }
     public static void SetClipboard(string value)
     {
-        PropertyInfo P = GetSystemCopyBufferProperty();
-        P.SetValue(null, value, null);
+        if (string.IsNullOrEmpty(value))
+        {
+            Debug.LogWarning($"Tried to copy an empty string to clipboard. String: {value}");
+            return;
+        }
+        GUIUtility.systemCopyBuffer = value;
     }
+    public static void CopyToClipboard(this string value) => SetClipboard(value);
 }
