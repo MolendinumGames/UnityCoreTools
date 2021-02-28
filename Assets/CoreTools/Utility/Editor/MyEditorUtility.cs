@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace CoreTools
 {
-	public static class EditorUtility
+	public static class MyEditorUtility
 	{
 		public static void DrawLine(float height, Color color, float padding, int indent)
         {
