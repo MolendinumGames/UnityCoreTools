@@ -2,25 +2,17 @@ using CoreTools.Dialogue;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using System;
 
 namespace CoreTools
 {
     [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue")]
-    public class DialogueSO : ScriptableObject
+    public class DialogueSO : ScriptableObject, ISerializationCallbackReceiver
     {
-        [SerializeField]
         List<DialogueNode> nodes = new List<DialogueNode>();
 
         private Dictionary<string, DialogueNode> nodeLookup = new Dictionary<string, DialogueNode>();
-
-        private void Awake()
-        {
-#if UNITY_EDITOR
-            TryGenerateRootNode();
-#endif
-            PopulateNodeLookup();
-        }
 
         private void OnValidate()
         {
@@ -41,10 +33,8 @@ namespace CoreTools
 
         private void TryGenerateRootNode()
         {
-#if UNITY_EDITOR
             if (nodes.Count == 0)
-                nodes.Add(new DialogueNode());
-#endif
+                CreateNode();
         }
         public DialogueNode GetRootNode() => nodes[0];
         public DialogueNode GetNodeById(string id)
@@ -84,6 +74,55 @@ namespace CoreTools
                     return true;
             }
             return false;
+        }
+        public DialogueNode CreateNode()
+        {
+            DialogueNode newNode = CreateInstance<DialogueNode>();
+            newNode.uniqueID = Guid.NewGuid().ToString();
+            newNode.name = newNode.uniqueID;
+            nodes.Add(newNode);
+            OnValidate();
+            return newNode;
+        }
+        public DialogueNode CreateNode(DialogueNode parent)
+        {
+            DialogueNode newNode = CreateNode();
+            if (parent != null)
+                parent.ChildID = newNode.uniqueID;
+            return newNode;
+        }
+        public void RemoveNode(DialogueNode node)
+        {
+            string removeId = node.uniqueID;
+            foreach (DialogueNode checkNode in GetNodes())
+            {
+                if (checkNode.ChildID == removeId)
+                    checkNode.ChildID = null;
+            }
+            nodes.Remove(node);
+            OnValidate();
+        }
+
+        public void OnBeforeSerialize()
+        {
+#if UNITY_EDITOR
+            TryGenerateRootNode();
+            if (AssetDatabase.GetAssetPath(this) != "")
+            {
+                foreach (DialogueNode node in GetNodes())
+                {
+                    if (AssetDatabase.GetAssetPath(node) == "")
+                    {
+                        AssetDatabase.AddObjectToAsset(node, this);
+                    }
+                }
+            }
+#endif
+        }
+
+        public void OnAfterDeserialize()
+        {
+
         }
     }
 }

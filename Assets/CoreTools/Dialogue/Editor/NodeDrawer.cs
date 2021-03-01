@@ -43,6 +43,26 @@ namespace CoreTools.Dialogue.Editor
             DrawHeader(node);
 
             EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Reset", EditorStyles.miniButtonLeft))
+            {
+                node.ResetValues();
+                dialogueEditor.Repaint();
+            }
+            if (GUILayout.Button("Delete", EditorStyles.miniButtonMid))
+            {
+                dialogueEditor.MarkNodeToRemove(node);
+            }
+            if (GUILayout.Button("Create Child", EditorStyles.miniButtonRight))
+            {
+                dialogueEditor.MarkAsCreationNode(node);
+            }
+            EditorGUILayout.EndHorizontal();
+            Debug.Log("");
+
+
+            EditorGUILayout.Space(3f);
+
+            EditorGUILayout.BeginHorizontal();
             Sprite newIcon = DrawIconField(node);
             string newSpeaker = DrawSpeakerField(node);
             EditorGUILayout.EndHorizontal();
@@ -65,8 +85,7 @@ namespace CoreTools.Dialogue.Editor
         }
         private void DrawHeader(DialogueNode node)
         {
-            EditorGUILayout.LabelField("Standard Node", EditorStyles.toolbarButton);
-            EditorGUILayout.Space(3f);
+            EditorGUILayout.LabelField("Standard Node", EditorStyles.boldLabel);
         }
         private Sprite DrawIconField(DialogueNode node)
         {

@@ -22,6 +22,9 @@ namespace CoreTools.Dialogue.Editor
         //public GUIStyle radioActiveStyle;
         private Vector2 lastMousePos = Vector2.zero;
 
+        private DialogueNode creatingNode;
+        private DialogueNode removeNode;
+
         [MenuItem("Tools/DialogueEditor")]
         public static void OpenWindow()
         {
@@ -62,9 +65,14 @@ namespace CoreTools.Dialogue.Editor
                 EditorGUILayout.LabelField("No Dialogue selected!");
                 return;
             }
-
+            //DrawToolBar();
             DrawGraph();
             ProcessEvents();
+
+            if (creatingNode != null)
+                CreateNewChildNode();
+            if (removeNode != null)
+                RemoveNode(removeNode);
         }
         private void DrawGraph()
         {
@@ -194,6 +202,35 @@ namespace CoreTools.Dialogue.Editor
                 draggedNode.rect.position = Event.current.mousePosition + dragOffset;
                 GUI.changed = true;
             }
+        }
+        private void DrawToolBar()
+        {
+            string[] tools = { "tool1", "tool2", "tool3", "tool4" };
+            int newSelection = GUILayout.Toolbar(-1, tools);
+        }
+        public void MarkAsCreationNode(DialogueNode node)
+        {
+            creatingNode = node;
+        }
+        private void CreateNewChildNode()
+        {
+            DialogueNode newNode = selectedDialogue.CreateNode(creatingNode);
+            float xOffset = creatingNode.rect.width + 50f;
+            float yOffset = 20f;
+            Vector2 newPosition = creatingNode.rect.position + new Vector2(xOffset, yOffset);
+            newNode.rect.position = newPosition;
+            creatingNode = null;
+            Repaint();
+        }
+        public void MarkNodeToRemove(DialogueNode node)
+        {
+            removeNode = node;
+        }
+        private void RemoveNode(DialogueNode node)
+        {
+            selectedDialogue.RemoveNode(node);
+            removeNode = null;
+            Repaint();
         }
     }
 }

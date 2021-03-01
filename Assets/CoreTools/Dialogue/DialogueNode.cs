@@ -5,8 +5,7 @@ using UnityEditor;
 
 namespace CoreTools.Dialogue
 {
-    [System.Serializable]
-    public class DialogueNode
+    public class DialogueNode : ScriptableObject
     {
         public string uniqueID = "newId";
 
@@ -17,9 +16,9 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                //Undo.RecordObject(this, "Update Node Text");
+                Undo.RecordObject(this, "Update Node Text");
                 text = value;
-                //EditorUtility.SetDirty(this);
+                EditorUtility.SetDirty(this);
             }
 #endif
         }
@@ -31,9 +30,9 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                //Undo.RecordObject(this, "Changed node portrait");
+                Undo.RecordObject(this, "Changed node portrait");
                 portrait = value;
-                //EditorUtility.SetDirty(this);
+                EditorUtility.SetDirty(this);
             }
 #endif
         }
@@ -45,9 +44,9 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                //Undo.RecordObject(this, "Changed node speaker");
+                Undo.RecordObject(this, "Changed node speaker");
                 speaker = value;
-                //EditorUtility.SetDirty(this);
+                EditorUtility.SetDirty(this);
             }
 #endif
         }
@@ -60,18 +59,24 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                //Undo.RecordObject(this, "Changed node childID");
+                Undo.RecordObject(this, "Changed node childID");
                 childId = value;
-                //EditorUtility.SetDirty(this);
+                EditorUtility.SetDirty(this);
             }
 #endif
         }
 
 #if UNITY_EDITOR
-        public Rect rect = new Rect(10, 10, 300, 250);
+        public Rect rect = new Rect(10, 10, 360, 245);
         public Vector2 scroll = Vector2.zero;
 #endif
-
         public bool HasChild() => !string.IsNullOrEmpty(ChildID);
+        public void ResetValues()
+        {
+            speaker = null;
+            portrait = null;
+            childId = null;
+            text = "";
+        }
     }
 }
