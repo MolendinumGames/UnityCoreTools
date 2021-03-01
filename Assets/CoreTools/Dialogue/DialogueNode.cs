@@ -7,8 +7,10 @@ namespace CoreTools.Dialogue
 {
     public class DialogueNode : ScriptableObject
     {
+        [SerializeField]
         public string uniqueID = "newId";
 
+        [SerializeField]
         private string text;
         public string Text
         {
@@ -23,6 +25,7 @@ namespace CoreTools.Dialogue
 #endif
         }
 
+        [SerializeField]
         private Sprite portrait;
         public Sprite Portrait
         {
@@ -37,6 +40,7 @@ namespace CoreTools.Dialogue
 #endif
         }
 
+        [SerializeField]
         private string speaker;
         public string Speaker
         {
@@ -67,7 +71,9 @@ namespace CoreTools.Dialogue
         }
 
 #if UNITY_EDITOR
+        [SerializeField]
         public Rect rect = new Rect(10, 10, 360, 245);
+        [SerializeField]
         public Vector2 scroll = Vector2.zero;
 #endif
         public bool HasChild() => !string.IsNullOrEmpty(ChildID);

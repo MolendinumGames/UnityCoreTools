@@ -10,8 +10,10 @@ namespace CoreTools
     [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue")]
     public class DialogueSO : ScriptableObject, ISerializationCallbackReceiver
     {
+        [SerializeField]
         List<DialogueNode> nodes = new List<DialogueNode>();
 
+        [SerializeField]
         private Dictionary<string, DialogueNode> nodeLookup = new Dictionary<string, DialogueNode>();
 
         private void OnValidate()
@@ -107,6 +109,7 @@ namespace CoreTools
         {
 #if UNITY_EDITOR
             TryGenerateRootNode();
+            EditorUtility.SetDirty(this);
             if (AssetDatabase.GetAssetPath(this) != "")
             {
                 foreach (DialogueNode node in GetNodes())

@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abeba84d0dad744aa79401c71dd6ef2, type: 3}
   m_Name: New Dialogue
   m_EditorClassIdentifier: 
---- !u!114 &760006176147395068
+  nodes:
+  - {fileID: 5581386649867778163}
+  - {fileID: 2720346181605119704}
+--- !u!114 &2720346181605119704
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -22,18 +25,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
-  m_Name: e73c1790-c14a-4724-a062-043614481ac3
+  m_Name: 287d47fd-ccfd-4417-86f9-603100558e8f
   m_EditorClassIdentifier: 
-  uniqueID: e73c1790-c14a-4724-a062-043614481ac3
+  uniqueID: 287d47fd-ccfd-4417-86f9-603100558e8f
+  text: nnnnnnnnnnn
+  portrait: {fileID: 21300000, guid: 0101b6a410154cf41842be260971c5a8, type: 3}
+  speaker: nnnnnnghgt
   childId: 
   rect:
     serializedVersion: 2
-    x: 687
-    y: 209
+    x: 639
+    y: 181
     width: 360
     height: 245
   scroll: {x: 0, y: 0}
---- !u!114 &6038179462804794525
+--- !u!114 &5581386649867778163
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,14 +49,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
-  m_Name: ffbd2159-4fe2-4869-860f-48d129f40c75
+  m_Name: 2406a190-9f3f-4394-b8fd-9d4d995084f2
   m_EditorClassIdentifier: 
-  uniqueID: ffbd2159-4fe2-4869-860f-48d129f40c75
-  childId: e73c1790-c14a-4724-a062-043614481ac3
+  uniqueID: 2406a190-9f3f-4394-b8fd-9d4d995084f2
+  text: awdwadadwwa
+  portrait: {fileID: 21300000, guid: 373773b6623f4fb4c89ed91602df42dd, type: 3}
+  speaker: awaaaa
+  childId: 287d47fd-ccfd-4417-86f9-603100558e8f
   rect:
     serializedVersion: 2
-    x: 198
-    y: 173
+    x: 229
+    y: 161
     width: 360
     height: 245
   scroll: {x: 0, y: 0}
