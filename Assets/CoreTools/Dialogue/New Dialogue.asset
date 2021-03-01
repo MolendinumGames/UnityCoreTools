@@ -1,5 +1,29 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7208612761181373167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 3c989cd1-6abe-4260-a3b1-5d7f82386079
+  m_EditorClassIdentifier: 
+  uniqueID: 3c989cd1-6abe-4260-a3b1-5d7f82386079
+  text: 
+  portrait: {fileID: 0}
+  speaker: 
+  childId: 
+  rect:
+    serializedVersion: 2
+    x: 724
+    y: 179
+    width: 360
+    height: 245
+  scroll: {x: 0, y: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15,6 +39,7 @@ MonoBehaviour:
   nodes:
   - {fileID: 5581386649867778163}
   - {fileID: 2720346181605119704}
+  - {fileID: -7208612761181373167}
 --- !u!114 &2720346181605119704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34,8 +59,8 @@ MonoBehaviour:
   childId: 
   rect:
     serializedVersion: 2
-    x: 639
-    y: 181
+    x: 350
+    y: 116
     width: 360
     height: 245
   scroll: {x: 0, y: 0}
@@ -55,11 +80,11 @@ MonoBehaviour:
   text: awdwadadwwa
   portrait: {fileID: 21300000, guid: 373773b6623f4fb4c89ed91602df42dd, type: 3}
   speaker: awaaaa
-  childId: 287d47fd-ccfd-4417-86f9-603100558e8f
+  childId: 
   rect:
     serializedVersion: 2
-    x: 229
-    y: 161
+    x: -31
+    y: 67
     width: 360
     height: 245
   scroll: {x: 0, y: 0}

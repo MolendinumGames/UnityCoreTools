@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -12,18 +15,24 @@ namespace CoreTools.Dialogue.Editor
 
         public DialogueSO selectedDialogue;
 
+        [NonSerialized]
         private DialogueNode draggedNode = null;
+        [NonSerialized]
         private Vector2 dragOffset = Vector2.zero;
-
-        public DialogueNode findingParentNode = null;
-        public DialogueNode findingChildNode = null;
-
-        //public readonly Vector2 radioButtonSize = new Vector2(10f, 10f);
-        //public GUIStyle radioActiveStyle;
+        [NonSerialized]
         private Vector2 lastMousePos = Vector2.zero;
 
+        [NonSerialized]
+        public DialogueNode findingParentNode = null;
+        [NonSerialized]
+        public DialogueNode findingChildNode = null;
+
+        [NonSerialized]
         private DialogueNode creatingNode;
+        [NonSerialized]
         private DialogueNode removeNode;
+
+        Vector2 scrollPosition = Vector2.zero;
 
         [MenuItem("Tools/DialogueEditor")]
         public static void OpenWindow()
@@ -65,9 +74,11 @@ namespace CoreTools.Dialogue.Editor
                 EditorGUILayout.LabelField("No Dialogue selected!");
                 return;
             }
-            //DrawToolBar();
+
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             DrawGraph();
             ProcessEvents();
+            EditorGUILayout.EndScrollView();
 
             if (creatingNode != null)
                 CreateNewChildNode();
@@ -79,7 +90,9 @@ namespace CoreTools.Dialogue.Editor
             foreach (DialogueNode node in selectedDialogue.GetNodes())
             {
                 nodeDrawer.DrawNode(node);
-                DrawConnection(node);
+                var child = selectedDialogue.GetChildOfNode(node);
+                if (child != null)
+                    nodeDrawer.DrawConnection(node, child);
             }
             DrawSearchingNodeConnection();
         }
@@ -94,7 +107,7 @@ namespace CoreTools.Dialogue.Editor
                 Vector3 startTangent = startPoint + (Vector3.left * 50f);
                 Vector3 endTangent = endPoint + (Vector3.right * 50f);
 
-                Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.red, null, 2f);
+                Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.red, null, 4f);
                 Repaint();
             }
             else if (findingChildNode != null)
@@ -106,25 +119,11 @@ namespace CoreTools.Dialogue.Editor
                 Vector3 startTangent = startPoint + (Vector3.right * 50f);
                 Vector3 endTangent = endPoint + (Vector3.left * 50f);
 
-                Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.red, null, 2f);
+                Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.red, null, 4f);
                 Repaint();
             }
         }
 
-        private void DrawConnection(DialogueNode node)
-        {
-            DialogueNode childNode = selectedDialogue.GetChildOfNode(node);
-            if (childNode != null)
-            {
-                float offsetValue = nodeDrawer.radioButtonSize.x * .5f;
-                Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0);
-                Vector3 startPoint = (Vector3)nodeDrawer.GetOutConnectorPos(node) + offsetVector;
-                Vector3 endPoint = (Vector3)nodeDrawer.GetInConnectorPos(childNode) + offsetVector;
-                Vector3 startTangent = startPoint + (Vector3.right * 50f);
-                Vector3 endTangent = endPoint + (Vector3.left * 50f);
-                Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.white, null, 2f);
-            }
-        }
         private void ProcessEvents()
         {
             if (Event.current.type == EventType.MouseDown)

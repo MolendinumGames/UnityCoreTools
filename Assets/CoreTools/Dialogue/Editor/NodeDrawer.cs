@@ -191,5 +191,16 @@ namespace CoreTools.Dialogue.Editor
             Vector2 target = nodePos + new Vector2(xOffset, yOffset);
             return target;
         }
+        public void DrawConnection(DialogueNode parentNode, DialogueNode childNode)
+        {
+
+            float offsetValue = radioButtonSize.x * .5f;
+            Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0);
+            Vector3 startPoint = (Vector3)GetOutConnectorPos(parentNode) + offsetVector;
+            Vector3 endPoint = (Vector3)GetInConnectorPos(childNode) + offsetVector;
+            Vector3 startTangent = startPoint + (Vector3.right * 50f);
+            Vector3 endTangent = endPoint + (Vector3.left * 50f);
+            Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.white, null, 3f);
+        }
     }
 }
