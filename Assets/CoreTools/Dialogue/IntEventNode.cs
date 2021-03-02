@@ -1,0 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using CoreTools;
+using UnityEditor;
+
+namespace CoreTools.Dialogue
+{
+    public class IntEventNode : EventNode
+    {
+        [SerializeField]
+        IntChannelSO channel;
+        public IntChannelSO Channel
+        {
+            get => channel;
+#if UNITY_EDITOR
+            set
+            {
+                Undo.RecordObject(this, "Changed IntChannel EventNode");
+                channel = value;
+                EditorUtility.SetDirty(this);
+            }
+#endif
+        }
+
+        [SerializeField]
+        int value = 0;
+        public int Value
+        {
+            get => value;
+#if UNITY_EDITOR
+            set
+            {
+                Undo.RecordObject(this, "Changed IntChannel EventNode Value");
+                this.value = value;
+            }
+#endif
+        }
+
+        public override void Raise()
+        {
+            if (channel != null)
+                channel.Raise(Value);
+            else
+                Debug.LogError($"Empty IntChannel for node: {this.name}");
+        }
+    }
+}

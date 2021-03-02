@@ -5,10 +5,9 @@ using UnityEditor;
 
 namespace CoreTools.Dialogue
 {
-    public class DialogueNode : ScriptableObject
+    public class DialogueNode : GraphNode
     {
-        [SerializeField]
-        public string uniqueID = "newId";
+        public Vector2 boxScroll = Vector2.zero;
 
         [SerializeField]
         private string text;
@@ -55,33 +54,18 @@ namespace CoreTools.Dialogue
 #endif
         }
 
-        [SerializeField]
-        private string childId;
-        public string ChildID
-        {
-            get => childId;
-#if UNITY_EDITOR
-            set
-            {
-                Undo.RecordObject(this, "Changed node childID");
-                childId = value;
-                EditorUtility.SetDirty(this);
-            }
-#endif
-        }
-
 #if UNITY_EDITOR
         [SerializeField]
-        public Rect rect = new Rect(10, 10, 360, 245);
-        [SerializeField]
-        public Vector2 scroll = Vector2.zero;
+        private Rect rect = new Rect(10, 10, 330, 220);
+        public override Rect NodeRect { get => rect; set => rect = value; }
 #endif
         public bool HasChild() => !string.IsNullOrEmpty(ChildID);
         public void ResetValues()
         {
             speaker = null;
+
             portrait = null;
-            childId = null;
+            ChildID = null;
             text = "";
         }
     }

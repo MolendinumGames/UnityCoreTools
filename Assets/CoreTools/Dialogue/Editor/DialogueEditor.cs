@@ -11,26 +11,28 @@ namespace CoreTools.Dialogue.Editor
     {
         private static readonly string windowTitle = "Dialogue Window";
 
-        private NodeDrawer nodeDrawer;
+        NodeDrawer nodeDrawer;
 
         public DialogueSO selectedDialogue;
 
         [NonSerialized]
-        private DialogueNode draggedNode = null;
+        GraphNode draggedNode = null;
         [NonSerialized]
-        private Vector2 dragOffset = Vector2.zero;
+        Vector2 nodeDragOffset = Vector2.zero;
         [NonSerialized]
-        private Vector2 lastMousePos = Vector2.zero;
+        bool dragginViewPort = false;
+        [NonSerialized]
+        Vector2 viewDragOffset = Vector2.zero;
 
         [NonSerialized]
         public DialogueNode findingParentNode = null;
         [NonSerialized]
-        public DialogueNode findingChildNode = null;
+        public GraphNode findingChildNode = null;
 
         [NonSerialized]
-        private DialogueNode creatingNode;
+        private GraphNode creatingNode;
         [NonSerialized]
-        private DialogueNode removeNode;
+        private GraphNode removeNode;
 
         Vector2 scrollPosition = Vector2.zero;
 
@@ -55,7 +57,9 @@ namespace CoreTools.Dialogue.Editor
         private void OnEnable()
         {
             nodeDrawer = new NodeDrawer(this);
+            OnSelectionChange();
             ClearConnectingNodes();
+            Repaint();
         }
         private void OnSelectionChange()
         {
@@ -66,7 +70,13 @@ namespace CoreTools.Dialogue.Editor
                 Repaint();
             }
         }
-
+        private void OnFocus()
+        {
+            if (nodeDrawer == null)
+                nodeDrawer = new NodeDrawer(this);
+            ClearConnectingNodes();
+            Repaint();
+        }
         private void OnGUI()
         {
             if (selectedDialogue == null)
@@ -74,27 +84,38 @@ namespace CoreTools.Dialogue.Editor
                 EditorGUILayout.LabelField("No Dialogue selected!");
                 return;
             }
+            DrawToolBar();
+            DrawEventToolbar();
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, true, true);
+            Rect canvas = GUILayoutUtility.GetRect(4000, 4000);
+            Texture2D background = Resources.Load("background2") as Texture2D;
+            Rect texCoords = new Rect(0, 0, canvas.width / background.width, canvas.height / background.height);
+            GUI.DrawTextureWithTexCoords(canvas, background, texCoords);
 
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             DrawGraph();
             ProcessEvents();
             EditorGUILayout.EndScrollView();
 
             if (creatingNode != null)
-                CreateNewChildNode();
+                CreateNewDialogueNode();
             if (removeNode != null)
                 RemoveNode(removeNode);
         }
         private void DrawGraph()
         {
-            foreach (DialogueNode node in selectedDialogue.GetNodes())
+            foreach (GraphNode node in selectedDialogue.GetAllGraphNodes())
             {
-                nodeDrawer.DrawNode(node);
-                var child = selectedDialogue.GetChildOfNode(node);
+                nodeDrawer.DrawGraphNode(node);
+                var child = selectedDialogue.GetChildNode(node);
                 if (child != null)
                     nodeDrawer.DrawConnection(node, child);
             }
+
             DrawSearchingNodeConnection();
+        }
+        private void DrawEntryNode()
+        {
+            nodeDrawer.DrawGraphNode(selectedDialogue.GetEntryNode());
         }
         private void DrawSearchingNodeConnection()
         {
@@ -146,17 +167,21 @@ namespace CoreTools.Dialogue.Editor
                 OnMouseUp();
             }
         }
-        private DialogueNode GetNodeAtPoint(Vector2 mousePos)
+        private GraphNode GetNodeAtPoint(Vector2 mousePos)
         {
-            // returns he LAST node from GetNodes() that matches the position
-            DialogueNode targetNode = null;
-            foreach (DialogueNode node in selectedDialogue.GetNodes())
+            // returns EntryNode OR the LAST node from GetNodes() that matches the position
+            GraphNode targetNode = null;
+            foreach (GraphNode node in selectedDialogue.GetAllGraphNodes())
             {
-                if (node.rect.Contains(mousePos))
+                if (node.NodeRect.Contains(mousePos))
                 {
                     targetNode = node;
                 }
             }
+
+            if (selectedDialogue.GetEntryNode().NodeRect.Contains(mousePos))
+                targetNode = selectedDialogue.GetEntryNode();
+
             return targetNode;
         }
         public void ClearConnectingNodes()
@@ -170,16 +195,28 @@ namespace CoreTools.Dialogue.Editor
             draggedNode = GetNodeAtPoint(Event.current.mousePosition);
             if (draggedNode != null)
             {
-                dragOffset = draggedNode.rect.position - Event.current.mousePosition;
+                nodeDragOffset = draggedNode.NodeRect.position - (Event.current.mousePosition + scrollPosition);
             }
+            else
+            {
+                dragginViewPort = true;
+                viewDragOffset = Event.current.mousePosition + scrollPosition;
+            }
+
             if (findingChildNode != null)
-                findingChildNode.ChildID = null;
+            {
+                if (findingChildNode is DialogueNode)
+                    (findingChildNode as DialogueNode).ChildID = null;
+                else if (findingChildNode is EntryNode)
+                    (findingChildNode as EntryNode).ChildID = null;
+            }
             if (findingParentNode != null)
             {
-                foreach (DialogueNode parent in selectedDialogue.GetParentNodes(findingParentNode))
-                {
-                    parent.ChildID = null;
-                }
+                //foreach (DialogueNode parent in selectedDialogue.GetParentNodes(findingParentNode))
+                //{
+                //    parent.ChildID = null;
+                //}
+                findingParentNode = null;
             }
 
             ClearConnectingNodes();
@@ -191,41 +228,94 @@ namespace CoreTools.Dialogue.Editor
         private void OnMouseUp()
         {
             draggedNode = null;
-            dragOffset = Vector2.zero;
+            nodeDragOffset = Vector2.zero;
+            dragginViewPort = false;
         }
         private void OnMouseDrag()
         {
             if (draggedNode != null)
             {
-                Undo.RecordObject(selectedDialogue, "Moved Dialogue Node");
-                draggedNode.rect.position = Event.current.mousePosition + dragOffset;
+                Undo.RecordObject(selectedDialogue, "Moved GraphNode");
+                Vector2 newPosition = Event.current.mousePosition + scrollPosition + nodeDragOffset;
+                draggedNode.SetPosition(newPosition);
                 GUI.changed = true;
+                Repaint();
+            }
+            else if (dragginViewPort)
+            {
+                scrollPosition = viewDragOffset - Event.current.mousePosition;
+                Repaint();
             }
         }
         private void DrawToolBar()
         {
-            string[] tools = { "tool1", "tool2", "tool3", "tool4" };
+            string[] tools = { "Create Dialogue Node", "Save" };
             int newSelection = GUILayout.Toolbar(-1, tools);
+            switch (newSelection)
+            {
+                case 0:
+                    CreateNewDialogueNode();
+                    break;
+                case 1:
+                    AssetDatabase.SaveAssets();
+                    break;
+                default:
+                    break;
+            }
         }
-        public void MarkAsCreationNode(DialogueNode node)
+        private void DrawEventToolbar()
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Create Event Channel: ", EditorStyles.toolbarButton, GUILayout.Width(200f));
+            string[] tools = { "Void", "Bool", "Float", "Int", "String" };
+            int newSelection = GUILayout.Toolbar(-1, tools);
+            switch (newSelection)
+            {
+                case 0:
+                    selectedDialogue.CreateVoidEventNode();
+                    Repaint();
+                    break;
+                case 1:
+                    selectedDialogue.CreateBoolEventNode();
+                    Repaint();
+                    break;
+                case 2:
+                    selectedDialogue.CreateFloatEventNode();
+                    Repaint();
+                    break;
+                case 3:
+                    selectedDialogue.CreateIntEventNode();
+                    Repaint();
+                    break;
+                case 4:
+                    selectedDialogue.CreateStringEventNode();
+                    Repaint();
+                    break;
+                default:
+                    break;
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        public void MarkAsCreationNode(GraphNode node)
         {
             creatingNode = node;
         }
-        private void CreateNewChildNode()
+        private void CreateNewDialogueNode()
         {
-            DialogueNode newNode = selectedDialogue.CreateNode(creatingNode);
-            float xOffset = creatingNode.rect.width + 50f;
+            DialogueNode newNode = selectedDialogue.CreateDialogueNode(creatingNode);
+            float xOffset = creatingNode.NodeRect.width + 50f;
             float yOffset = 20f;
-            Vector2 newPosition = creatingNode.rect.position + new Vector2(xOffset, yOffset);
-            newNode.rect.position = newPosition;
+            Vector2 newPosition = creatingNode.NodeRect.position + new Vector2(xOffset, yOffset);
+            newNode.SetPosition(newPosition);
             creatingNode = null;
             Repaint();
         }
-        public void MarkNodeToRemove(DialogueNode node)
+        public void MarkNodeToRemove(GraphNode node)
         {
             removeNode = node;
         }
-        private void RemoveNode(DialogueNode node)
+        private void RemoveNode(GraphNode node)
         {
             selectedDialogue.RemoveNode(node);
             removeNode = null;

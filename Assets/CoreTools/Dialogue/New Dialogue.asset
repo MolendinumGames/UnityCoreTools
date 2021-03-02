@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7208612761181373167
+--- !u!114 &-8691949713580469261
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,21 +9,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
-  m_Name: 3c989cd1-6abe-4260-a3b1-5d7f82386079
+  m_Script: {fileID: 11500000, guid: bb2449119fd224e4ba0b83b0f3fcef2c, type: 3}
+  m_Name: EntryNode
   m_EditorClassIdentifier: 
-  uniqueID: 3c989cd1-6abe-4260-a3b1-5d7f82386079
-  text: 
-  portrait: {fileID: 0}
-  speaker: 
-  childId: 
+  uniqueID: 2f7c87ce-be5c-4e10-b4bd-a3555bcb5b94
+  childID: 15ab9474-1f06-4d94-a894-4fbc8d434552
+--- !u!114 &-60043646641369476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dbc2c829e177546bd46f4c933e9e10, type: 3}
+  m_Name: 5bf60eef-d398-4930-88c9-2d731630bc3e
+  m_EditorClassIdentifier: 
+  uniqueID: 5bf60eef-d398-4930-88c9-2d731630bc3e
+  childID: 
   rect:
     serializedVersion: 2
-    x: 724
-    y: 179
-    width: 360
-    height: 245
-  scroll: {x: 0, y: 0}
+    x: 820
+    y: 135
+    width: 250
+    height: 115
+  channel: {fileID: 11400000, guid: 1ae4d178658e44141bfc2e6f11277ea9, type: 2}
+  value: 100
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,11 +48,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abeba84d0dad744aa79401c71dd6ef2, type: 3}
   m_Name: New Dialogue
   m_EditorClassIdentifier: 
-  nodes:
-  - {fileID: 5581386649867778163}
-  - {fileID: 2720346181605119704}
-  - {fileID: -7208612761181373167}
---- !u!114 &2720346181605119704
+  allNodes:
+  - {fileID: -8691949713580469261}
+  - {fileID: 1998961432213947014}
+  - {fileID: 6900887021329957897}
+  - {fileID: -60043646641369476}
+  entryNode: {fileID: -8691949713580469261}
+--- !u!114 &1998961432213947014
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -50,21 +64,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
-  m_Name: 287d47fd-ccfd-4417-86f9-603100558e8f
+  m_Name: 15ab9474-1f06-4d94-a894-4fbc8d434552
   m_EditorClassIdentifier: 
-  uniqueID: 287d47fd-ccfd-4417-86f9-603100558e8f
-  text: nnnnnnnnnnn
-  portrait: {fileID: 21300000, guid: 0101b6a410154cf41842be260971c5a8, type: 3}
-  speaker: nnnnnnghgt
-  childId: 
+  uniqueID: 15ab9474-1f06-4d94-a894-4fbc8d434552
+  childID: d240c6d6-ee3b-41ec-9410-37e21b40388b
+  boxScroll: {x: 0, y: 0}
+  text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+    qui officia deserunt mollit anim id est laborum.
+  portrait: {fileID: 21300000, guid: c1b61b3a91732a747a8496fc75a13fe2, type: 3}
+  speaker: A hat
   rect:
     serializedVersion: 2
-    x: 350
-    y: 116
-    width: 360
-    height: 245
-  scroll: {x: 0, y: 0}
---- !u!114 &5581386649867778163
+    x: 113
+    y: 51
+    width: 330
+    height: 220
+--- !u!114 &6900887021329957897
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,17 +93,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
-  m_Name: 2406a190-9f3f-4394-b8fd-9d4d995084f2
+  m_Name: d240c6d6-ee3b-41ec-9410-37e21b40388b
   m_EditorClassIdentifier: 
-  uniqueID: 2406a190-9f3f-4394-b8fd-9d4d995084f2
-  text: awdwadadwwa
-  portrait: {fileID: 21300000, guid: 373773b6623f4fb4c89ed91602df42dd, type: 3}
-  speaker: awaaaa
-  childId: 
+  uniqueID: d240c6d6-ee3b-41ec-9410-37e21b40388b
+  childID: 5bf60eef-d398-4930-88c9-2d731630bc3e
+  boxScroll: {x: 0, y: 0}
+  text: Doing magical things
+  portrait: {fileID: 21300000, guid: a1ec2c0ddc0da634b85f0f465fec2d0d, type: 3}
+  speaker: A magical scroll
   rect:
     serializedVersion: 2
-    x: -31
-    y: 67
-    width: 360
-    height: 245
-  scroll: {x: 0, y: 0}
+    x: 468
+    y: 171
+    width: 330
+    height: 220
