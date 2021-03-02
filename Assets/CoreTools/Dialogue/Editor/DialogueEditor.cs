@@ -77,12 +77,20 @@ namespace CoreTools.Dialogue.Editor
             ClearConnectingNodes();
             Repaint();
         }
+        private void OnProjectChange()
+        {
+            Debug.Log("project change");
+        }
         private void OnGUI()
         {
             if (selectedDialogue == null)
             {
                 EditorGUILayout.LabelField("No Dialogue selected!");
                 return;
+            }
+            if (nodeDrawer == null)
+            {
+                Debug.Log("NodeDrawe null!!!");
             }
             DrawToolBar();
             DrawEventToolbar();

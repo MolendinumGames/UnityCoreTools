@@ -56,7 +56,7 @@ namespace CoreTools.Dialogue.Editor
         {
             GUILayout.BeginArea(node.NodeRect, nodeStyle);
             DrawHeader("Float Event Node");
-            DrawEventNodeButtons(node);
+            DrawButtonBar(node);
             EditorGUI.BeginChangeCheck();
             EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
             FloatChannelSO channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(FloatChannelSO), false) as FloatChannelSO;
@@ -78,7 +78,7 @@ namespace CoreTools.Dialogue.Editor
         {
             GUILayout.BeginArea(node.NodeRect, nodeStyle);
             DrawHeader("String Event Node");
-            DrawEventNodeButtons(node);
+            DrawButtonBar(node);
             EditorGUI.BeginChangeCheck();
             EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
             StringChannelSO newChannel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(StringChannelSO), false) as StringChannelSO;
@@ -100,7 +100,7 @@ namespace CoreTools.Dialogue.Editor
         {
             GUILayout.BeginArea(node.NodeRect, nodeStyle);
             DrawHeader("Int Event Node");
-            DrawEventNodeButtons(node);
+            DrawButtonBar(node);
             EditorGUI.BeginChangeCheck();
             EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
             IntChannelSO channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(IntChannelSO), false) as IntChannelSO;
@@ -122,7 +122,7 @@ namespace CoreTools.Dialogue.Editor
         {
             GUILayout.BeginArea(node.NodeRect, nodeStyle);
             DrawHeader("Bool Event Node");
-            DrawEventNodeButtons(node);
+            DrawButtonBar(node);
             EditorGUI.BeginChangeCheck();
             EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
             BoolChannelSO channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(BoolChannelSO), false) as BoolChannelSO;
@@ -144,7 +144,7 @@ namespace CoreTools.Dialogue.Editor
         {
             GUILayout.BeginArea(node.NodeRect, nodeStyle);
             DrawHeader("Void Event Node");
-            DrawEventNodeButtons(node);
+            DrawButtonBar(node);
             EditorGUI.BeginChangeCheck();
             EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
             VoidChannelSO channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(VoidChannelSO), false) as VoidChannelSO;
@@ -159,7 +159,7 @@ namespace CoreTools.Dialogue.Editor
             DrawInConnector(node);
             DrawOutConnector(node);
         }
-        private void DrawEventNodeButtons(EventNode node)
+        private void DrawButtonBar(GraphNode node)
         {
             EditorGUILayout.BeginHorizontal();
             int buttonWidth = Mathf.FloorToInt(node.NodeRect.width / 3) - 13;
@@ -193,8 +193,8 @@ namespace CoreTools.Dialogue.Editor
             entryStyle.alignment = TextAnchor.MiddleCenter;
             entryStyle.fontSize *= 2;
 
-            headerStyle = new GUIStyle(EditorStyles.boldLabel);
-            headerStyle.alignment = TextAnchor.UpperLeft;
+            // setting ehader style here based on EditorStyles.boldLabel will cause NullRef
+            // create new headerstyle inside DraHeader instead
         }
         private void DrawEntryNode(EntryNode node)
         {
@@ -204,6 +204,25 @@ namespace CoreTools.Dialogue.Editor
             EditorGUILayout.LabelField("Entry", headerStyle, GUILayout.Height(headerStyle.lineHeight * 1.8f));
             GUILayout.EndArea();
             DrawOutConnector(node);
+        }
+        private void DrawChoiceNode(ChoiceNode node)
+        {
+            GUILayout.BeginArea(node.NodeRect, nodeStyle);
+            DrawHeader("Dialogue Choice Node");
+            DrawButtonBar(node);
+
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.BeginHorizontal();
+            //Sprite newIcon = DrawIconField(node);
+            //string newSpeaker = DrawSpeakerField(node);
+            EditorGUILayout.EndHorizontal();
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(dialogueEditor.selectedDialogue, "Changed Choice Node");
+                // APPLY VALUES
+                EditorUtility.SetDirty(dialogueEditor.selectedDialogue);
+            }
+            GUILayout.EndArea();
         }
 
         private void DrawStandardNode(DialogueNode node)
@@ -257,6 +276,8 @@ namespace CoreTools.Dialogue.Editor
         }
         private void DrawHeader(string title)
         {
+            headerStyle = new GUIStyle(EditorStyles.boldLabel);
+            headerStyle.alignment = TextAnchor.UpperLeft;
             EditorGUILayout.LabelField(title, EditorStyles.boldLabel, GUILayout.Height(10f));
         }
         private Sprite DrawIconField(DialogueNode node)
@@ -280,7 +301,7 @@ namespace CoreTools.Dialogue.Editor
 
             node.boxScroll = GUILayout.BeginScrollView(node.boxScroll, false, false, GUIStyle.none, GUI.skin.verticalScrollbar);
             EditorStyles.textField.wordWrap = true;
-            string newText = EditorGUILayout.TextArea(node.Text, GUILayout.Height(node.NodeRect.height - 30f));
+            string newText = EditorGUILayout.TextArea(node.Text, GUILayout.Height(EditorGUIUtility.singleLineHeight * 3));
 
             EditorGUILayout.EndScrollView();
 
