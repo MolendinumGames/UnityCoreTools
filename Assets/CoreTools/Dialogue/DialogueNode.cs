@@ -10,7 +10,7 @@ namespace CoreTools.Dialogue
         public Vector2 boxScroll = Vector2.zero;
 
         [SerializeField]
-        private string text;
+        private string text = "New Dialogue Text";
         public string Text
         {
             get => text;
@@ -56,7 +56,7 @@ namespace CoreTools.Dialogue
 
 #if UNITY_EDITOR
         [SerializeField]
-        private Rect rect = new Rect(10, 10, 330, 220);
+        protected Rect rect = new Rect(10, 10, 300, 180);
         public override Rect NodeRect { get => rect; set => rect = value; }
 #endif
         public bool HasChild() => !string.IsNullOrEmpty(ChildID);

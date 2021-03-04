@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace CoreTools.Dialogue
 {
+    [System.Serializable]
     public class ChoiceField
     {
         public string childId;

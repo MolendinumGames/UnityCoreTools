@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace CoreTools.Dialogue.Editor
+namespace CoreTools.Dialogue
 {
     public class DialogueEditor : EditorWindow
     {
@@ -56,6 +56,7 @@ namespace CoreTools.Dialogue.Editor
         }
         private void OnEnable()
         {
+            Debug.Log("OnEnable");
             nodeDrawer = new NodeDrawer(this);
             OnSelectionChange();
             ClearConnectingNodes();
@@ -72,6 +73,7 @@ namespace CoreTools.Dialogue.Editor
         }
         private void OnFocus()
         {
+            Debug.Log("OnFocus");
             if (nodeDrawer == null)
                 nodeDrawer = new NodeDrawer(this);
             ClearConnectingNodes();
@@ -87,10 +89,6 @@ namespace CoreTools.Dialogue.Editor
             {
                 EditorGUILayout.LabelField("No Dialogue selected!");
                 return;
-            }
-            if (nodeDrawer == null)
-            {
-                Debug.Log("NodeDrawe null!!!");
             }
             DrawToolBar();
             DrawEventToolbar();
@@ -114,9 +112,17 @@ namespace CoreTools.Dialogue.Editor
             foreach (GraphNode node in selectedDialogue.GetAllGraphNodes())
             {
                 nodeDrawer.DrawGraphNode(node);
-                var child = selectedDialogue.GetChildNode(node);
-                if (child != null)
-                    nodeDrawer.DrawConnection(node, child);
+
+                if (node is ChoiceNode choiceNode)
+                {
+
+                }
+                else
+                {
+                    var child = selectedDialogue.GetChildNode(node);
+                    if (child != null)
+                        nodeDrawer.DrawConnection(node, child);
+                }
             }
 
             DrawSearchingNodeConnection();
@@ -257,7 +263,7 @@ namespace CoreTools.Dialogue.Editor
         }
         private void DrawToolBar()
         {
-            string[] tools = { "Create Dialogue Node", "Save" };
+            string[] tools = { "New Dialogue Node", "New Choice Node", "Save" };
             int newSelection = GUILayout.Toolbar(-1, tools);
             switch (newSelection)
             {
@@ -265,6 +271,9 @@ namespace CoreTools.Dialogue.Editor
                     CreateNewDialogueNode();
                     break;
                 case 1:
+                    CreateNewChoiceNode();
+                    break;
+                case 2:
                     AssetDatabase.SaveAssets();
                     break;
                 default:
@@ -312,10 +321,26 @@ namespace CoreTools.Dialogue.Editor
         private void CreateNewDialogueNode()
         {
             DialogueNode newNode = selectedDialogue.CreateDialogueNode(creatingNode);
-            float xOffset = creatingNode.NodeRect.width + 50f;
-            float yOffset = 20f;
-            Vector2 newPosition = creatingNode.NodeRect.position + new Vector2(xOffset, yOffset);
-            newNode.SetPosition(newPosition);
+            if (creatingNode != null)
+            {
+                float xOffset = creatingNode.NodeRect.width + 50f;
+                float yOffset = 20f;
+                Vector2 newPosition = creatingNode.NodeRect.position + new Vector2(xOffset, yOffset);
+                newNode.SetPosition(newPosition);
+            }
+            creatingNode = null;
+            Repaint();
+        }
+        private void CreateNewChoiceNode()
+        {
+            ChoiceNode newNode = selectedDialogue.CreateChoiceNode(creatingNode);
+            if (creatingNode != null)
+            {
+                float xOffset = creatingNode.NodeRect.width + 50f;
+                float yOffset = 20f;
+                Vector2 newPosition = creatingNode.NodeRect.position + new Vector2(xOffset, yOffset);
+                newNode.SetPosition(newPosition);
+            }
             creatingNode = null;
             Repaint();
         }

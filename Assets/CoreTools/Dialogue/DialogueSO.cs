@@ -71,11 +71,16 @@ namespace CoreTools
                 return nodeLookup[node.ChildID];
             else return null;
         }
-        public IEnumerable<GraphNode> GetAllParent(GraphNode node)
+        public IEnumerable<GraphNode> GetAllParents(GraphNode node)
         {
             string id = node.UniqueID;
             foreach (GraphNode parent in GetAllGraphNodes())
             {
+                if (node is ChoiceNode choiceNode)
+                {
+                    if (choiceNode.GetAllChildren().Contains(node.UniqueID))
+                        yield return choiceNode;
+                }
                 if (parent.ChildID.Equals(id))
                     yield return parent;
             }
@@ -85,6 +90,9 @@ namespace CoreTools
         #region Node Validation
         public bool HasValidChild(GraphNode node)
         {
+            if (node is ChoiceNode)
+                return false; //
+
             GraphNode child = GetChildNode(node);
             return child != null;
         }
@@ -99,7 +107,12 @@ namespace CoreTools
 
             foreach (GraphNode parent in GetAllGraphNodes())
             {
-                if (parent.ChildID == id)
+                if (parent is ChoiceNode choiceNode)
+                {
+                    if (choiceNode.GetAllChildren().Contains(id))
+                        return true;
+                }
+                else if (parent.ChildID == id)
                     return true;
             }
             return false;
@@ -119,6 +132,7 @@ namespace CoreTools
                 PopulateNodeLookup();
             }
         }
+
         public DialogueNode CreateDialogueNode()
         {
             Undo.RecordObject(this, "Added Dialogue node");
@@ -129,6 +143,21 @@ namespace CoreTools
         public DialogueNode CreateDialogueNode(GraphNode parent)
         {
             DialogueNode newNode = CreateDialogueNode();
+            if (parent != null)
+                parent.ChildID = newNode.UniqueID;
+            return newNode;
+        }
+
+        public ChoiceNode CreateChoiceNode()
+        {
+            Undo.RecordObject(this, "Added Choice Node");
+            ChoiceNode newNode = CreateInstance<ChoiceNode>();
+            SetupNewNode(newNode);
+            return newNode;
+        }
+        public ChoiceNode CreateChoiceNode(GraphNode parent)
+        {
+            ChoiceNode newNode = CreateChoiceNode();
             if (parent != null)
                 parent.ChildID = newNode.UniqueID;
             return newNode;
@@ -228,7 +257,9 @@ namespace CoreTools
         {
             foreach (GraphNode node in GetAllGraphNodes())
             {
-                if (node.ChildID == id)
+                if (node is ChoiceNode choiceNode)
+                    choiceNode.ClearIdFromChoices(id);
+                else if (node.ChildID == id)
                     node.ChildID = null;
             }
         }
