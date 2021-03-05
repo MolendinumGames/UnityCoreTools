@@ -175,7 +175,6 @@ namespace CoreTools.Dialogue
         private void DrawChoiceNode(ChoiceNode node)
         {
             GUILayout.BeginArea(node.NodeRect, nodeStyle);
-
             DrawHeader(node);
             GUILayout.Space(1f);
 

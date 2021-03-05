@@ -32,9 +32,12 @@ namespace CoreTools.Dialogue
         public int findingChildChoiceId = -1;
 
         [NonSerialized]
-        private GraphNode creatingNode;
+        GraphNode creatingNode;
         [NonSerialized]
-        private GraphNode removeNode;
+        GraphNode removeNode;
+
+        [NonSerialized]
+        GraphNode selectedNode = null;
 
         Vector2 scrollPosition = Vector2.zero;
 
@@ -79,6 +82,7 @@ namespace CoreTools.Dialogue
             if (nodeDrawer == null)
                 nodeDrawer = new NodeDrawer(this);
             ClearConnectingNodes();
+            selectedNode = null;
             Repaint();
         }
         private void OnProjectChange()
@@ -113,7 +117,8 @@ namespace CoreTools.Dialogue
         {
             foreach (GraphNode node in selectedDialogue.GetAllGraphNodes())
             {
-                nodeDrawer.DrawGraphNode(node);
+                if (node != selectedNode)
+                    nodeDrawer.DrawGraphNode(node);
 
                 if (node is ChoiceNode choiceNode)
                 {
@@ -126,7 +131,7 @@ namespace CoreTools.Dialogue
                         nodeDrawer.DrawConnection(node, child);
                 }
             }
-
+            DrawSelectedNode();
             DrawSearchingNodeConnection();
         }
         private void DrawSearchingNodeConnection()
@@ -176,7 +181,11 @@ namespace CoreTools.Dialogue
                 }
             }
         }
-
+        private void DrawSelectedNode()
+        {
+            if (selectedNode != null)
+                nodeDrawer.DrawGraphNode(selectedNode);
+        }
         private void ProcessEvents()
         {
             if (Event.current.type == EventType.MouseDown)
@@ -214,6 +223,9 @@ namespace CoreTools.Dialogue
             if (selectedDialogue.GetEntryNode().NodeRect.Contains(mousePos))
                 targetNode = selectedDialogue.GetEntryNode();
 
+            if (selectedNode != null && selectedNode.NodeRect.Contains(mousePos))
+                targetNode = selectedNode;
+
             return targetNode;
         }
         public void ClearConnectingNodes()
@@ -228,10 +240,12 @@ namespace CoreTools.Dialogue
             draggedNode = GetNodeAtPoint(Event.current.mousePosition);
             if (draggedNode != null)
             {
+                selectedNode = draggedNode;
                 nodeDragOffset = draggedNode.NodeRect.position - (Event.current.mousePosition + scrollPosition);
             }
             else
             {
+                selectedNode = null;
                 dragginViewPort = true;
                 viewDragOffset = Event.current.mousePosition + scrollPosition;
             }
