@@ -53,6 +53,19 @@ namespace CoreTools.Dialogue
             }
 #endif
         }
+        [SerializeField]
+        private DialogueOrientation orientation = DialogueOrientation.DownLeft;
+        public DialogueOrientation Orientation
+        {
+            get => orientation;
+            set
+            {
+                Undo.RecordObject(this, "Changed Node Orientation");
+                orientation = value;
+                EditorUtility.SetDirty(this);
+            }
+        }
+
 
 #if UNITY_EDITOR
         [SerializeField]
@@ -65,16 +78,9 @@ namespace CoreTools.Dialogue
             portrait = null;
             ChildID = null;
             text = "";
+            orientation = DialogueOrientation.DownLeft;
         }
 #endif
         public bool HasChild() => !string.IsNullOrEmpty(ChildID);
-        //public void ResetValues()
-        //{
-        //    speaker = null;
-
-        //    portrait = null;
-        //    ChildID = null;
-        //    text = "";
-        //}
     }
 }

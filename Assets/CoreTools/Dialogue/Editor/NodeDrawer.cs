@@ -182,7 +182,10 @@ namespace CoreTools.Dialogue
 
             GUILayout.BeginHorizontal();
             Sprite newIcon = DrawIconField(node);
+            GUILayout.BeginVertical();
             string newSpeaker = DrawSpeakerField(node);
+            DialogueOrientation newOrientation = (DialogueOrientation)EditorGUILayout.EnumPopup(node.Orientation);
+            GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
             GUILayout.Space(1f);
@@ -212,6 +215,7 @@ namespace CoreTools.Dialogue
                 node.Portrait = newIcon;
                 node.Speaker = newSpeaker;
                 node.Text = newText;
+                node.Orientation = newOrientation;
                 for (int i = 0; i < choices.Length; i++)
                 {
                     choices[i].text = newChoiceTexts[i];
@@ -255,8 +259,11 @@ namespace CoreTools.Dialogue
             GUILayout.BeginHorizontal();
 
             Sprite newIcon = DrawIconField(node);
-            string newSpeaker = DrawSpeakerField(node);
 
+            GUILayout.BeginVertical();
+            string newSpeaker = DrawSpeakerField(node);
+            DialogueOrientation newOrientation = (DialogueOrientation)EditorGUILayout.EnumPopup(node.Orientation);
+            GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
             GUILayout.Space(1f);
@@ -269,6 +276,7 @@ namespace CoreTools.Dialogue
                 node.Text = newText;
                 node.Speaker = newSpeaker;
                 node.Portrait = newIcon;
+                node.Orientation = newOrientation;
             }
 
             GUILayout.EndArea();

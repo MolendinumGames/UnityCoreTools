@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3997561677496955984
+--- !u!114 &-2161725673345775170
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,31 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f635f02dffdf2b94e91f84a241e5243e, type: 3}
-  m_Name: 7ce6badd-f5f7-4f5e-95f3-f45328805820
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 47625f8b-ad2c-4d80-8c0f-2f3c4d10af42
   m_EditorClassIdentifier: 
-  uniqueID: 7ce6badd-f5f7-4f5e-95f3-f45328805820
-  childID: 
+  uniqueID: 47625f8b-ad2c-4d80-8c0f-2f3c4d10af42
+  childID: f9592290-6b62-4a17-8851-2d82dd193a1a
   boxScroll: {x: 0, y: 0}
-  text: fhgddgkhkjhz
-  portrait: {fileID: 21300000, guid: 9fa58c3c61ade394babd173e2d5ee40b, type: 3}
-  speaker: 
+  text: Would like like free stuff?
+  portrait: {fileID: 21300000, guid: a1ec2c0ddc0da634b85f0f465fec2d0d, type: 3}
+  speaker: A magical Scroll
+  orientation: 1
   rect:
     serializedVersion: 2
-    x: 10
-    y: 10
+    x: 111
+    y: 56
     width: 300
     height: 180
-  selectedPath: 0
-  choices:
-  - childId: 31dac2af-218e-484e-87e4-2c47fc8b60b6
-    text: ',hgchgc'
-  choiceRect:
-    serializedVersion: 2
-    x: 337
-    y: 139
-    width: 300
-    height: 200
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48,8 +39,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allNodes:
   - {fileID: 1333259446784572322}
-  - {fileID: -3997561677496955984}
-  - {fileID: 1355311875434229863}
+  - {fileID: 6038284222142017271}
+  - {fileID: 2751015835577779023}
+  - {fileID: 6458828201939284157}
+  - {fileID: 6768999641287887263}
+  - {fileID: -2161725673345775170}
   entryNode: {fileID: 1333259446784572322}
 --- !u!114 &1333259446784572322
 MonoBehaviour:
@@ -64,8 +58,8 @@ MonoBehaviour:
   m_Name: EntryNode
   m_EditorClassIdentifier: 
   uniqueID: f4dce47e-b8fc-4018-903e-baa436ae7cae
-  childID: 7ce6badd-f5f7-4f5e-95f3-f45328805820
---- !u!114 &1355311875434229863
+  childID: 47625f8b-ad2c-4d80-8c0f-2f3c4d10af42
+--- !u!114 &2751015835577779023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,16 +68,103 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ddb119eb48f9c8499579e3ce5a8ab3a, type: 3}
-  m_Name: 31dac2af-218e-484e-87e4-2c47fc8b60b6
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 4eca6666-d47d-4c0a-a864-bdbd37806ffb
   m_EditorClassIdentifier: 
-  uniqueID: 31dac2af-218e-484e-87e4-2c47fc8b60b6
+  uniqueID: 4eca6666-d47d-4c0a-a864-bdbd37806ffb
   childID: 
+  boxScroll: {x: 0, y: 0}
+  text: Too bad!
+  portrait: {fileID: 21300000, guid: a1ec2c0ddc0da634b85f0f465fec2d0d, type: 3}
+  speaker: An upset magical scroll
+  orientation: 1
   rect:
     serializedVersion: 2
-    x: 698
-    y: 243
+    x: 766
+    y: 289
+    width: 300
+    height: 180
+--- !u!114 &6038284222142017271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dbc2c829e177546bd46f4c933e9e10, type: 3}
+  m_Name: 7b8e2312-9b3d-4fc9-8c84-af48246eb118
+  m_EditorClassIdentifier: 
+  uniqueID: 7b8e2312-9b3d-4fc9-8c84-af48246eb118
+  childID: b6a50205-a293-46ac-aa0d-9e0aac102a31
+  rect:
+    serializedVersion: 2
+    x: 763
+    y: 106
     width: 250
     height: 95
-  channel: {fileID: 0}
-  value: 0
+  channel: {fileID: 11400000, guid: 1ae4d178658e44141bfc2e6f11277ea9, type: 2}
+  value: 100
+--- !u!114 &6458828201939284157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: b6a50205-a293-46ac-aa0d-9e0aac102a31
+  m_EditorClassIdentifier: 
+  uniqueID: b6a50205-a293-46ac-aa0d-9e0aac102a31
+  childID: 
+  boxScroll: {x: 0, y: 0}
+  text: Awesome! Here is 100 coins!
+  portrait: {fileID: 21300000, guid: a1ec2c0ddc0da634b85f0f465fec2d0d, type: 3}
+  speaker: A happy magical scroll
+  orientation: 1
+  rect:
+    serializedVersion: 2
+    x: 1040
+    y: 103
+    width: 300
+    height: 180
+--- !u!114 &6768999641287887263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f635f02dffdf2b94e91f84a241e5243e, type: 3}
+  m_Name: f9592290-6b62-4a17-8851-2d82dd193a1a
+  m_EditorClassIdentifier: 
+  uniqueID: f9592290-6b62-4a17-8851-2d82dd193a1a
+  childID: 
+  boxScroll: {x: 0, y: 0}
+  text: Uhm...
+  portrait: {fileID: 21300000, guid: c1b61b3a91732a747a8496fc75a13fe2, type: 3}
+  speaker: Player
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 10
+    y: 10
+    width: 300
+    height: 180
+  selectedPath: 0
+  choices:
+  - childId: 7b8e2312-9b3d-4fc9-8c84-af48246eb118
+    text: Yes
+  - childId: 4eca6666-d47d-4c0a-a864-bdbd37806ffb
+    text: No
+  choiceRect:
+    serializedVersion: 2
+    x: 435
+    y: 126
+    width: 300
+    height: 200
