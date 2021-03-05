@@ -58,15 +58,23 @@ namespace CoreTools.Dialogue
         [SerializeField]
         protected Rect rect = new Rect(10, 10, 300, 180);
         public override Rect NodeRect { get => rect; set => rect = value; }
-#endif
-        public bool HasChild() => !string.IsNullOrEmpty(ChildID);
-        public void ResetValues()
+        public override void Reset()
         {
+            Undo.RecordObject(this, "Reset DialogueNode");
             speaker = null;
-
             portrait = null;
             ChildID = null;
             text = "";
         }
+#endif
+        public bool HasChild() => !string.IsNullOrEmpty(ChildID);
+        //public void ResetValues()
+        //{
+        //    speaker = null;
+
+        //    portrait = null;
+        //    ChildID = null;
+        //    text = "";
+        //}
     }
 }

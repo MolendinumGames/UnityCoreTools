@@ -80,7 +80,12 @@ namespace CoreTools.Dialogue
         {
             return choiceRect;
         }
-
+        public override void Reset()
+        {
+            // Undo records in base
+            base.Reset();
+            choices.Clear();
+        }
 
     }
 }

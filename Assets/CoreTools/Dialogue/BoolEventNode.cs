@@ -44,5 +44,14 @@ namespace CoreTools.Dialogue
             else
                 Debug.LogError($"Empty BoolChannel for node: {name}");
         }
+#if UNITY_EDITOR
+        public override void Reset()
+        {
+            Undo.RecordObject(this, "Reset Bool Event Node");
+            ChildID = null;
+            channel = null;
+            value = true;
+#endif
+        }
     }
 }

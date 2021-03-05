@@ -1,5 +1,77 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7977042297693313147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: ba7503dc-f617-4309-9665-ca5078086010
+  m_EditorClassIdentifier: 
+  uniqueID: ba7503dc-f617-4309-9665-ca5078086010
+  childID: 
+  boxScroll: {x: 0, y: 0}
+  text: 
+  portrait: {fileID: 0}
+  speaker: 
+  rect:
+    serializedVersion: 2
+    x: 527
+    y: 43
+    width: 300
+    height: 180
+--- !u!114 &-5356802401744987013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f635f02dffdf2b94e91f84a241e5243e, type: 3}
+  m_Name: e635b855-e15a-4600-8fac-6ed6312fd290
+  m_EditorClassIdentifier: 
+  uniqueID: e635b855-e15a-4600-8fac-6ed6312fd290
+  childID: 
+  boxScroll: {x: 0, y: 0}
+  text: 
+  portrait: {fileID: 0}
+  speaker: 
+  rect:
+    serializedVersion: 2
+    x: 10
+    y: 10
+    width: 300
+    height: 180
+  selectedPath: 0
+  choices:
+  - childId: 
+    text: 
+  choiceRect:
+    serializedVersion: 2
+    x: 498
+    y: 253
+    width: 300
+    height: 200
+--- !u!114 &-346733193835419091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb2449119fd224e4ba0b83b0f3fcef2c, type: 3}
+  m_Name: EntryNode
+  m_EditorClassIdentifier: 
+  uniqueID: d6842434-7702-4bde-94ec-c1773692f62d
+  childID: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13,5 +85,44 @@ MonoBehaviour:
   m_Name: New Dialogue
   m_EditorClassIdentifier: 
   allNodes:
-  - {fileID: 0}
-  entryNode: {fileID: 0}
+  - {fileID: -346733193835419091}
+  - {fileID: 1918170896372862010}
+  - {fileID: -7977042297693313147}
+  - {fileID: -5356802401744987013}
+  entryNode: {fileID: -346733193835419091}
+--- !u!114 &1918170896372862010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f635f02dffdf2b94e91f84a241e5243e, type: 3}
+  m_Name: 6acfcf65-5f72-4e5a-82b0-4a1f3cb63327
+  m_EditorClassIdentifier: 
+  uniqueID: 6acfcf65-5f72-4e5a-82b0-4a1f3cb63327
+  childID: 
+  boxScroll: {x: 0, y: 0}
+  text: New Dialogue Text
+  portrait: {fileID: 0}
+  speaker: 
+  rect:
+    serializedVersion: 2
+    x: 10
+    y: 10
+    width: 300
+    height: 180
+  selectedPath: 0
+  choices:
+  - childId: 
+    text: 
+  - childId: 
+    text: 
+  choiceRect:
+    serializedVersion: 2
+    x: 183
+    y: 113
+    width: 300
+    height: 200

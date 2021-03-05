@@ -44,5 +44,14 @@ namespace CoreTools.Dialogue
             else
                 Debug.LogError($"Empty IntChannel for node: {this.name}");
         }
+#if UNITY_EDITOR
+        public override void Reset()
+        {
+            Undo.RecordObject(this, "Reset Int Event Node");
+            ChildID = null;
+            channel = null;
+            value = 0;
+        }
+#endif
     }
 }

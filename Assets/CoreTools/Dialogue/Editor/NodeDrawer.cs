@@ -192,12 +192,13 @@ namespace CoreTools.Dialogue
 
             ChoiceField[] choices = node.GetAllChoices().ToArray();
             string[] newChoiceTexts = new string[node.ChoiceAmount];
+            int toRemoveChoice = -1;
             for (int i = 0; i < choices.Length; i++)
             {
                 GUILayout.BeginHorizontal(EditorStyles.helpBox, GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(node.NodeRect.width - 32f));
                 if (GUILayout.Button("X", GUILayout.Width(EditorGUIUtility.singleLineHeight)))
                 {
-
+                    toRemoveChoice = i;
                 }
                 GUILayout.Label(i.ToString(), GUILayout.Width(16f));
                 newChoiceTexts[i] = EditorGUILayout.TextField(GUIContent.none, choices[i].text);
@@ -215,6 +216,12 @@ namespace CoreTools.Dialogue
                 for (int i = 0; i < choices.Length; i++)
                 {
                     choices[i].text = newChoiceTexts[i];
+                }
+                if (toRemoveChoice >= 0)
+                {
+                    node.RemoveChoice(toRemoveChoice);
+                    EditorUtility.SetDirty(dialogueEditor.selectedDialogue);
+                    dialogueEditor.Repaint();
                 }
 
                 EditorUtility.SetDirty(dialogueEditor.selectedDialogue);
@@ -381,7 +388,15 @@ namespace CoreTools.Dialogue
             {
                 if (dialogueEditor.findingChildNode != null)
                 {
-                    dialogueEditor.findingChildNode.ChildID = node.UniqueID;
+                    if (dialogueEditor.findingChildNode is ChoiceNode choiceNode)
+                    {
+                        int id = dialogueEditor.findingChildChoiceId;
+                        choiceNode.GetAllChoices()[id].childId = node.UniqueID;
+                    }
+                    else
+                    {
+                        dialogueEditor.findingChildNode.ChildID = node.UniqueID;
+                    }
                     EditorUtility.SetDirty(dialogueEditor.selectedDialogue);
                     dialogueEditor.ClearConnectingNodes();
                     dialogueEditor.Repaint();
@@ -496,7 +511,30 @@ namespace CoreTools.Dialogue
         }
         public void DrawChoiceNodeConnections(ChoiceNode node)
         {
-
+            var choices = node.GetAllChoices();
+            for (int i = 0; i < choices.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(choices[i].childId))
+                {
+                    GraphNode child = dialogueEditor.selectedDialogue.GetAnyGraphNode(choices[i].childId);
+                    if (child == null)
+                    {
+                        choices[i].childId = null;
+                        EditorUtility.SetDirty(dialogueEditor.selectedDialogue);
+                        continue;
+                    }
+                    else
+                    {
+                        float offsetValue = radioButtonSize.x * .5f;
+                        Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0); // to draw into the middle of the button
+                        Vector3 endPos = (Vector3)GetInConnectorPos(child) + offsetVector;
+                        Vector3 startPos = (Vector3)GetChoiceConnectorPosition(node, i) + offsetVector;
+                        Vector3 startTangent = startPos + (Vector3.right * 50f);
+                        Vector3 endTangent = endPos + (Vector3.left * 50f);
+                        Handles.DrawBezier(startPos, endPos, startTangent, endTangent, Color.white, null, 3f);
+                    }
+                }
+            }
         }
     }
 }

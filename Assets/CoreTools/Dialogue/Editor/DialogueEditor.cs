@@ -238,17 +238,19 @@ namespace CoreTools.Dialogue
 
             if (findingChildNode != null)
             {
-                if (findingChildNode is DialogueNode)
-                    (findingChildNode as DialogueNode).ChildID = null;
-                else if (findingChildNode is EntryNode)
-                    (findingChildNode as EntryNode).ChildID = null;
+                findingChildNode.ChildID = null;
+                if (findingChildNode is ChoiceNode choiceNode)
+                {
+                    if (findingChildChoiceId >= 0 && findingChildChoiceId < choiceNode.ChoiceAmount)
+                    {
+                        Undo.RecordObject(choiceNode, "Changed Choice Node");
+                        EditorUtility.SetDirty(selectedDialogue);
+                        choiceNode.GetAllChoices()[findingChildChoiceId].childId = null;
+                    }
+                }
             }
             if (findingParentNode != null)
             {
-                //foreach (DialogueNode parent in selectedDialogue.GetParentNodes(findingParentNode))
-                //{
-                //    parent.ChildID = null;
-                //}
                 findingParentNode = null;
             }
 
@@ -371,6 +373,14 @@ namespace CoreTools.Dialogue
         {
             selectedDialogue.RemoveNode(node);
             removeNode = null;
+            Repaint();
+        }
+
+        public void ResetNode(GraphNode node)
+        {
+            //Undo.RecordObject(selectedDialogue, "Node reseted");
+            node.Reset();
+            EditorUtility.SetDirty(selectedDialogue);
             Repaint();
         }
     }

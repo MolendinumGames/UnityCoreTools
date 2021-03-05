@@ -42,6 +42,7 @@ namespace CoreTools.Dialogue
             newPos.y = Mathf.Clamp(newPos.y, 0f, 4000f);
             NodeRect = new Rect(newPos, NodeRect.size);
         }
+        public abstract void Reset();
 #endif
     }
 }
