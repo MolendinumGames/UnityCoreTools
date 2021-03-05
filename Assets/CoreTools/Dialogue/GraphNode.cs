@@ -36,7 +36,12 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
         public abstract Rect NodeRect { get; set; }
 
-        public virtual void SetPosition(Vector2 newPos) => NodeRect = new Rect(newPos, NodeRect.size);
+        public virtual void SetPosition(Vector2 newPos)
+        {
+            newPos.x = Mathf.Clamp(newPos.x, 0f, 4000f);
+            newPos.y = Mathf.Clamp(newPos.y, 0f, 4000f);
+            NodeRect = new Rect(newPos, NodeRect.size);
+        }
 #endif
     }
 }

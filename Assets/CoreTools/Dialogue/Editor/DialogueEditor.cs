@@ -28,6 +28,8 @@ namespace CoreTools.Dialogue
         public DialogueNode findingParentNode = null;
         [NonSerialized]
         public GraphNode findingChildNode = null;
+        [NonSerialized]
+        public int findingChildChoiceId = -1;
 
         [NonSerialized]
         private GraphNode creatingNode;
@@ -115,7 +117,7 @@ namespace CoreTools.Dialogue
 
                 if (node is ChoiceNode choiceNode)
                 {
-
+                    nodeDrawer.DrawChoiceNodeConnections(choiceNode);
                 }
                 else
                 {
@@ -126,10 +128,6 @@ namespace CoreTools.Dialogue
             }
 
             DrawSearchingNodeConnection();
-        }
-        private void DrawEntryNode()
-        {
-            nodeDrawer.DrawGraphNode(selectedDialogue.GetEntryNode());
         }
         private void DrawSearchingNodeConnection()
         {
@@ -147,15 +145,35 @@ namespace CoreTools.Dialogue
             }
             else if (findingChildNode != null)
             {
-                float offsetValue = nodeDrawer.radioButtonSize.x * .5f;
-                Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0);
-                Vector3 startPoint = (Vector3)nodeDrawer.GetOutConnectorPos(findingChildNode) + offsetVector;
-                Vector3 endPoint = Event.current.mousePosition;
-                Vector3 startTangent = startPoint + (Vector3.right * 50f);
-                Vector3 endTangent = endPoint + (Vector3.left * 50f);
+                if (findingChildNode is ChoiceNode choiceNode)
+                {
+                    if (findingChildChoiceId >= 0 && findingChildChoiceId < choiceNode.ChoiceAmount)
+                    {
+                        float offsetValue = nodeDrawer.radioButtonSize.x * .5f;
+                        Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0);
 
-                Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.red, null, 4f);
-                Repaint();
+                        Vector3 startPoint = (Vector3)nodeDrawer.GetChoiceConnectorPosition(choiceNode, findingChildChoiceId) + offsetVector;
+                        Vector3 endPoint = Event.current.mousePosition;
+
+                        Vector3 startTangent = startPoint + (Vector3.right * 50f);
+                        Vector3 endTangent = endPoint + (Vector3.left * 50f);
+
+                        Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.red, null, 4f);
+                        Repaint();
+                    }
+                }
+                else
+                {
+                    float offsetValue = nodeDrawer.radioButtonSize.x * .5f;
+                    Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0);
+                    Vector3 startPoint = (Vector3)nodeDrawer.GetOutConnectorPos(findingChildNode) + offsetVector;
+                    Vector3 endPoint = Event.current.mousePosition;
+                    Vector3 startTangent = startPoint + (Vector3.right * 50f);
+                    Vector3 endTangent = endPoint + (Vector3.left * 50f);
+
+                    Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.red, null, 4f);
+                    Repaint();
+                }
             }
         }
 
@@ -202,6 +220,7 @@ namespace CoreTools.Dialogue
         {
             findingChildNode = null;
             findingParentNode = null;
+            findingChildChoiceId = -1;
         }
 
         private void OnLeftClick()

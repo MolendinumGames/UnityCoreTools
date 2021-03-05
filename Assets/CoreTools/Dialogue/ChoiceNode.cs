@@ -60,6 +60,9 @@ namespace CoreTools.Dialogue
         }
         public override void SetPosition(Vector2 newPos)
         {
+            newPos.x = Mathf.Clamp(newPos.x, 0f, 4000f);
+            newPos.y = Mathf.Clamp(newPos.y, 0f, 4000f);
+
             choiceRect = new Rect(newPos, choiceRect.size);
         }
         public float GetChoiceHeight() => EditorGUIUtility.singleLineHeight * 1.5f + 2;
