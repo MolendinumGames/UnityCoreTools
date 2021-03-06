@@ -16,9 +16,12 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                Undo.RecordObject(this, "Changed VoidChannel EventNode");
-                channel = value;
-                EditorUtility.SetDirty(this);
+                if (channel != value)
+                {
+                    Undo.RecordObject(this, "Changed VoidChannel EventNode");
+                    channel = value;
+                    EditorUtility.SetDirty(this);
+                }
             }
 #endif
         }
@@ -36,6 +39,7 @@ namespace CoreTools.Dialogue
             Undo.RecordObject(this, "Reset Void Node");
             ChildID = null;
             channel = null;
+            EditorUtility.SetDirty(this);
         }
 #endif
     }

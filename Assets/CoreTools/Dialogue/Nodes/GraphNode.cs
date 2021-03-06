@@ -14,9 +14,12 @@ namespace CoreTools.Dialogue
             get => uniqueID;
             set
             {
-                Undo.RecordObject(this, "Changed Node ID");
-                uniqueID = value;
-                EditorUtility.SetDirty(this);
+                if (uniqueID != value)
+                {
+                    Undo.RecordObject(this, "Changed Node ID");
+                    uniqueID = value;
+                    EditorUtility.SetDirty(this);
+                }
             }
         }
 
@@ -27,9 +30,12 @@ namespace CoreTools.Dialogue
             get => childID;
             set
             {
-                Undo.RecordObject(this, "Changed Dialogue Node childID");
-                childID = value;
-                EditorUtility.SetDirty(this);
+                if (childID != value)
+                {
+                    Undo.RecordObject(this, "Changed Dialogue Node childID");
+                    childID = value;
+                    EditorUtility.SetDirty(this);
+                }
             }
         }
 
@@ -38,9 +44,11 @@ namespace CoreTools.Dialogue
 
         public virtual void SetPosition(Vector2 newPos)
         {
+            Undo.RecordObject(this, "Set Node Position");
             newPos.x = Mathf.Clamp(newPos.x, 0f, 4000f);
             newPos.y = Mathf.Clamp(newPos.y, 0f, 4000f);
             NodeRect = new Rect(newPos, NodeRect.size);
+            EditorUtility.SetDirty(this);
         }
         public abstract void Reset();
 #endif

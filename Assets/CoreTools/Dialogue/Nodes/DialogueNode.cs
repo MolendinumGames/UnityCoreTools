@@ -17,9 +17,12 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                Undo.RecordObject(this, "Update Node Text");
-                text = value;
-                EditorUtility.SetDirty(this);
+                if (text != value)
+                {
+                    Undo.RecordObject(this, "Update Node Text");
+                    text = value;
+                    EditorUtility.SetDirty(this);
+                }
             }
 #endif
         }
@@ -32,9 +35,12 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                Undo.RecordObject(this, "Changed node portrait");
-                portrait = value;
-                EditorUtility.SetDirty(this);
+                if (portrait != value)
+                {
+                    Undo.RecordObject(this, "Changed node portrait");
+                    portrait = value;
+                    EditorUtility.SetDirty(this);
+                }
             }
 #endif
         }
@@ -47,9 +53,12 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                Undo.RecordObject(this, "Changed node speaker");
-                speaker = value;
-                EditorUtility.SetDirty(this);
+                if (speaker != value)
+                {
+                    Undo.RecordObject(this, "Changed node speaker");
+                    speaker = value;
+                    EditorUtility.SetDirty(this);
+                }
             }
 #endif
         }
@@ -60,9 +69,12 @@ namespace CoreTools.Dialogue
             get => orientation;
             set
             {
-                Undo.RecordObject(this, "Changed Node Orientation");
-                orientation = value;
-                EditorUtility.SetDirty(this);
+                if (orientation != value)
+                {
+                    Undo.RecordObject(this, "Changed Node Orientation");
+                    orientation = value;
+                    EditorUtility.SetDirty(this);
+                }
             }
         }
 
@@ -79,6 +91,7 @@ namespace CoreTools.Dialogue
             ChildID = null;
             text = "";
             orientation = DialogueOrientation.DownLeft;
+            EditorUtility.SetDirty(this);
         }
 #endif
         public bool HasChild() => !string.IsNullOrEmpty(ChildID);

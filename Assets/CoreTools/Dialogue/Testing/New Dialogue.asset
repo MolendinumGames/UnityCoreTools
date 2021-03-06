@@ -18,6 +18,7 @@ MonoBehaviour:
   text: 
   portrait: {fileID: 0}
   speaker: 
+  orientation: 0
   rect:
     serializedVersion: 2
     x: 467
@@ -42,13 +43,13 @@ MonoBehaviour:
   text: 
   portrait: {fileID: 21300000, guid: 8e77f4013dc06ac47bf24565426fccdc, type: 3}
   speaker: 
+  orientation: 0
   rect:
     serializedVersion: 2
     x: 10
     y: 10
     width: 300
     height: 180
-  selectedPath: 0
   choices: []
   choiceRect:
     serializedVersion: 2
@@ -106,13 +107,13 @@ MonoBehaviour:
   text: New Dialogue Text
   portrait: {fileID: 0}
   speaker: 
+  orientation: 0
   rect:
     serializedVersion: 2
     x: 10
     y: 10
     width: 300
     height: 180
-  selectedPath: 0
   choices:
   - childId: e635b855-e15a-4600-8fac-6ed6312fd290
     text: 

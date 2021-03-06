@@ -16,9 +16,12 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                Undo.RecordObject(this, "Changed FloatChannel EventNode");
-                channel = value;
-                EditorUtility.SetDirty(this);
+                if (channel != value)
+                {
+                    Undo.RecordObject(this, "Changed FloatChannel EventNode");
+                    channel = value;
+                    EditorUtility.SetDirty(this);
+                }
             }
 #endif
         }
@@ -31,8 +34,11 @@ namespace CoreTools.Dialogue
 #if UNITY_EDITOR
             set
             {
-                Undo.RecordObject(this, "Changed FloatChannel EventNode Value");
-                this.value = value;
+                if (this.value != value)
+                {
+                    Undo.RecordObject(this, "Changed FloatChannel EventNode Value");
+                    this.value = value;
+                }
             }
 #endif
         }
@@ -51,6 +57,7 @@ namespace CoreTools.Dialogue
             ChildID = null;
             channel = null;
             value = 0;
+            EditorUtility.SetDirty(this);
         }
 #endif
     }

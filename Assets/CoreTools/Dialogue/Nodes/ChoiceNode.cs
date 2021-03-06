@@ -10,9 +10,7 @@ namespace CoreTools.Dialogue
 {
     public class ChoiceNode : DialogueNode
     {
-        [SerializeField]
-        int selectedPath = 0;
-        public override string ChildID 
+        public override string ChildID
         {
             get
             {
@@ -29,41 +27,80 @@ namespace CoreTools.Dialogue
         {
             get => choices.Count;
         }
+        public List<string> GetAllChildren() => choices.Select(choice => choice.childId).ToList();
+
         public List<ChoiceField> GetAllChoices() => choices;
 
-        public string GetChildOfChoice(int choiceId)
-        {
-            return choices[choiceId].childId;
-        }
-        public void RemoveChoice(int index)
-        {
-            choices.RemoveAt(index);
-        }
-        public ChoiceField AddChoice()
-        {
-            ChoiceField newField = new ChoiceField();
-            choices.Add(newField);
-            return newField;
-        }
         public string[] GetAllChoiceTexts()
         {
             return choices.Select(choice => choice.text).ToArray();
         }
-        public List<string> GetAllChildren() => choices.Select(choice => choice.childId).ToList();
+        public string GetChildOfChoice(int choiceId)
+        {
+            return choices[choiceId].childId;
+        }
+        public string GetTextOfChoice(int id)
+        {
+            return choices[id].text;
+        }
+
+
+#if UNITY_EDITOR
+        public void RemoveChoice(int index)
+        {
+            Undo.RecordObject(this, "Removed Choice");
+            choices.RemoveAt(index);
+            EditorUtility.SetDirty(this);
+        }
+        public ChoiceField AddChoice()
+        {
+            Undo.RecordObject(this, "Added choice to node");
+            ChoiceField newField = new ChoiceField();
+            choices.Add(newField);
+            EditorUtility.SetDirty(this);
+            return newField;
+        }
+        public void SetChildOfChoice(int id, string childId)
+        {
+            if (choices[id].childId != childId)
+            {
+                Undo.RecordObject(this, "Changed Choices child of node");
+                choices[id].childId = childId;
+                EditorUtility.SetDirty(this);
+            }
+        }
+        public void SetTextOfChoice(int id, string newText)
+        {
+            if (choices[id].text != newText)
+            {
+                Undo.RecordObject(this, "Changed Choice Text");
+                choices[id].text = newText;
+                EditorUtility.SetDirty(this);
+            }
+        }
         public void ClearIdFromChoices(string id)
         {
+            Undo.RecordObject(this, "Removed child ID from all choices");
             foreach (ChoiceField field in GetAllChoices())
             {
                 if (field.childId == id)
                     field.childId = null;
             }
+            EditorUtility.SetDirty(this);
         }
+
+    #region Layout Methods
+        [SerializeField]
+        Rect choiceRect = new Rect(10f, 10f, 300f, 200f);
+        public override Rect NodeRect { get => GetChoiceNodeRect(); }
         public override void SetPosition(Vector2 newPos)
         {
+            Undo.RecordObject(this, "Set Position of choice node");
             newPos.x = Mathf.Clamp(newPos.x, 0f, 4000f);
             newPos.y = Mathf.Clamp(newPos.y, 0f, 4000f);
 
             choiceRect = new Rect(newPos, choiceRect.size);
+            EditorUtility.SetDirty(this);
         }
         public float GetChoiceHeight() => EditorGUIUtility.singleLineHeight * 1.5f + 2;
         protected Rect GetChoiceNodeRect()
@@ -73,19 +110,18 @@ namespace CoreTools.Dialogue
             Vector2 extraSize = new Vector2(0, extra);
             return new Rect(choiceRect.position, choiceRect.size + extraSize);
         }
-        [SerializeField]
-        Rect choiceRect = new Rect(10f, 10f, 300f, 200f);
-        public override Rect NodeRect { get => GetChoiceNodeRect(); }
         public Rect GetBasicRect()
         {
             return choiceRect;
         }
+    #endregion
         public override void Reset()
         {
             // Undo records in base
             base.Reset();
             choices.Clear();
         }
+#endif
 
     }
 }

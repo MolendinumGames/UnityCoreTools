@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
 using System;
 
 namespace CoreTools
@@ -28,6 +29,7 @@ namespace CoreTools
         private void OnValidate()
         {
             // will not get called in final build!
+            this.name = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(this));
             PopulateNodeLookup();
         }
 
@@ -135,8 +137,8 @@ namespace CoreTools
 
         public DialogueNode CreateDialogueNode()
         {
-            Undo.RecordObject(this, "Added Dialogue node");
             DialogueNode newNode = CreateInstance<DialogueNode>();
+            Undo.RegisterCreatedObjectUndo(newNode, "New Node Created");
             SetupNewNode(newNode);
             return newNode;
         }
@@ -150,8 +152,8 @@ namespace CoreTools
 
         public ChoiceNode CreateChoiceNode()
         {
-            Undo.RecordObject(this, "Added Choice Node");
             ChoiceNode newNode = CreateInstance<ChoiceNode>();
+            Undo.RegisterCreatedObjectUndo(newNode, "Created Choice node");
             SetupNewNode(newNode);
             return newNode;
         }
@@ -165,8 +167,8 @@ namespace CoreTools
 
         public VoidEventNode CreateVoidEventNode()
         {
-            Undo.RecordObject(this, "Created Void Event Node");
             VoidEventNode newNode = CreateInstance<VoidEventNode>();
+            Undo.RegisterCreatedObjectUndo(newNode, "Created New Void Node");
             SetupNewNode(newNode);
             return newNode;
             
@@ -181,8 +183,8 @@ namespace CoreTools
 
         public BoolEventNode CreateBoolEventNode()
         {
-            Undo.RecordObject(this, "Created Bool Event Node");
             BoolEventNode newNode = CreateInstance<BoolEventNode>();
+            Undo.RegisterCreatedObjectUndo(newNode, "Created New Int Node");
             SetupNewNode(newNode);
             return newNode;
 
@@ -197,8 +199,8 @@ namespace CoreTools
 
         public IntEventNode CreateIntEventNode()
         {
-            Undo.RecordObject(this, "Created Int Event Node");
             IntEventNode newNode = CreateInstance<IntEventNode>();
+            Undo.RegisterCreatedObjectUndo(newNode, "Created New Int Node");
             SetupNewNode(newNode);
             return newNode;
 
@@ -213,8 +215,8 @@ namespace CoreTools
 
         public FloatEventNode CreateFloatEventNode()
         {
-            Undo.RecordObject(this, "Created Float Event Node");
             FloatEventNode newNode = CreateInstance<FloatEventNode>();
+            Undo.RegisterCreatedObjectUndo(newNode, "Created New Float Node");
             SetupNewNode(newNode);
             return newNode;
 
@@ -229,8 +231,8 @@ namespace CoreTools
 
         public StringEventNode CreateStringEventNode()
         {
-            Undo.RecordObject(this, "Created String Event Node");
             StringEventNode newNode = CreateInstance<StringEventNode>();
+            Undo.RegisterCreatedObjectUndo(newNode, "Created New String Node");
             SetupNewNode(newNode);
             return newNode;
 
@@ -246,12 +248,15 @@ namespace CoreTools
 
         public void RemoveNode(GraphNode node)
         {
+           
+            Undo.RecordObject(this, "Removed Node");
             string removeId = node.UniqueID;
             allNodes.Remove(node);
             nodeLookup.Remove(removeId);
-            Undo.DestroyObjectImmediate(node);
             ClearFromAllChildren(removeId);
+            Undo.DestroyObjectImmediate(node);
             PopulateNodeLookup();
+            EditorUtility.SetDirty(this);
         }
         private void ClearFromAllChildren(string id)
         {
@@ -267,8 +272,12 @@ namespace CoreTools
         {
             node.UniqueID = Guid.NewGuid().ToString();
             node.name = node.UniqueID;
+
+            Undo.RecordObject(this, "Created Node");
+
             allNodes.Add(node);
             PopulateNodeLookup();
+            EditorUtility.SetDirty(this);
         }
 #endif
         #endregion
@@ -288,7 +297,6 @@ namespace CoreTools
                     }
                 }
             }
-            //EditorUtility.SetDirty(this);
 #endif
         }
 
