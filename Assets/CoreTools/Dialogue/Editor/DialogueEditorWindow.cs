@@ -182,6 +182,7 @@ namespace CoreTools.Dialogue.Editor
             }
             if (newSelection >= 0)
             {
+                EditorUtility.SetDirty(selectedDialogue);
                 ClearPopup();
                 ClearConnectingNodes();
                 Repaint();
@@ -217,6 +218,7 @@ namespace CoreTools.Dialogue.Editor
             }
             if (newSelection >= 0)
             {
+                EditorUtility.SetDirty(selectedDialogue);
                 ClearConnectingNodes();
                 ClearPopup();
                 Repaint();
@@ -464,53 +466,53 @@ namespace CoreTools.Dialogue.Editor
             Rect popupRect = new Rect(position, popupSize);
             GUILayout.BeginArea(popupRect, popupStyle);
 
+            bool buttonPressed = false;
             GUILayout.Label("Create New Node: ", EditorStyles.boldLabel);
             if (GUILayout.Button("Dialogue Node"))
             {
                 GraphNode newNode = selectedDialogue.CreateDialogueNode();
                 newNode.SetPosition(creationPopupPosition);
-                ClearPopup();
-                Repaint();
+                buttonPressed = true;
             }
             if (GUILayout.Button("Choice Node"))
             {
                 GraphNode newNode = selectedDialogue.CreateChoiceNode();
                 newNode.SetPosition(creationPopupPosition);
-                ClearPopup();
-                Repaint();
+                buttonPressed = true;
             }
             if (GUILayout.Button("Void Event Node"))
             {
                 GraphNode newNode = selectedDialogue.CreateVoidEventNode();
                 newNode.SetPosition(creationPopupPosition);
-                ClearPopup();
-                Repaint();
+                buttonPressed = true;
             }
             if (GUILayout.Button("Bool Event Node"))
             {
                 GraphNode newNode = selectedDialogue.CreateBoolEventNode();
                 newNode.SetPosition(creationPopupPosition);
-                ClearPopup();
-                Repaint();
+                buttonPressed = true;
             }
             if (GUILayout.Button("String Event Node"))
             {
                 GraphNode newNode = selectedDialogue.CreateStringEventNode();
                 newNode.SetPosition(creationPopupPosition);
-                ClearPopup();
-                Repaint();
+                buttonPressed = true;
             }
             if (GUILayout.Button("Int Event Node"))
             {
                 GraphNode newNode = selectedDialogue.CreateIntEventNode();
                 newNode.SetPosition(creationPopupPosition);
-                ClearPopup();
-                Repaint();
+                buttonPressed = true;
             }
             if (GUILayout.Button("Float Event Node"))
             {
                 GraphNode newNode = selectedDialogue.CreateFloatEventNode();
                 newNode.SetPosition(creationPopupPosition);
+                buttonPressed = true;
+            }
+            if (buttonPressed)
+            {
+                EditorUtility.SetDirty(selectedDialogue);
                 ClearPopup();
                 Repaint();
             }
