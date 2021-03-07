@@ -45,7 +45,7 @@ namespace CoreTools.Dialogue.Editor
 
         // Drawn last (on top)
         [NonSerialized]
-        public GraphNode selectedNode = null;
+        public GraphNode focusedNode = null;
 
 
         [MenuItem("Tools/DialogueEditor")]
@@ -95,7 +95,7 @@ namespace CoreTools.Dialogue.Editor
         {
             ClearConnectingNodes();
             ClearPopup();
-            selectedNode = null;
+            focusedNode = null;
         }
         private void OnGUI()
         {
@@ -105,7 +105,6 @@ namespace CoreTools.Dialogue.Editor
                 return;
             }
 
-            ProcessEvents();
 
             DrawHeaderToolbar();
 
@@ -123,7 +122,12 @@ namespace CoreTools.Dialogue.Editor
 
             EditorGUILayout.EndScrollView();
 
+            ProcessEvents();
+
             HandleRemoveNode();
+
+            if (dragginViewPort)
+                Repaint();
         }
         private void ProcessEvents()
         {
@@ -231,7 +235,7 @@ namespace CoreTools.Dialogue.Editor
         {
             foreach (GraphNode node in selectedDialogue.GetAllGraphNodes())
             {
-                if (node != selectedNode)
+                if (node != focusedNode)
                     nodeDrawer.DrawGraphNode(node);
 
                 if (node is ChoiceNode choiceNode)
@@ -250,8 +254,8 @@ namespace CoreTools.Dialogue.Editor
         }
         private void DrawSelectedNode()
         {
-            if (selectedNode != null)
-                nodeDrawer.DrawGraphNode(selectedNode);
+            if (focusedNode != null)
+                nodeDrawer.DrawGraphNode(focusedNode);
         }
         private void DrawSearchingNodeConnection()
         {
@@ -302,8 +306,6 @@ namespace CoreTools.Dialogue.Editor
             if (removeNode != null)
                 RemoveNode(removeNode);
         }
-
-
         private GraphNode GetNodeAtPoint(Vector2 mousePos)
         {
             // returns EntryNode OR the LAST node from GetNodes() that matches the position
@@ -321,14 +323,8 @@ namespace CoreTools.Dialogue.Editor
 
             return targetNode;
         }
-
-
-
-
-
         public void ClearConnectingNodes()
         {
-            Debug.Log("called");
             findingChildNode = null;
             findingParentNode = null;
             findingChildChoiceId = -1;
@@ -339,7 +335,7 @@ namespace CoreTools.Dialogue.Editor
         {
             GraphNode targetedNode = GetNodeAtPoint(Event.current.mousePosition + scrollPosition - new Vector2(0, EditorGUIUtility.singleLineHeight * 2 + 5));
             draggedNode = targetedNode;
-            selectedNode = targetedNode;
+            focusedNode = targetedNode;
 
             if (targetedNode != null)
             {
@@ -364,19 +360,18 @@ namespace CoreTools.Dialogue.Editor
                         {
                             choiceNode.SetChildOfChoice(findingChildChoiceId, targetedNode.UniqueID);
                         }
-                        ClearConnectingNodes();
-                        Repaint();
                     }
                     else
                     {
                         findingChildNode.ChildID = targetedNode.UniqueID;
+                    }
                         ClearConnectingNodes();
                         Repaint();
-                    }
                 }
             }
             else
             {
+                focusedNode = null;
                 dragginViewPort = true;
                 viewPortDragStartPoint = Event.current.mousePosition + scrollPosition;
                 if (findingChildNode != null)
@@ -407,7 +402,7 @@ namespace CoreTools.Dialogue.Editor
         private void OnRightClick()
         {
             ClearConnectingNodes();
-            selectedNode = null;
+            focusedNode = null;
             ClearPopup();
             Repaint();
         }
@@ -454,7 +449,7 @@ namespace CoreTools.Dialogue.Editor
             creationPopupPosition = Event.current.mousePosition + scrollPosition - new Vector2(0, EditorGUIUtility.singleLineHeight * 2);
             popupOpen = true;
             ClearConnectingNodes();
-            selectedNode = null;
+            focusedNode = null;
             Repaint();
         }
         private void DrawCreationPopup(Vector2 position)

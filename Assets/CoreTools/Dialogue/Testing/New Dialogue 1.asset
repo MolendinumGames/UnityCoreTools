@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 4842e648-2171-413f-87e3-01ed8ef720ff
   m_EditorClassIdentifier: 
   uniqueID: 4842e648-2171-413f-87e3-01ed8ef720ff
-  childID: 901efa71-4d03-44ee-afd6-1a1ee4f70e5b
+  childID: fa2fe543-842d-483c-9420-b906eca52703
   boxScroll: {x: 0, y: 0}
   text: Too bad!
   portrait: {fileID: 21300000, guid: a1ec2c0ddc0da634b85f0f465fec2d0d, type: 3}
@@ -21,8 +21,8 @@ MonoBehaviour:
   orientation: 1
   rect:
     serializedVersion: 2
-    x: 770
-    y: 337
+    x: 845
+    y: 333
     width: 300
     height: 180
 --- !u!114 &-5673897193055724606
@@ -38,7 +38,7 @@ MonoBehaviour:
   m_Name: 901efa71-4d03-44ee-afd6-1a1ee4f70e5b
   m_EditorClassIdentifier: 
   uniqueID: 901efa71-4d03-44ee-afd6-1a1ee4f70e5b
-  childID: 
+  childID: fa2fe543-842d-483c-9420-b906eca52703
   boxScroll: {x: 0, y: 0}
   text: Awesome! There you go.
   portrait: {fileID: 21300000, guid: a1ec2c0ddc0da634b85f0f465fec2d0d, type: 3}
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Name: 60db4481-fc54-4742-9f86-9a8bd16d05ee
   m_EditorClassIdentifier: 
   uniqueID: 60db4481-fc54-4742-9f86-9a8bd16d05ee
-  childID: 
+  childID: 901efa71-4d03-44ee-afd6-1a1ee4f70e5b
   rect:
     serializedVersion: 2
     x: 773
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: ad0bf0f6-70d8-47ed-83c6-0e8e377f87dd
   m_EditorClassIdentifier: 
   uniqueID: ad0bf0f6-70d8-47ed-83c6-0e8e377f87dd
-  childID: 60db4481-fc54-4742-9f86-9a8bd16d05ee
+  childID: 
   boxScroll: {x: 0, y: 0}
   text: Uhm...
   portrait: {fileID: 21300000, guid: c1b61b3a91732a747a8496fc75a13fe2, type: 3}

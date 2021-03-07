@@ -17,7 +17,7 @@ namespace CoreTools.Dialogue.Editor
         public GUIStyle nodeStyle;
         public GUIStyle entryStyle;
         public GUIStyle headerStyle;
-        private float oldLabelWidth;    
+        private float oldLabelWidth;
         public NodeDrawer(DialogueEditorWindow dialogueEditor)
         {
             this.dialogueEditor = dialogueEditor;
@@ -100,7 +100,7 @@ namespace CoreTools.Dialogue.Editor
             node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(IntChannelSO), false) as IntChannelSO;
             node.Value = EditorGUILayout.IntField("Value: ", node.Value);
             EditorGUIUtility.labelWidth = oldLabelWidth;
-            
+
             GUILayout.EndArea();
 
             DrawInConnector(node);
@@ -117,7 +117,7 @@ namespace CoreTools.Dialogue.Editor
             node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(BoolChannelSO), false) as BoolChannelSO;
             node.Value = EditorGUILayout.Toggle("Value: ", node.Value);
             EditorGUIUtility.labelWidth = oldLabelWidth;
-            
+
             GUILayout.EndArea();
 
             DrawInConnector(node);
@@ -167,13 +167,11 @@ namespace CoreTools.Dialogue.Editor
 
             node.Text = DrawDialogueBox(node);
 
-            ChoiceField[] choices = node.GetAllChoices().ToArray();
-            string[] newChoiceTexts = new string[node.ChoiceAmount];
             int toRemoveChoice = -1;
-            for (int i = 0; i < choices.Length; i++)
+            for (int i = 0; i < node.ChoiceAmount; i++)
             {
-                GUILayout.BeginHorizontal(EditorStyles.helpBox, 
-                                          GUILayout.Height(EditorGUIUtility.singleLineHeight), 
+                GUILayout.BeginHorizontal(EditorStyles.helpBox,
+                                          GUILayout.Height(EditorGUIUtility.singleLineHeight),
                                           GUILayout.Width(node.NodeRect.width - 32f));
 
                 if (GUILayout.Button("X", GUILayout.Width(EditorGUIUtility.singleLineHeight)))
@@ -181,24 +179,14 @@ namespace CoreTools.Dialogue.Editor
                     toRemoveChoice = i;
                 }
 
-                GUILayout.Label(i.ToString(), GUILayout.Width(16f));
-                newChoiceTexts[i] = EditorGUILayout.TextField(GUIContent.none, choices[i].text);
+                GUILayout.Label(i.ToString(), GUILayout.Width(18f));
+                string newText = EditorGUILayout.TextField(GUIContent.none, node.GetTextOfChoice(i));
+                node.SetTextOfChoice(i, newText);
 
                 GUILayout.EndHorizontal();
                 GUILayout.Space(2f);
             }
 
-
-
-            for (int i = 0; i < choices.Length; i++)
-            {
-                if (choices[i].text != newChoiceTexts[i])
-                {
-                    Undo.RecordObject(node, "Changed choices of node");
-                choices[i].text = newChoiceTexts[i];
-                    EditorUtility.SetDirty(node);
-                }
-            }
             if (toRemoveChoice >= 0)
             {
                 node.RemoveChoice(toRemoveChoice);
@@ -219,18 +207,13 @@ namespace CoreTools.Dialogue.Editor
         }
         private void DrawStandardNode(DialogueNode node)
         {
-            // Setup
             GUILayout.BeginArea(node.NodeRect, nodeStyle);
-
             EditorGUIUtility.labelWidth = oldLabelWidth * .5f;
-            //
 
             DrawHeader(node);
-
             GUILayout.Space(1f);
 
             GUILayout.BeginHorizontal();
-
             node.Portrait = DrawIconField(node);
 
             GUILayout.BeginVertical();
@@ -238,7 +221,6 @@ namespace CoreTools.Dialogue.Editor
             node.Orientation = (DialogueOrientation)EditorGUILayout.EnumPopup(node.Orientation);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
-
             GUILayout.Space(1f);
 
             node.Text = DrawDialogueBox(node);
@@ -247,60 +229,41 @@ namespace CoreTools.Dialogue.Editor
 
             EditorGUIUtility.labelWidth = oldLabelWidth;
 
-            // Connectors
             DrawInConnector(node);
             DrawOutConnector(node);
         }
         #endregion
 
-
-
-
-        //private void DrawButtonBar(GraphNode node)
-        //{
-        //    EditorGUILayout.BeginHorizontal();
-        //    int buttonWidth = Mathf.FloorToInt(node.NodeRect.width / 3) - 13;
-
-        //    if (GUILayout.Button("Reset",EditorStyles.miniButtonLeft, GUILayout.Width(buttonWidth)))
-        //    {
-                
-        //    }
-        //    if (GUILayout.Button("Delete", EditorStyles.miniButtonMid,GUILayout.Width(buttonWidth)))
-        //    {
-        //        dialogueEditor.MarkNodeToRemove(node);
-        //    }
-        //    if (GUILayout.Button("Add Child", EditorStyles.miniButtonRight,GUILayout.Width(buttonWidth)))
-        //    {
-        //        dialogueEditor.MarkAsCreationNode(node);
-        //    }
-
-        //    EditorGUILayout.EndHorizontal();
-        //}
-
         private void GenerateStyles()
         {
-            nodeStyle = new GUIStyle();
+            nodeStyle = new GUIStyle()
+            {
+                padding = new RectOffset(20, 20, 15, 15),
+                border = new RectOffset(33, 33, 33, 33),
+            };
             nodeStyle.normal.background = EditorGUIUtility.Load("node0") as Texture2D;
             nodeStyle.normal.textColor = Color.white;
-            nodeStyle.padding = new RectOffset(20, 20, 15,15);
-            nodeStyle.border = new RectOffset(33, 33, 33, 33);
 
-            entryStyle = new GUIStyle();
+            entryStyle = new GUIStyle()
+            {
+                border = new RectOffset(22, 22, 22, 22),
+                padding = new RectOffset(20, 20, 15, 15),
+                alignment = TextAnchor.MiddleCenter,
+            };
             entryStyle.normal.textColor = Color.white;
             entryStyle.normal.background = EditorGUIUtility.Load("node3") as Texture2D;
-            entryStyle.border = new RectOffset(22, 22, 22, 22);
-            entryStyle.padding = new RectOffset(20, 20, 15, 15);
-            entryStyle.alignment = TextAnchor.MiddleCenter;
             entryStyle.fontSize *= 2;
 
             // setting ehader style here based on EditorStyles.boldLabel will cause NullRef
-            // create new headerstyle inside DraHeader instead
+            // create new headerstyle inside DrawHeader instead
         }
 
         private void DrawHeader(GraphNode node)
         {
-            headerStyle = new GUIStyle(EditorStyles.boldLabel);
-            headerStyle.alignment = TextAnchor.UpperLeft;
+            headerStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.UpperLeft
+            };
             string headerName = node.GetType().GetLastTypeAsString();
 
             GUILayout.BeginHorizontal();
@@ -360,28 +323,26 @@ namespace CoreTools.Dialogue.Editor
 
             if (GUI.Button(buttonRect, GUIContent.none, style))
             {
-                //if (dialogueEditor.findingChildNode != null)
-                //{
-                //    if (dialogueEditor.findingChildNode is ChoiceNode choiceNode)
-                //    {
-                //        int id = dialogueEditor.findingChildChoiceId;
-                //        choiceNode.GetAllChoices()[id].childId = node.UniqueID;
-                //    }
-                //    else
-                //    {
-                //        dialogueEditor.findingChildNode.ChildID = node.UniqueID;
-                //    }
-                //    EditorUtility.SetDirty(dialogueEditor.selectedDialogue);
-                //    dialogueEditor.ClearConnectingNodes();
-                //    dialogueEditor.Repaint();
-                //}
-                //else
-                //{
-                    dialogueEditor.ClearConnectingNodes();
+                if (dialogueEditor.findingChildNode != null &&
+                    dialogueEditor.findingChildNode != node)
+                {
+                    if (dialogueEditor.findingChildNode is ChoiceNode choiceNode)
+                    {
+                        int id = dialogueEditor.findingChildChoiceId;
+                        choiceNode.GetAllChoices()[id].childId = node.UniqueID;
+                    }
+                    else
+                    {
+                        dialogueEditor.findingChildNode.ChildID = node.UniqueID;
+                    }
+                }
+                else
+                {
                     dialogueEditor.findingParentNode = node;
-                dialogueEditor.selectedNode = node;
-                    dialogueEditor.Repaint();
-                //}
+                    dialogueEditor.focusedNode = node;
+                }
+                dialogueEditor.ClearConnectingNodes();
+                dialogueEditor.Repaint();
             }
 
         }
@@ -397,20 +358,18 @@ namespace CoreTools.Dialogue.Editor
 
             if (GUI.Button(buttonRect, GUIContent.none, style))
             {
-                //if (dialogueEditor.findingParentNode != null)
-                //{
-                //    node.ChildID = dialogueEditor.findingParentNode.UniqueID;
-                //    EditorUtility.SetDirty(dialogueEditor.selectedDialogue);
-                //    dialogueEditor.ClearConnectingNodes();
-                //    dialogueEditor.Repaint();
-                //}
-                //else
-                //{
-                    dialogueEditor.ClearConnectingNodes();
+                if (dialogueEditor.findingParentNode != null &&
+                    dialogueEditor.findingParentNode != node)
+                {
+                    node.ChildID = dialogueEditor.findingParentNode.UniqueID;
+                }
+                else
+                {
                     dialogueEditor.findingChildNode = node;
-                dialogueEditor.selectedNode = node;
-                    dialogueEditor.Repaint();
-                //}
+                    dialogueEditor.focusedNode = node;
+                }
+                dialogueEditor.ClearConnectingNodes();
+                dialogueEditor.Repaint();
             }
         }
         private void DrawChoiceOutConnectors(ChoiceNode node)
@@ -429,25 +388,26 @@ namespace CoreTools.Dialogue.Editor
 
                 if (GUI.Button(buttonRect, GUIContent.none, style))
                 {
-                    //if (dialogueEditor.findingParentNode != null)
-                    //{
-                    //    node.GetAllChoices()[i].childId = dialogueEditor.findingParentNode.UniqueID;
-                    //    dialogueEditor.ClearConnectingNodes();
-                    //}
-                    //else
-                    //{
-                        dialogueEditor.ClearConnectingNodes();
+                    if (dialogueEditor.findingParentNode != null &&
+                        dialogueEditor.findingParentNode != node)
+                    {
+                        node.GetAllChoices()[i].childId = dialogueEditor.findingParentNode.UniqueID;
+                    }
+                    else
+                    {
                         dialogueEditor.findingChildChoiceId = i;
-                    dialogueEditor.selectedNode = node;
+                        dialogueEditor.focusedNode = node;
                         dialogueEditor.findingChildNode = node;
-                    //}
+                    }
+                    dialogueEditor.ClearConnectingNodes();
+                    dialogueEditor.Repaint();
                 }
             }
         }
         public Vector2 GetChoiceConnectorPosition(ChoiceNode node, int id)
         {
             Vector2 nodePos = node.NodeRect.position;
-            float xOffset = node.GetBasicRect().width - 17f;
+            float xOffset = node.GetBasicRect().width - 15f;
             float yOffset = node.GetBasicRect().height - 16f;
             Vector2 baselineOutPos = nodePos + new Vector2(xOffset, yOffset);
 
@@ -459,7 +419,7 @@ namespace CoreTools.Dialogue.Editor
         public Vector2 GetInConnectorPos(GraphNode node)
         {
             var nodePos = node.NodeRect.position;
-            var xOffset = 2f;
+            var xOffset = 0f;
             var yOffset = node.NodeRect.height * 0.5f - 5f;
             if (node is ChoiceNode choiceNode)
             {
@@ -472,7 +432,7 @@ namespace CoreTools.Dialogue.Editor
         public Vector2 GetOutConnectorPos(GraphNode node)
         {
             Vector2 nodePos = node.NodeRect.position;
-            float xOffset = node.NodeRect.width - 17f;
+            float xOffset = node.NodeRect.width - 15f;
             float yOffset = node.NodeRect.height * .5f - 5f;
             Vector2 target = nodePos + new Vector2(xOffset, yOffset);
             return target;
