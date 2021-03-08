@@ -92,8 +92,8 @@ MonoBehaviour:
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 1453
-    y: 319
+    x: 1404
+    y: 302
     width: 300
     height: 180
 --- !u!114 &892491220335917187
@@ -151,8 +151,8 @@ MonoBehaviour:
   childID: 901efa71-4d03-44ee-afd6-1a1ee4f70e5b
   rect:
     serializedVersion: 2
-    x: 773
-    y: 208
+    x: 798
+    y: 192
     width: 250
     height: 95
   channel: {fileID: 11400000, guid: 1ae4d178658e44141bfc2e6f11277ea9, type: 2}
@@ -189,7 +189,7 @@ MonoBehaviour:
     text: No, thank you.
   choiceRect:
     serializedVersion: 2
-    x: 429
-    y: 161
+    x: 442
+    y: 160
     width: 300
     height: 200
