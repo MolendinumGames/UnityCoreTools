@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+// For support, feedback and suggestions please conact me under:
+// contactsundiray@gmail.com
+// Check out my other content:
+// https://sundiray.itch.io/
+
 namespace SundirayTools
 {
     public class SwitcherTool : EditorWindow
@@ -11,7 +16,7 @@ namespace SundirayTools
         Transform firstT;
         Transform secondT;
         bool drawGiz = true;
-        SerializedObject sO;
+        Vector2 scrollPos;
 
         private static GUIContent windowTitle = new GUIContent("Switcher");
         [MenuItem("MyTools/Switcher")]
@@ -26,11 +31,14 @@ namespace SundirayTools
 
         private void OnGUI()
         {
+            scrollPos = GUILayout.BeginScrollView(scrollPos);
+
             drawGiz = EditorGUILayout.Toggle("Draw Connection: ", drawGiz);
 
             DrawTransformField(ref firstT);
             DrawTransformField(ref secondT);
 
+            GUILayout.BeginHorizontal();
             EditorGUI.BeginDisabledGroup(firstT == null || secondT == null || firstT == secondT);
             if (GUILayout.Button("Switch Positions"))
             {
@@ -44,6 +52,9 @@ namespace SundirayTools
                 secondT = null;
                 SceneView.RepaintAll();
             }
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndScrollView();
         }
 
         private void DrawTransformField(ref Transform t)
@@ -70,7 +81,6 @@ namespace SundirayTools
             firstT.position = second;
             secondT.position = first;
         }
-
         private void DrawConnection(SceneView sceneView)
         {
             if (!drawGiz)

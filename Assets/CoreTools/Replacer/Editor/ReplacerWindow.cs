@@ -1,25 +1,37 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace SundirayTools
+    // For support, feedback and suggestions please conact me under:
+    // contactsundiray@gmail.com
+    // Check out my other content:
+    // https://sundiray.itch.io/
+
+namespace CoreTools.Replacer
 {
     public class ReplacerWindow : EditorWindow
     {
-        bool moveToSelection = true;
-        bool keepParents = true;
-        bool dontDestory = false;
-        bool applyRotation = false;
-        bool applyScale = false;
-        Vector3 offset = Vector3.zero;
+        // target Prefab
+        private GameObject newGO;
 
-        GameObject newGO;
+        // Viewport
+        private Vector2 scrollPos = Vector2.zero;
+        static readonly GUIContent windowTitle = new GUIContent("Replacer Tool", 
+                                                                "Replace selected GameObjects with a Prefab.");
 
-        static GUIContent windowTitle = new GUIContent("Replacer Tool", "Replace selected GameObjects with a Prefab.");
+        // Parameters
+        private bool moveToSelection = true;
+        private bool keepParents = true;
+        private bool dontDestory = false;
+        private bool applyRotation = false;
+        private bool applyScale = false;
+        private bool applyTag = false;
+        private Vector3 offset = Vector3.zero;
 
-        [MenuItem("MyTools/Replacer")]
+        [MenuItem("Window/Replacer")]
         static void Init()
         {
             ReplacerWindow window = (ReplacerWindow)GetWindow(typeof(ReplacerWindow));
@@ -27,11 +39,15 @@ namespace SundirayTools
             window.Show();
         }
 
+        private void OnSelectionChange() => Repaint();
+        
         private void OnGUI()
         {
+            scrollPos = GUILayout.BeginScrollView(scrollPos);
+
             DrawHeader();
 
-            GUILayout.Label("Replace all GameObjects in your Selection with the target Prefab.");
+            GUILayout.Label("Replace selected GameObjects with a Prefab.");
 
             DrawSettings();
 
@@ -42,6 +58,8 @@ namespace SundirayTools
             EditorGUILayout.Space();
 
             DrawReplaceButton();
+
+            GUILayout.EndScrollView();
         }
         private void DrawHeader()
         {
@@ -58,13 +76,17 @@ namespace SundirayTools
             dontDestory = EditorGUILayout.Toggle("Don't Destroy Old", dontDestory);
             applyRotation = EditorGUILayout.Toggle("Keep Rotation:", applyRotation);
             applyScale = EditorGUILayout.Toggle("Keep Scale:", applyScale);
+            applyTag = EditorGUILayout.Toggle("Keep Tag: ", applyTag);
             offset = EditorGUILayout.Vector3Field("Offset All:", offset);
         }
 
         private void DrawReplaceButton()
         {
-            EditorGUI.BeginDisabledGroup(PrefabCheck());
-            if (GUILayout.Button("Replace"))
+            var targets = GetSelectedSceneGameObjects();
+
+            EditorGUI.BeginDisabledGroup(PrefabCheck() || targets.Count == 0);
+            string buttonTag = "Replace " + targets.Count.ToString();
+            if (GUILayout.Button(buttonTag))
             {
                 TryReplaceSelection();
             }
@@ -72,30 +94,33 @@ namespace SundirayTools
         }
         private void TryReplaceSelection()
         {
-            Transform[] selectedTransforms = Selection.GetTransforms(SelectionMode.OnlyUserModifiable | SelectionMode.Editable);
-            if (selectedTransforms.Length == 0)
+            var selection = GetSelectedSceneGameObjects();
+            if (selection.Count == 0)
             {
                 Debug.LogWarning("No editable GameObjects are selected!");
                 return;
             }
             List<GameObject> newSelectedObjects = new List<GameObject>();
-            foreach (var t in selectedTransforms)
+            foreach (var target in selection)
             {
                 GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(newGO);
                 Undo.RegisterCreatedObjectUndo(go, "Created Replacement Prefabs");
-                go.transform.position = t.position + offset;
+                go.transform.position = target.transform.position + offset;
 
                 if (applyRotation)
-                    go.transform.localRotation = t.transform.localRotation;
+                    go.transform.localRotation = target.transform.localRotation;
 
                 if (applyScale)
-                    go.transform.localScale = t.transform.localScale;
+                    go.transform.localScale = target.transform.localScale;
 
-                if (keepParents && t.parent != null)
-                    go.transform.SetParent(t.parent);
+                if (keepParents && target.transform.parent != null)
+                    go.transform.SetParent(target.transform.parent);
+
+                if (applyTag)
+                    go.tag = target.tag;
 
                 if (!dontDestory)
-                    Undo.DestroyObjectImmediate(t.gameObject);
+                    Undo.DestroyObjectImmediate(target);
 
                 if (moveToSelection)
                     newSelectedObjects.Add(go);
@@ -108,10 +133,17 @@ namespace SundirayTools
             if (newGO != null)
             {
                 PrefabAssetType pref = PrefabUtility.GetPrefabAssetType(newGO);
-                if (pref == PrefabAssetType.Regular | pref == PrefabAssetType.Model || pref == PrefabAssetType.Variant)
+                if (pref == PrefabAssetType.Regular || pref == PrefabAssetType.Model || pref == PrefabAssetType.Variant)
                     return false;
             }
             return true;
+        }
+        private List<GameObject> GetSelectedSceneGameObjects()
+        {
+            return Selection.GetTransforms(SelectionMode.OnlyUserModifiable | SelectionMode.Editable)
+                    .Where(t => t.gameObject.scene.IsValid())
+                    .Select(t => t.gameObject)
+                    .ToList();
         }
     }
 }
