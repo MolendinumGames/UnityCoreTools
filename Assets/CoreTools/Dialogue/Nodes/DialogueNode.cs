@@ -63,7 +63,7 @@ namespace CoreTools.Dialogue
 #endif
         }
         [SerializeField]
-        private DialogueOrientation orientation = DialogueOrientation.DownLeft;
+        private DialogueOrientation orientation = DialogueOrientation.Left;
         public DialogueOrientation Orientation
         {
             get => orientation;
@@ -90,7 +90,7 @@ namespace CoreTools.Dialogue
             portrait = null;
             ChildID = null;
             text = "";
-            orientation = DialogueOrientation.DownLeft;
+            orientation = DialogueOrientation.Left;
             EditorUtility.SetDirty(this);
         }
 #endif
