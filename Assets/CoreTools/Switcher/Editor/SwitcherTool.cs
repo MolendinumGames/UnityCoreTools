@@ -1,24 +1,31 @@
-﻿using System;
+﻿/* Copyright (c) 2021 - Christoph Römer. All rights reserved. 
+ * 
+ * For support, feedback and suggestions please conact me under:
+ * contactsundiray@gmail.com
+ * 
+ * Check out my other content:
+ * https://sundiray.itch.io/
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-// For support, feedback and suggestions please conact me under:
-// contactsundiray@gmail.com
-// Check out my other content:
-// https://sundiray.itch.io/
-
-namespace SundirayTools
+namespace CoreTools.CoreEditor
 {
     public class SwitcherTool : EditorWindow
     {
-        Transform firstT;
-        Transform secondT;
-        bool drawGiz = true;
-        Vector2 scrollPos;
+        // Parameters
+        private Transform firstT;
+        private Transform secondT;
 
-        private static GUIContent windowTitle = new GUIContent("Switcher");
+        // Viewport
+        private bool drawGiz = true;
+        private Vector2 scrollPos;
+        private static readonly GUIContent windowTitle = new GUIContent("Switcher");
+
         [MenuItem("MyTools/Switcher")]
         public static void OpenWindow()
         {
@@ -33,9 +40,14 @@ namespace SundirayTools
         {
             scrollPos = GUILayout.BeginScrollView(scrollPos);
 
+            DrawHeader();
+
             drawGiz = EditorGUILayout.Toggle("Draw Connection: ", drawGiz);
 
+            GUILayout.Label("Swap:", GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
             DrawTransformField(ref firstT);
+
+            GUILayout.Label("And: ");
             DrawTransformField(ref secondT);
 
             GUILayout.BeginHorizontal();
@@ -96,6 +108,16 @@ namespace SundirayTools
 
             if (firstT != null && secondT != null)
                 Handles.DrawLine(firstT.position, secondT.position);
+        }
+        private void DrawHeader()
+        {
+            GUIStyle headerStyle = new GUIStyle("WhiteLargeLabel")
+            {
+                alignment = TextAnchor.MiddleCenter
+            };
+            EditorGUILayout.LabelField("Switch Tool", headerStyle);
+
+            GUILayout.Label("Swap positions of two transforms.");
         }
     }
 

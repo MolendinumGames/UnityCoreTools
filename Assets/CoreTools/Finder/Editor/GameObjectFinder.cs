@@ -1,24 +1,35 @@
+/* Copyright (c) 2021 - Christoph Römer. All rights reserved. 
+ * 
+ * For support, feedback and suggestions please conact me under:
+ * contactsundiray@gmail.com
+ * 
+ * Check out my other content:
+ * https://sundiray.itch.io/
+ */
+
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.Linq;
 
 namespace CoreTools.CoreEditor
 {
-    public class SceneObjectFinder : EditorWindow
+    public class GameObjectFinder : EditorWindow
     {
-        
-        string targetName = "";
-        LayerMask layer;
-        int selectedIndex = 0;
-        Vector2 scrollPos = Vector2.zero;
+        // Parameters
+        private string targetName = "";
+        private int selectedIndex = 0;
+
+        // Viewport
+        private Vector2 scrollPos = Vector2.zero;
         private static readonly GUIContent header = new GUIContent("GO Finder", "Find GameObjects in the hierarchy.");
 
         [MenuItem("Window/Finder")]
         public static void Init()
         {
-            var window = GetWindow<SceneObjectFinder>();
+            var window = GetWindow<GameObjectFinder>();
             window.titleContent = header;
             window.Show();
         }
@@ -40,7 +51,6 @@ namespace CoreTools.CoreEditor
             GUILayout.EndHorizontal();
 
 
-
             GUILayout.Label("Name Contains: ");
             GUILayout.BeginHorizontal();
             targetName = GUILayout.TextField(targetName, GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
@@ -52,6 +62,7 @@ namespace CoreTools.CoreEditor
                     .ToArray();
             }
             GUILayout.EndHorizontal();
+
             GUILayout.EndScrollView();
         }
         private void DrawHeader()
@@ -60,10 +71,9 @@ namespace CoreTools.CoreEditor
             {
                 alignment = TextAnchor.MiddleCenter
             };
-            EditorGUILayout.LabelField("GameObject Finder", headerStyle);
+            GUILayout.Label("GameObject Finder", headerStyle);
+
+            GUILayout.Label("Search scene hierarchy for GameObejcts.");
         }
-
-        
-
     }
 }
