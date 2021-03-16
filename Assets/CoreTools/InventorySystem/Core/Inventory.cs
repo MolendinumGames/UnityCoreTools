@@ -7,12 +7,14 @@ namespace InventorySystem
 {
     public class Inventory : MonoBehaviour
     {
+        [SerializeField]
         [Tooltip("Max allowed size")]
-        [SerializeField] private int inventorySize;
+        private int inventorySize;
 
-        InventorySlot[] slots;
+        private InventorySlot[] slots;
 
-        [SerializeField] InventoryItem restrictTo;
+        [SerializeField]
+        private InventoryItem restrictTo;
 
         public event Action inventoryUpdated;
 
@@ -22,10 +24,8 @@ namespace InventorySystem
             SetUpInventory();
             OnAwake();
         }
-        protected virtual void OnAwake()
-        {
+        protected virtual void OnAwake() { }
 
-        }
         #endregion
         private void SetUpInventory()
         {
@@ -137,7 +137,7 @@ namespace InventorySystem
         protected void RaiseUpdateEvent() => inventoryUpdated?.Invoke();
 
         public bool HasRestriction() => restrictTo != null;
-        public bool ItemIsCorrectType(InventoryItem item) => restrictTo == null ? true : item.GetType() == restrictTo.GetType();
+        public bool ItemIsCorrectType(InventoryItem item) => restrictTo == null || item.GetType() == restrictTo.GetType();
         public int SetSlot(int slot, InventoryItem item, int amount)
         {
             slots[slot].Reset();

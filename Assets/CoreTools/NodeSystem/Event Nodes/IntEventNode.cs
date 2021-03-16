@@ -4,7 +4,7 @@ using UnityEngine;
 using CoreTools;
 using UnityEditor;
 
-namespace CoreTools.Dialogue
+namespace CoreTools.NodeSystem
 {
     public class IntEventNode : EventNode
     {

@@ -3,33 +3,176 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CoreTools;
+using System.Linq;
 using TMPro;
 
 namespace CoreTools.Dialogue
 {
     public class DialogueUIController : MonoBehaviour
     {
-        [Header("DownLeft Layout")]
+        private DialogueSO viewedDialogue;
+        private string viewedNode;
+        private List<Button> options = new List<Button>();
+
+        [SerializeField]
+        private GameObject dialogueParent;
+
+        [Header("Layout Elements")]
         [SerializeField]
         private TextMeshProUGUI textArea;
+        [SerializeField]
         private TextMeshProUGUI speakerField;
-        private Image speakerIcon;
-        private TextMeshPro optionArea;
+
+        [SerializeField]
+        private bool orientateSpeaker = false;
+
+        [SerializeField]
+        private Image lefticon;
+        [SerializeField]
+        private Image rightIcon;
+        [SerializeField]
+        private GameObject optionArea;
+        [SerializeField]
         private GameObject optionButtonPrefab;
-        private List<Button> options = new List<Button>();
+        [SerializeField]
+        private Button nextButton;
+
         public void AddOption(int index, string text)
         {
             Button button = Instantiate(optionButtonPrefab, optionArea.transform).GetComponent<Button>();
             options.Add(button);
             button.GetComponentInChildren<TextMeshProUGUI>().text = text;
-            // add listener to button
-
+            button.onClick.AddListener(() => Next(index));
         }
 
 
         public void ProcessDialogue(DialogueSO dialogue)
         {
+            ClearUI();
+            if (dialogue == null)
+            {
+                Debug.LogError("Null Dialogue has been pushed!");
+            }
+            viewedDialogue = dialogue;
+            var node = dialogue.GetStartNode();
+            if (node != null)
+            {
+                ProcessNode(node);
+            }
+            else
+            {
+                Debug.LogWarning($"Empty but non null Dialogue has been pushed! Dialogue: {dialogue.name}");
+            }
+        }
+        private void ProcessNode(DialogueNode node)
+        {
+            ClearUI();
+            viewedNode = node.UniqueID;
+            nextButton.gameObject.SetActive(true);
 
+            if (node.Orientation == DialogueOrientation.Left)
+            {
+                if (!string.IsNullOrWhiteSpace(node.Speaker))
+                {
+                    speakerField.gameObject.SetActive(true);
+                    speakerField.text = node.Speaker;
+                    if(orientateSpeaker)
+                        speakerField.alignment = TMPro.TextAlignmentOptions.MidlineLeft;
+                    
+                }
+
+                if (node.Portrait != null)
+                {
+                    lefticon.transform.parent.gameObject.SetActive(true);
+                    lefticon.sprite = node.Portrait;
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(node.Speaker))
+                {
+                    speakerField.gameObject.SetActive(true);
+                    speakerField.text = node.Speaker;
+                    if (orientateSpeaker)
+                        speakerField.alignment = TMPro.TextAlignmentOptions.MidlineRight;
+                }
+
+                if (node.Portrait != null)
+                {
+                    rightIcon.transform.parent.gameObject.SetActive(true);
+                    rightIcon.sprite = node.Portrait;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(node.Text))
+            {
+                textArea.gameObject.SetActive(true);
+                textArea.text = node.Text;
+            }
+
+            if (node is ChoiceNode choiceNode)
+            {
+                if (choiceNode.ChoiceAmount > 0)
+                {
+                    nextButton.gameObject.SetActive(false);
+                    optionArea.SetActive(true);
+                    string[] choices = choiceNode.GetAllChoiceTexts();
+                    for (int i = 0; i < choiceNode.ChoiceAmount; i++)
+                    {
+                        AddOption(i, choices[i]);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"Choice Node pushed without choices!");
+                    // ChoiceNode.Text will still be displayed
+                    // but Next-button will remain active to proceed
+                }
+            }
+        }
+        public void Next()
+        {
+            var node = viewedDialogue.Next(viewedNode);
+            if (node == null)
+            {
+                CloseDialogue();
+            }
+            else
+            {
+                viewedNode = node.UniqueID;
+                ProcessNode(node);
+            }
+        }
+        private void Next(int choice)
+        {
+            var node = viewedDialogue.Next(viewedNode, choice);
+            if (node == null)
+                CloseDialogue();
+            else
+            {
+                viewedNode = node.UniqueID;
+                ProcessNode(node);
+            }
+        }
+        private void CloseDialogue()
+        {
+            ClearUI();
+            dialogueParent.SetActive(false);
+            // Reenable player controls
+        }
+        private void ClearUI()
+        {
+            foreach (GameObject option in options.Select( o => o.gameObject))
+            {
+                Destroy(option);
+            }
+            options.Clear();
+
+            textArea.text = "";
+            textArea.gameObject.SetActive(false);
+            speakerField.gameObject.SetActive(false);
+            lefticon.transform.parent.gameObject.SetActive(false);
+            rightIcon.transform.parent.gameObject.SetActive(false);
         }
     }
 }

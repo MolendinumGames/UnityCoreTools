@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using CoreTools;
 
-namespace CoreTools.Dialogue
+namespace CoreTools.NodeSystem
 {
     public class FloatEventNode : EventNode
     {

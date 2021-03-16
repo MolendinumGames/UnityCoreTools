@@ -5,54 +5,121 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System;
+using CoreTools.NodeSystem;
 
 namespace CoreTools
 {
     [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue")]
-    public class DialogueSO : ScriptableObject, ISerializationCallbackReceiver
+    public class DialogueSO : NodeHolder/*, ISerializationCallbackReceiver*/
     {
-        [SerializeField]
-        List<GraphNode> allNodes = new List<GraphNode>();
+        //[SerializeField]
+        //List<GraphNode> allNodes = new List<GraphNode>();
 
         //[SerializeField]
-        //List<DialogueNode> dialogueNodes = new List<DialogueNode>();
+        //Dictionary<string, GraphNode> nodeLookup = new Dictionary<string, GraphNode>();
 
         //[SerializeField]
-        //List<EventNode> eventNodes = new List<EventNode>();
+        //DialogueEntryNode entryNode;
 
-        [SerializeField]
-        Dictionary<string, GraphNode> nodeLookup = new Dictionary<string, GraphNode>();
+        //private void OnValidate()
+        //{
+        //    // will not get called in final build!
+        //    this.name = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(this));
+        //    PopulateNodeLookup();
+        //}
 
-        [SerializeField]
-        EntryNode entryNode;
+        //private void PopulateNodeLookup()
+        //{
+        //    nodeLookup.Clear();
+        //    foreach (GraphNode node in GetAllGraphNodes())
+        //    {
+        //        nodeLookup[node.UniqueID] = node;
+        //    }
+        //}
 
-        private void OnValidate()
+        public DialogueNode GetStartNode()
         {
-            // will not get called in final build!
-            this.name = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(this));
-            PopulateNodeLookup();
+            GraphNode currentNode = GetEntryNode();
+            return GetNextDialogue(currentNode);
         }
-
-        private void PopulateNodeLookup()
+        public DialogueNode Next(string currentId)
         {
-            nodeLookup.Clear();
-            foreach (GraphNode node in GetAllGraphNodes())
+            GraphNode currentNode = GetAnyGraphNode(currentId);
+            if (currentNode != null)
             {
-                nodeLookup[node.UniqueID] = node;
+                if (currentNode is ChoiceNode)
+                {
+                    Debug.LogWarning($"Next called on choice node without index being passed in! Dialogue: {this.name}. NodeID{currentId}.");
+                    return Next(currentId, 0);
+                }
+                else return GetNextDialogue(currentNode);
             }
+            else
+            {
+                Debug.LogWarning($"Cannot current node. Dialogue: {this.name}. CurrentID: {currentId}. Returning null.");
+                return null;
+            }
+        }
+        public DialogueNode Next(string currentId, int choice)
+        {
+            ChoiceNode currentNode = GetAnyGraphNode(currentId) as ChoiceNode;
+            if (currentNode != null)
+            {
+                if (choice >= 0 && choice < currentNode.ChoiceAmount)
+                {
+                    string childId = currentNode.GetChildOfChoice(choice);
+                    var childNode = GetAnyGraphNode(childId);
+                    if (childNode == null)
+                    {
+                        return null;
+                    }
+                    else if (childNode is EventNode e)
+                    {
+                        e.Raise();
+                        return GetNextDialogue(e);
+                    }
+                    else return childNode as DialogueNode;
+                }
+                else return null;
+            }
+            else
+            {
+                return Next(currentId);
+            }
+        }
+        private DialogueNode GetNextDialogue(GraphNode fromNode)
+        {
+            GraphNode currentNode = fromNode;
+            DialogueNode nextNode = null;
+            while (nextNode == null)
+            {
+                currentNode = GetChildNode(currentNode);
+
+                if (currentNode == null)
+                    return null;
+                else if (currentNode is DialogueNode dNode)
+                {
+                    nextNode = dNode;
+                }
+                else if (currentNode is EventNode eventNode)
+                {
+                    eventNode.Raise();
+                }
+            }
+            return nextNode;
         }
 
         #region GetNodes Methodes
-        public IEnumerable<GraphNode> GetAllGraphNodes() => allNodes;
-        public GraphNode GetAnyGraphNode(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                return null;
-            if (nodeLookup.ContainsKey(id))
-                return nodeLookup[id];
-            else return null;
-        }
-        public EntryNode GetEntryNode() => entryNode;
+        //public IEnumerable<GraphNode> GetAllGraphNodes() => allNodes;
+        //public GraphNode GetAnyGraphNode(string id)
+        //{
+        //    if (string.IsNullOrEmpty(id))
+        //        return null;
+        //    if (nodeLookup.ContainsKey(id))
+        //        return nodeLookup[id];
+        //    else return null;
+        //}
+        //public DialogueEntryNode GetEntryNode() => entryNode;
         public DialogueNode GetDialogueNode(string id)
         {
             if (nodeLookup.ContainsKey(id))
@@ -67,24 +134,26 @@ namespace CoreTools
         }
         public GraphNode GetChildNode(GraphNode node)
         {
-            if (string.IsNullOrEmpty(node.ChildID))
+            string childId = (node as ISingleChild).ChildID;
+            if (string.IsNullOrEmpty(childId))
                 return null;
-            if (nodeLookup.ContainsKey(node.ChildID))
-                return nodeLookup[node.ChildID];
+            if (nodeLookup.ContainsKey(childId))
+                return nodeLookup[childId];
             else return null;
         }
         public IEnumerable<GraphNode> GetAllParents(GraphNode node)
         {
             string id = node.UniqueID;
-            foreach (GraphNode parent in GetAllGraphNodes())
+            foreach (GraphNode checkNode in GetAllGraphNodes())
             {
-                if (node is ChoiceNode choiceNode)
+                ISingleChild parent = (ISingleChild)checkNode;
+                if (checkNode is ChoiceNode choiceNode)
                 {
                     if (choiceNode.GetAllChildren().Contains(node.UniqueID))
                         yield return choiceNode;
                 }
                 if (parent.ChildID.Equals(id))
-                    yield return parent;
+                    yield return checkNode;
             }
         }
         #endregion
@@ -100,7 +169,7 @@ namespace CoreTools
         }
         public bool HasValidParent(GraphNode node)
         {
-            if (node is EntryNode)
+            if (node is DialogueEntryNode)
                 return false;
 
             string id = node.UniqueID;
@@ -114,7 +183,7 @@ namespace CoreTools
                     if (choiceNode.GetAllChildren().Contains(id))
                         return true;
                 }
-                else if (parent.ChildID == id)
+                else if (((ISingleChild)parent).ChildID == id)
                     return true;
             }
             return false;
@@ -123,15 +192,13 @@ namespace CoreTools
 
         #region Editor functionality
 #if UNITY_EDITOR
-        private void SetupRootNode()
+        protected override void SetupRootNode()
         {
             if (entryNode == null)
             {
-                entryNode = CreateInstance<EntryNode>();
+                entryNode = CreateInstance<DialogueEntryNode>();
+                SetupNewNode(entryNode);
                 entryNode.name = "EntryNode";
-                entryNode.UniqueID = Guid.NewGuid().ToString();
-                allNodes.Add(entryNode);
-                PopulateNodeLookup();
             }
         }
 
@@ -145,8 +212,7 @@ namespace CoreTools
         public DialogueNode CreateDialogueNode(GraphNode parent)
         {
             DialogueNode newNode = CreateDialogueNode();
-            if (parent != null)
-                parent.ChildID = newNode.UniqueID;
+            AddChildToParent(parent, newNode.UniqueID);
             return newNode;
         }
 
@@ -160,150 +226,150 @@ namespace CoreTools
         public ChoiceNode CreateChoiceNode(GraphNode parent)
         {
             ChoiceNode newNode = CreateChoiceNode();
-            if (parent != null)
-                parent.ChildID = newNode.UniqueID;
+            AddChildToParent(parent, newNode.UniqueID);
             return newNode;
         }
 
-        public VoidEventNode CreateVoidEventNode()
-        {
-            VoidEventNode newNode = CreateInstance<VoidEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New Void Node");
-            SetupNewNode(newNode);
-            return newNode;
+        //public VoidEventNode CreateVoidEventNode()
+        //{
+        //    VoidEventNode newNode = CreateInstance<VoidEventNode>();
+        //    Undo.RegisterCreatedObjectUndo(newNode, "Created New Void Node");
+        //    SetupNewNode(newNode);
+        //    return newNode;
             
-        }
-        public VoidEventNode CreateVoidEventNode(GraphNode parent)
-        {
-            VoidEventNode newNode = CreateVoidEventNode();
-            if (parent != null)
-                parent.ChildID = newNode.UniqueID;
-            return newNode;
-        }
+        //}
+        //public VoidEventNode CreateVoidEventNode(GraphNode parent)
+        //{
+        //    VoidEventNode newNode = CreateVoidEventNode();
+        //    if (parent != null)
+        //        ((ISingleChild)parent).ChildID = newNode.UniqueID;
+        //    return newNode;
+        //}
 
-        public BoolEventNode CreateBoolEventNode()
-        {
-            BoolEventNode newNode = CreateInstance<BoolEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New Int Node");
-            SetupNewNode(newNode);
-            return newNode;
+        //public BoolEventNode CreateBoolEventNode()
+        //{
+        //    BoolEventNode newNode = CreateInstance<BoolEventNode>();
+        //    Undo.RegisterCreatedObjectUndo(newNode, "Created New Int Node");
+        //    SetupNewNode(newNode);
+        //    return newNode;
 
-        }
-        public BoolEventNode CreateBoolEventNode(GraphNode parent)
-        {
-            BoolEventNode newNode = CreateBoolEventNode();
-            if (parent != null)
-                parent.ChildID = newNode.UniqueID;
-            return newNode;
-        }
+        //}
+        //public BoolEventNode CreateBoolEventNode(GraphNode parent)
+        //{
+        //    BoolEventNode newNode = CreateBoolEventNode();
+        //    if (parent != null)
+        //        ((ISingleChild)parent).ChildID = newNode.UniqueID;
+        //    return newNode;
+        //}
 
-        public IntEventNode CreateIntEventNode()
-        {
-            IntEventNode newNode = CreateInstance<IntEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New Int Node");
-            SetupNewNode(newNode);
-            return newNode;
+        //public IntEventNode CreateIntEventNode()
+        //{
+        //    IntEventNode newNode = CreateInstance<IntEventNode>();
+        //    Undo.RegisterCreatedObjectUndo(newNode, "Created New Int Node");
+        //    SetupNewNode(newNode);
+        //    return newNode;
 
-        }
-        public IntEventNode CreateIntEventNode(GraphNode parent)
-        {
-            IntEventNode newNode = CreateIntEventNode();
-            if (parent != null)
-                parent.ChildID = newNode.UniqueID;
-            return newNode;
-        }
+        //}
+        //public IntEventNode CreateIntEventNode(GraphNode parent)
+        //{
+        //    IntEventNode newNode = CreateIntEventNode();
+        //    if (parent != null)
+        //        ((ISingleChild)parent).ChildID = newNode.UniqueID;
+        //    return newNode;
+        //}
 
-        public FloatEventNode CreateFloatEventNode()
-        {
-            FloatEventNode newNode = CreateInstance<FloatEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New Float Node");
-            SetupNewNode(newNode);
-            return newNode;
+        //public FloatEventNode CreateFloatEventNode()
+        //{
+        //    FloatEventNode newNode = CreateInstance<FloatEventNode>();
+        //    Undo.RegisterCreatedObjectUndo(newNode, "Created New Float Node");
+        //    SetupNewNode(newNode);
+        //    return newNode;
 
-        }
-        public FloatEventNode CreateFloatEventNode(GraphNode parent)
-        {
-            FloatEventNode newNode = CreateFloatEventNode();
-            if (parent != null)
-                parent.ChildID = newNode.UniqueID;
-            return newNode;
-        }
+        //}
+        //public FloatEventNode CreateFloatEventNode(GraphNode parent)
+        //{
+        //    FloatEventNode newNode = CreateFloatEventNode();
+        //    if (parent != null)
+        //        ((ISingleChild)parent).ChildID = newNode.UniqueID;
+        //    return newNode;
+        //}
 
-        public StringEventNode CreateStringEventNode()
-        {
-            StringEventNode newNode = CreateInstance<StringEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New String Node");
-            SetupNewNode(newNode);
-            return newNode;
+        //public StringEventNode CreateStringEventNode()
+        //{
+        //    StringEventNode newNode = CreateInstance<StringEventNode>();
+        //    Undo.RegisterCreatedObjectUndo(newNode, "Created New String Node");
+        //    SetupNewNode(newNode);
+        //    return newNode;
 
-        }
-        public StringEventNode CreateStringEventNode(GraphNode parent)
-        {
-            StringEventNode newNode = CreateStringEventNode();
-            if (parent != null)
-                parent.ChildID = newNode.UniqueID;
-            return newNode;
-        }
+        //}
+        //public StringEventNode CreateStringEventNode(GraphNode parent)
+        //{
+        //    StringEventNode newNode = CreateStringEventNode();
+        //    if (parent != null)
+        //        ((ISingleChild)parent).ChildID = newNode.UniqueID;
+        //    return newNode;
+        //}
 
 
-        public void RemoveNode(GraphNode node)
-        {
+        //public void RemoveNode(GraphNode node)
+        //{
            
-            Undo.RecordObject(this, "Removed Node");
-            string removeId = node.UniqueID;
-            allNodes.Remove(node);
-            nodeLookup.Remove(removeId);
-            ClearFromAllChildren(removeId);
-            Undo.DestroyObjectImmediate(node);
-            PopulateNodeLookup();
-            EditorUtility.SetDirty(this);
-        }
-        private void ClearFromAllChildren(string id)
-        {
-            foreach (GraphNode node in GetAllGraphNodes())
-            {
-                if (node is ChoiceNode choiceNode)
-                    choiceNode.ClearIdFromChoices(id);
-                else if (node.ChildID == id)
-                    node.ChildID = null;
-            }
-        }
-        private void SetupNewNode(GraphNode node)
-        {
-            node.UniqueID = Guid.NewGuid().ToString();
-            node.name = node.UniqueID;
+        //    Undo.RecordObject(this, "Removed Node");
+        //    string removeId = node.UniqueID;
+        //    allNodes.Remove(node);
+        //    nodeLookup.Remove(removeId);
+        //    ClearFromAllChildren(removeId);
+        //    Undo.DestroyObjectImmediate(node);
+        //    PopulateNodeLookup();
+        //    EditorUtility.SetDirty(this);
+        //}
+        //private void ClearFromAllChildren(string id)
+        //{
+        //    foreach (GraphNode node in GetAllGraphNodes())
+        //    {
+        //        ISingleChild parent = (ISingleChild)node;
+        //        if (node is ChoiceNode choiceNode)
+        //            choiceNode.ClearIdFromChoices(id);
+        //        else if (parent.ChildID == id)
+        //            parent.ChildID = null;
+        //    }
+        //}
+        //private void SetupNewNode(GraphNode node)
+        //{
+        //    node.UniqueID = Guid.NewGuid().ToString();
+        //    node.name = node.UniqueID;
 
-            Undo.RecordObject(this, "Created Node");
+        //    Undo.RecordObject(this, "Created Node");
 
-            allNodes.Add(node);
-            PopulateNodeLookup();
-            EditorUtility.SetDirty(this);
-        }
+        //    allNodes.Add(node);
+        //    PopulateNodeLookup();
+        //    EditorUtility.SetDirty(this);
+        //}
 #endif
         #endregion
 
-        #region Serialization
-        public void OnBeforeSerialize()
-        {
-#if UNITY_EDITOR
-            SetupRootNode();
-            if (AssetDatabase.GetAssetPath(this) != "")
-            {
-                foreach (GraphNode node in GetAllGraphNodes())
-                {
-                    if (AssetDatabase.GetAssetPath(node) == "")
-                    {
-                        AssetDatabase.AddObjectToAsset(node, this);
-                    }
-                }
-            }
-#endif
-        }
+//        #region Serialization
+//        public void OnBeforeSerialize()
+//        {
+//#if UNITY_EDITOR
+//            SetupRootNode();
+//            if (AssetDatabase.GetAssetPath(this) != "")
+//            {
+//                foreach (GraphNode node in GetAllGraphNodes())
+//                {
+//                    if (AssetDatabase.GetAssetPath(node) == "")
+//                    {
+//                        AssetDatabase.AddObjectToAsset(node, this);
+//                    }
+//                }
+//            }
+//#endif
+//        }
 
-        public void OnAfterDeserialize()
-        {
+//        public void OnAfterDeserialize()
+//        {
 
-        }
-        #endregion
+//        }
+//        #endregion
     }
 }

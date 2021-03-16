@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace CoreTools.Dialogue
+namespace CoreTools.NodeSystem
 {
     public abstract class GraphNode : ScriptableObject
     {
@@ -23,21 +23,21 @@ namespace CoreTools.Dialogue
             }
         }
 
-        [SerializeField]
-        string childID;
-        public virtual string ChildID
-        {
-            get => childID;
-            set
-            {
-                if (childID != value)
-                {
-                    Undo.RecordObject(this, "Changed Dialogue Node childID");
-                    childID = value;
-                    EditorUtility.SetDirty(this);
-                }
-            }
-        }
+        //[SerializeField]
+        //string childID;
+        //public virtual string ChildID
+        //{
+        //    get => childID;
+        //    set
+        //    {
+        //        if (childID != value)
+        //        {
+        //            Undo.RecordObject(this, "Changed Dialogue Node childID");
+        //            childID = value;
+        //            EditorUtility.SetDirty(this);
+        //        }
+        //    }
+        //}
 
 #if UNITY_EDITOR
         public abstract Rect NodeRect { get; set; }
@@ -50,6 +50,7 @@ namespace CoreTools.Dialogue
             NodeRect = new Rect(newPos, NodeRect.size);
             EditorUtility.SetDirty(this);
         }
+        public abstract Rect GetBaseRect();
         public abstract void Reset();
 #endif
     }

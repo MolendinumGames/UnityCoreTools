@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using CoreTools;
+using CoreTools.NodeSystem;
 
 namespace CoreTools.Dialogue
 {
@@ -27,7 +28,7 @@ namespace CoreTools.Dialogue
         {
             get => choices.Count;
         }
-        public List<string> GetAllChildren() => choices.Select(choice => choice.childId).ToList();
+        public List<string> GetAllChildren() => choices.Select(choice => ((ISingleChild)choice).ChildID).ToList();
 
         public List<ChoiceField> GetAllChoices() => choices;
 
@@ -37,7 +38,7 @@ namespace CoreTools.Dialogue
         }
         public string GetChildOfChoice(int choiceId)
         {
-            return choices[choiceId].childId;
+            return ((ISingleChild)choices[choiceId]).ChildID;
         }
         public string GetTextOfChoice(int id)
         {
@@ -62,10 +63,11 @@ namespace CoreTools.Dialogue
         }
         public void SetChildOfChoice(int id, string childId)
         {
-            if (choices[id].childId != childId)
+            ISingleChild choiceAsParent = (ISingleChild)choices[id];
+            if (choiceAsParent.ChildID != childId)
             {
                 Undo.RecordObject(this, "Changed Choices child of node");
-                choices[id].childId = childId;
+                choiceAsParent.ChildID = childId;
                 EditorUtility.SetDirty(this);
             }
         }
@@ -83,8 +85,9 @@ namespace CoreTools.Dialogue
             Undo.RecordObject(this, "Removed child ID from all choices");
             foreach (ChoiceField field in GetAllChoices())
             {
-                if (field.childId == id)
-                    field.childId = null;
+                ISingleChild fieldAsParent = (ISingleChild)field;
+                if (field.ChildID == id)
+                    field.ChildID = null;
             }
             EditorUtility.SetDirty(this);
         }
@@ -110,7 +113,7 @@ namespace CoreTools.Dialogue
             Vector2 extraSize = new Vector2(0, extra);
             return new Rect(choiceRect.position, choiceRect.size + extraSize);
         }
-        public Rect GetBasicRect()
+        public override Rect GetBaseRect()
         {
             return choiceRect;
         }

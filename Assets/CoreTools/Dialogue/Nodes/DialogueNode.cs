@@ -2,12 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using CoreTools.NodeSystem;
 
 namespace CoreTools.Dialogue
 {
-    public class DialogueNode : GraphNode
+    public class DialogueNode : GraphNode, ISingleChild
     {
-        public Vector2 boxScroll = Vector2.zero;
+
+        [SerializeField]
+        string childID;
+        public virtual string ChildID
+        {
+            get => childID;
+#if UNITY_EDITOR
+            set
+            {
+                if (childID != value)
+                {
+                    Undo.RecordObject(this, "Changed Dialogue Node childID");
+                    childID = value;
+                    EditorUtility.SetDirty(this);
+                }
+            }
+#endif
+        }
+        public bool HasChild() => !string.IsNullOrWhiteSpace(childID);
 
         [SerializeField]
         private string text = "New Dialogue Text";
@@ -83,6 +102,7 @@ namespace CoreTools.Dialogue
         [SerializeField]
         protected Rect rect = new Rect(10, 10, 300, 180);
         public override Rect NodeRect { get => rect; set => rect = value; }
+        public override Rect GetBaseRect() => rect;
         public override void Reset()
         {
             Undo.RecordObject(this, "Reset DialogueNode");
@@ -93,7 +113,7 @@ namespace CoreTools.Dialogue
             orientation = DialogueOrientation.Left;
             EditorUtility.SetDirty(this);
         }
+        public Vector2 boxScroll = Vector2.zero;
 #endif
-        public bool HasChild() => !string.IsNullOrEmpty(ChildID);
     }
 }

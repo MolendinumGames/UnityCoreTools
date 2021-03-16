@@ -6,13 +6,13 @@ using UnityEditor.Callbacks;
 using UnityEngine;
 using CoreTools.NodeSystem;
 
-namespace CoreTools.Dialogue.Editor
+namespace CoreTools.NodeSystem
 {
-    public class DialogueEditorWindow : EditorWindow
+    public abstract class NodeEditorWindow : EditorWindow
     {
         private static readonly string windowTitle = "Dialogue Window";
 
-        DialogueNodeDrawer nodeDrawer;
+        NodeDrawer nodeDrawer;
 
         public DialogueSO selectedDialogue;
 
@@ -48,36 +48,16 @@ namespace CoreTools.Dialogue.Editor
         [NonSerialized]
         public GraphNode focusedNode = null;
 
-
-        [MenuItem("Tools/DialogueEditor")]
-        public static void OpenWindow()
+        protected void OnEnable()
         {
-            var window = GetWindow<DialogueEditorWindow>(windowTitle);
-            window.Show();
-        }
-
-        [OnOpenAsset(1)]
-        public static bool OnOpenAsset(int instanceID, int line)
-        {
-            DialogueSO targetObj = EditorUtility.InstanceIDToObject(instanceID) as DialogueSO;
-            if (targetObj != null)
-            {
-                OpenWindow();
-                return true;
-            }
-            return false;
-        }
-        private void OnEnable()
-        {
-            nodeDrawer = new DialogueNodeDrawer(this);
             OnSelectionChange();
             Undo.undoRedoPerformed += Repaint;
         }
-        private void OnDisable()
+        protected void OnDisable()
         {
             Undo.undoRedoPerformed -= Repaint;
         }
-        private void OnSelectionChange()
+        protected void OnSelectionChange()
         {
             if (Selection.activeObject is DialogueSO)
             {
@@ -85,31 +65,17 @@ namespace CoreTools.Dialogue.Editor
                 Repaint();
             }
         }
-        private void OnFocus()
+        protected void OnFocus()
         {
-            if (nodeDrawer == null)
-                nodeDrawer = new DialogueNodeDrawer(this);
-
             Repaint();
         }
-        private void OnLostFocus()
+        protected void OnLostFocus()
         {
             ClearPopup();
             focusedNode = null;
         }
-        private void OnGUI()
+        protected void OnGUI()
         {
-            if (selectedDialogue == null)
-            {
-                EditorGUILayout.LabelField("No Dialogue selected!");
-                return;
-            }
-
-
-            DrawHeaderToolbar();
-
-            DrawEventToolbar();
-
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, true, true);
 
             DrawBackGround();
@@ -129,7 +95,7 @@ namespace CoreTools.Dialogue.Editor
             if (dragginViewPort)
                 Repaint();
         }
-        private void ProcessEvents()
+        protected void ProcessEvents()
         {
             if (Event.current.type == EventType.MouseDown)
             {
@@ -150,81 +116,8 @@ namespace CoreTools.Dialogue.Editor
             {
                 OnMouseUp();
             }
-            //else if (Event.current.keyCode == KeyCode.Space)
-            //{
-            //    OpenCreationPopup();
-            //}
         }
-        private void DrawHeaderToolbar()
-        {
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Editing: " + selectedDialogue.name, EditorStyles.toolbarButton, GUILayout.Width(200f));
-            string[] tools = { "New Dialogue Node", "New Choice Node", "Save" };
-            int newSelection = GUILayout.Toolbar(-1, tools);
-            GUILayout.EndHorizontal();
 
-            // Process Button Press:
-            switch (newSelection)
-            {
-                case 0:
-                    GraphNode node = selectedDialogue.CreateDialogueNode();
-                    node.SetPosition(standardNodePosition);
-                    break;
-                case 1:
-                    GraphNode newNode = selectedDialogue.CreateChoiceNode();
-                    newNode.SetPosition(standardNodePosition);
-                    break;
-                case 2:
-                    AssetDatabase.SaveAssets();
-                    break;
-                default:
-                    break;
-            }
-            if (newSelection >= 0)
-            {
-                EditorUtility.SetDirty(selectedDialogue);
-                ClearPopup();
-                ClearConnectingNodes();
-                Repaint();
-            }
-        }
-        private void DrawEventToolbar()
-        {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Create Event Channel: ", EditorStyles.toolbarButton, GUILayout.Width(200f));
-            string[] tools = { "Void", "Bool", "Float", "Int", "String" };
-            int newSelection = GUILayout.Toolbar(-1, tools);
-
-            // Process Button press
-            switch (newSelection)
-            {
-                case 0:
-                    selectedDialogue.CreateVoidEventNode();
-                    break;
-                case 1:
-                    selectedDialogue.CreateBoolEventNode();
-                    break;
-                case 2:
-                    selectedDialogue.CreateFloatEventNode();
-                    break;
-                case 3:
-                    selectedDialogue.CreateIntEventNode();
-                    break;
-                case 4:
-                    selectedDialogue.CreateStringEventNode();
-                    break;
-                default:
-                    break;
-            }
-            if (newSelection >= 0)
-            {
-                EditorUtility.SetDirty(selectedDialogue);
-                ClearConnectingNodes();
-                ClearPopup();
-                Repaint();
-            }
-            EditorGUILayout.EndHorizontal();
-        }
         private void DrawBackGround()
         {
             Rect canvas = GUILayoutUtility.GetRect(canvasSize.x, canvasSize.y);
@@ -233,27 +126,7 @@ namespace CoreTools.Dialogue.Editor
 
             GUI.DrawTextureWithTexCoords(canvas, background, texCoords);
         }
-        private void DrawGraph()
-        {
-            foreach (GraphNode node in selectedDialogue.GetAllGraphNodes())
-            {
-                if (node != focusedNode)
-                    nodeDrawer.DrawGraphNode(node);
 
-                if (node is ChoiceNode choiceNode)
-                {
-                    nodeDrawer.DrawChoiceNodeConnections(choiceNode);
-                }
-                else
-                {
-                    var child = selectedDialogue.GetChildNode(node);
-                    if (child != null)
-                        nodeDrawer.DrawConnection(node, child);
-                }
-            }
-            // Draw selected Node last / on top
-            DrawSelectedNode();
-        }
         private void DrawSelectedNode()
         {
             if (focusedNode != null)
@@ -530,17 +403,5 @@ namespace CoreTools.Dialogue.Editor
             creationPopupPosition = Vector2.zero;
         }
         #endregion
-
-        // UNUSED FOR NOW
-        //public void MarkAsCreationNode(GraphNode node)
-        //{
-        //    creatingNode = node;
-        //}
-        //public void ResetNode(GraphNode node)
-        //{
-        //    node.Reset();
-        //    Repaint();
-        //}
-
     }
 }

@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEditor;
 using CoreTools;
 
-namespace CoreTools.Dialogue
+namespace CoreTools.NodeSystem
 {
-    public class StringEventNode : EventNode
+    public class BoolEventNode : EventNode
     {
         [SerializeField]
-        StringChannelSO channel;
-        public StringChannelSO Channel
+        BoolChannelSO channel;
+        public BoolChannelSO Channel
         {
             get => channel;
 #if UNITY_EDITOR
@@ -18,17 +18,18 @@ namespace CoreTools.Dialogue
             {
                 if (channel != value)
                 {
-                    Undo.RecordObject(this, "Changed StringChannel EventNode");
+                    Undo.RecordObject(this, "Changed BoolChannel EventNode");
                     channel = value;
                     EditorUtility.SetDirty(this);
                 }
+
             }
 #endif
         }
 
         [SerializeField]
-        string value = "";
-        public string Value
+        bool value = true;
+        public bool Value
         {
             get => value;
 #if UNITY_EDITOR
@@ -36,7 +37,7 @@ namespace CoreTools.Dialogue
             {
                 if (this.value != value)
                 {
-                    Undo.RecordObject(this, "Changed StringChannel EventNode Value");
+                    Undo.RecordObject(this, "Changed BoolChannel EventNode Value");
                     this.value = value;
                 }
             }
@@ -48,17 +49,16 @@ namespace CoreTools.Dialogue
             if (channel != null)
                 channel.Raise(Value);
             else
-                Debug.LogError($"Empty StringChannel for node: {this.name}");
+                Debug.LogError($"Empty BoolChannel for node: {name}");
         }
 #if UNITY_EDITOR
         public override void Reset()
         {
-            Undo.RecordObject(this, "Reset String Event Node");
+            Undo.RecordObject(this, "Reset Bool Event Node");
             ChildID = null;
             channel = null;
-            value = "";
-            EditorUtility.SetDirty(this);
-        }
+            value = true;
 #endif
+        }
     }
 }
