@@ -1,4 +1,4 @@
-namespace CoreTools.Dialogue
+namespace CoreTools.DialogueSystem
 {
     public enum DialogueOrientation
     {

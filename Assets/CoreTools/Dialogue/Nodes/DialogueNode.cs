@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using CoreTools.NodeSystem;
 
-namespace CoreTools.Dialogue
+namespace CoreTools.DialogueSystem
 {
     public class DialogueNode : GraphNode, ISingleChild
     {

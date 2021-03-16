@@ -14,7 +14,7 @@ namespace CoreTools.NodeSystem
 
         NodeDrawer nodeDrawer;
 
-        public DialogueSO selectedDialogue;
+        public Dialogue selectedDialogue;
 
         private readonly Vector2 canvasSize = new Vector2(4000, 4000);
         private readonly Vector2 standardNodePosition = new Vector2(20f, 20f);
@@ -59,9 +59,9 @@ namespace CoreTools.NodeSystem
         }
         protected void OnSelectionChange()
         {
-            if (Selection.activeObject is DialogueSO)
+            if (Selection.activeObject is Dialogue)
             {
-                selectedDialogue = Selection.activeObject as DialogueSO;
+                selectedDialogue = Selection.activeObject as Dialogue;
                 Repaint();
             }
         }

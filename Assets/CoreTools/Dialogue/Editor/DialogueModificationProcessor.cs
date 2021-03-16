@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using CoreTools.Dialogue;
+using CoreTools.DialogueSystem;
 
-namespace CoreTools.Dialogue.Editor
+namespace CoreTools.DialogueSystem.Editor
 {
     public class DialogueModificationProcessor : UnityEditor.AssetModificationProcessor
     {
         private static AssetMoveResult OnWillMoveAsset(string sourcePath, string destinationPath)
         {
-            DialogueSO dialogue = AssetDatabase.LoadMainAssetAtPath(sourcePath) as DialogueSO;
+            Dialogue dialogue = AssetDatabase.LoadMainAssetAtPath(sourcePath) as Dialogue;
             if (dialogue == null)
             {
                 return AssetMoveResult.DidNotMove;

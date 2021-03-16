@@ -4,7 +4,7 @@ using UnityEngine;
 using CoreTools;
 using CoreTools.NodeSystem;
 
-namespace CoreTools.Quest
+namespace CoreTools.QuestSystem
 {
     public class QuestNode : GraphNode
     {

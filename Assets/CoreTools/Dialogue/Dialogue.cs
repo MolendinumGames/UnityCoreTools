@@ -1,4 +1,4 @@
-using CoreTools.Dialogue;
+using CoreTools.DialogueSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +10,7 @@ using CoreTools.NodeSystem;
 namespace CoreTools
 {
     [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue")]
-    public class DialogueSO : NodeHolder/*, ISerializationCallbackReceiver*/
+    public class Dialogue : NodeHolder/*, ISerializationCallbackReceiver*/
     {
         public DialogueNode GetStartNode()
         {

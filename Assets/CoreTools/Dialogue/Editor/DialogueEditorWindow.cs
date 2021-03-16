@@ -6,7 +6,7 @@ using UnityEditor.Callbacks;
 using UnityEngine;
 using CoreTools.NodeSystem;
 
-namespace CoreTools.Dialogue.Editor
+namespace CoreTools.DialogueSystem.Editor
 {
     public class DialogueEditorWindow : EditorWindow
     {
@@ -14,7 +14,7 @@ namespace CoreTools.Dialogue.Editor
 
         DialogueNodeDrawer nodeDrawer;
 
-        public DialogueSO selectedDialogue;
+        public Dialogue selectedDialogue;
 
         private readonly Vector2 canvasSize = new Vector2(4000, 4000);
         private readonly Vector2 standardNodePosition = new Vector2(20f, 20f);
@@ -59,7 +59,7 @@ namespace CoreTools.Dialogue.Editor
         [OnOpenAsset(1)]
         public static bool OnOpenAsset(int instanceID, int line)
         {
-            DialogueSO targetObj = EditorUtility.InstanceIDToObject(instanceID) as DialogueSO;
+            Dialogue targetObj = EditorUtility.InstanceIDToObject(instanceID) as Dialogue;
             if (targetObj != null)
             {
                 OpenWindow();
@@ -79,9 +79,9 @@ namespace CoreTools.Dialogue.Editor
         }
         private void OnSelectionChange()
         {
-            if (Selection.activeObject is DialogueSO)
+            if (Selection.activeObject is Dialogue)
             {
-                selectedDialogue = Selection.activeObject as DialogueSO;
+                selectedDialogue = Selection.activeObject as Dialogue;
                 Repaint();
             }
         }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using CoreTools;
-using CoreTools.Dialogue;
+using CoreTools.DialogueSystem;
 using CoreTools.NodeSystem;
 
-namespace CoreTools.Dialogue.Editor
+namespace CoreTools.DialogueSystem.Editor
 {
     public class DialogueNodeDrawer
     {

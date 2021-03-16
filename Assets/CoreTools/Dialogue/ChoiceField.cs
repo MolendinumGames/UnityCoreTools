@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CoreTools.NodeSystem;
 
-namespace CoreTools.Dialogue
+namespace CoreTools.DialogueSystem
 {
     [System.Serializable]
     public class ChoiceField : ISingleChild

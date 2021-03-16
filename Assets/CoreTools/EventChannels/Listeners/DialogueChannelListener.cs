@@ -10,7 +10,7 @@ namespace CoreTools
         [SerializeField]
         private DialogueChannelSO channel = null;
 
-        public UnityEvent<DialogueSO> OnEventRaised;
+        public UnityEvent<Dialogue> OnEventRaised;
 
         private void OnEnable()
         {
@@ -22,7 +22,7 @@ namespace CoreTools
             if (channel)
                 channel.OnEventRaised -= Respond;
         }
-        private void Respond(DialogueSO value)
+        private void Respond(Dialogue value)
         {
             OnEventRaised?.Invoke(value);
         }

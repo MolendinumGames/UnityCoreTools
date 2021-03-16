@@ -7,7 +7,7 @@ using UnityEditor;
 using CoreTools;
 using CoreTools.NodeSystem;
 
-namespace CoreTools.Dialogue
+namespace CoreTools.DialogueSystem
 {
     public class ChoiceNode : DialogueNode
     {

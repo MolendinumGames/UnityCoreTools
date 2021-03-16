@@ -6,11 +6,11 @@ using CoreTools;
 using System.Linq;
 using TMPro;
 
-namespace CoreTools.Dialogue
+namespace CoreTools.DialogueSystem
 {
     public class DialogueUIController : MonoBehaviour
     {
-        private DialogueSO viewedDialogue;
+        private Dialogue viewedDialogue;
         private string viewedNode;
         private List<Button> options = new List<Button>();
 
@@ -46,7 +46,7 @@ namespace CoreTools.Dialogue
         }
 
 
-        public void ProcessDialogue(DialogueSO dialogue)
+        public void ProcessDialogue(Dialogue dialogue)
         {
             ClearUI();
             if (dialogue == null)

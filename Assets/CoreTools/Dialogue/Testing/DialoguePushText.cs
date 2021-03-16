@@ -6,7 +6,7 @@ using CoreTools;
 public class DialoguePushText : MonoBehaviour
 {
     public DialogueChannelSO channel;
-    public DialogueSO dialogue;
+    public Dialogue dialogue;
 
     public void PushDialogue()
     {
