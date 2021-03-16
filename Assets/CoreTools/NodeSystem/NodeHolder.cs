@@ -97,6 +97,7 @@ namespace CoreTools.NodeSystem
                 {
                     singleParent.ChildID = parent.UniqueID;
                 }
+
                 if (parent is IMultiChild multiParent)
                 {
                     multiParent.AddChild(parent.UniqueID);
