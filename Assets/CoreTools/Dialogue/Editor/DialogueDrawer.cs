@@ -36,6 +36,7 @@ namespace CoreTools.DialogueSystem.Editor
                     break;
                 case ChoiceNode n:
                     DrawChoiceNode(n);
+                    DrawChoiceNodeConnections(n);
                     break;
                 case TextNode n:
                     DrawStandardNode(n);
@@ -55,6 +56,10 @@ namespace CoreTools.DialogueSystem.Editor
                 case StringEventNode n:
                     DrawStringEventNode(n);
                     break;
+            }
+            if (node is ISingleChild singleParent && singleParent.HasChild())
+            {
+                DrawConnection(node, dialogueEditor.selectedDialogue.GetAnyGraphNode(singleParent.ChildID));
             }
         }
 
@@ -326,7 +331,7 @@ namespace CoreTools.DialogueSystem.Editor
             if (node is DialogueEntryNode)
                 return;
 
-            Vector2 pos = GetInConnectorPos(node);
+            Vector2 pos = GetSingleInConnectorPos(node);
             Rect buttonRect = new Rect(pos, radioButtonSize);
             GUIStyle style = new GUIStyle(EditorStyles.radioButton);
             if (dialogueEditor.selectedDialogue.HasValidParent(node))
@@ -364,7 +369,7 @@ namespace CoreTools.DialogueSystem.Editor
             Vector2 pos = GetOutConnectorPos(node);
             Rect buttonRect = new Rect(pos, radioButtonSize);
             GUIStyle style = new GUIStyle(EditorStyles.radioButton);
-            if (dialogueEditor.selectedDialogue.GetChildNode(node) != null)
+            if ((node as ISingleChild).HasChild())
             {
                 style.normal = style.onActive;
             }
@@ -405,14 +410,15 @@ namespace CoreTools.DialogueSystem.Editor
                         dialogueEditor.findingParentNode != node)
                     {
                         ((ISingleChild)node.GetAllChoices()[i]).ChildID = dialogueEditor.findingParentNode.UniqueID;
+                        dialogueEditor.ClearConnectingNodes();
                     }
                     else
                     {
+                        dialogueEditor.ClearConnectingNodes();
                         dialogueEditor.findingChildChoiceId = i;
                         dialogueEditor.focusedNode = node;
                         dialogueEditor.findingChildNode = node;
                     }
-                    dialogueEditor.ClearConnectingNodes();
                     dialogueEditor.Repaint();
                 }
             }

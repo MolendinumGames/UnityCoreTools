@@ -11,6 +11,7 @@ namespace CoreTools.NodeSystem
     public abstract class NodeEditorWindow : EditorWindow
     {
         protected abstract string NoGraphMessage { get; }
+        protected abstract int topToolbarCount { get; }
 
         protected NodeDrawer nodeDrawer;
 
@@ -252,7 +253,8 @@ namespace CoreTools.NodeSystem
         #region Mouse Events
         protected virtual void OnLeftClick()
         {
-            focusedNode = GetNodeAtPoint(Event.current.mousePosition + scrollPosition - new Vector2(0, EditorGUIUtility.singleLineHeight * 2 + 5));
+            float yOffset = (topToolbarCount + 2) * 2;
+            focusedNode = GetNodeAtPoint(Event.current.mousePosition + scrollPosition - new Vector2(0, yOffset));
             draggedNode = focusedNode;
 
             if (focusedNode != null)

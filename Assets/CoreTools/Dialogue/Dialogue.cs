@@ -152,13 +152,26 @@ namespace CoreTools
 
             foreach (GraphNode parent in GetAllGraphNodes())
             {
+                if (node == parent)
+                    continue;
+
                 if (parent is IChoiceContainer choiceNode)
                 {
-                    return choiceNode.GetAllChildren().Contains(id);
+                    if (choiceNode.GetAllChildren().Contains(id))
+                        return true;
+                }
+                else if (parent is IMultiChild multiParent)
+                {
+                    foreach ( var multiChildNode in multiParent.GetChildren())
+                    {
+                        if (multiChildNode == id)
+                            return true;
+                    }
                 }
                 else if (parent is ISingleChild singleParent)
                 {
-                    return singleParent.ChildID == id;
+                    if (singleParent.ChildID == id)
+                        return true;
                 }
             }
             return false;

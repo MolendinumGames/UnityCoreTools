@@ -14,6 +14,7 @@ namespace CoreTools.DialogueSystem.Editor
         private DialogueDrawer dialogueDrawer;
 
         protected override int popupButtonCount => 7;
+        protected override int topToolbarCount => 0;
         //private static readonly string windowTitle = "Dialogue Window";
 
         //DialogueDrawer nodeDrawer;
