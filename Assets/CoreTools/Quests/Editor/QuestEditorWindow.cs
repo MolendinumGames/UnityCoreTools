@@ -15,7 +15,7 @@ namespace CoreTools.QuestSystem.Editor
         public Quest selectedQuest;
         protected override string NoGraphMessage => "Node Quest Selected!";
         protected override int popupButtonCount => 6;
-        protected override int topToolbarCount => 0;
+        protected override int topToolbarCount => 1;
 
         private static readonly string windowTitle = "Quest Editor";
         [MenuItem("Tools/QuestEditor")]

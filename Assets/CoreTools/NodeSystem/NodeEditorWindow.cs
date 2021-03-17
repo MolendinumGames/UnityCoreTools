@@ -94,6 +94,7 @@ namespace CoreTools.NodeSystem
             // toolbar not handled here
 
             // Draw usage tips?
+            DrawHeaderToolbar();
 
             //handled here
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, true, true);
@@ -151,6 +152,44 @@ namespace CoreTools.NodeSystem
             Rect texCoords = new Rect(0, 0, canvas.width / background.width, canvas.height / background.height);
 
             GUI.DrawTextureWithTexCoords(canvas, background, texCoords);
+        }
+        private void DrawHeaderToolbar()
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Editing: " + selectedGraph.name, EditorStyles.toolbarButton, GUILayout.Width(200f));
+            //string[] tools = { "New Dialogue Node", "New Choice Node", "Save" };
+            //int newSelection = GUILayout.Toolbar(-1, tools);
+            GUILayout.Label("(!) Right click to open creation menu");
+            if (GUILayout.Button("Save"))
+            {
+                AssetDatabase.SaveAssets();
+            }
+            GUILayout.EndHorizontal();
+
+            //// Process Button Press:
+            //switch (newSelection)
+            //{
+            //    case 0:
+            //        GraphNode node = selectedDialogue.CreateDialogueNode();
+            //        node.SetPosition(standardNodePosition);
+            //        break;
+            //    case 1:
+            //        GraphNode newNode = selectedDialogue.CreateChoiceNode();
+            //        newNode.SetPosition(standardNodePosition);
+            //        break;
+            //    case 2:
+            //        AssetDatabase.SaveAssets();
+            //        break;
+            //    default:
+            //        break;
+            //}
+            //if (newSelection >= 0)
+            //{
+            //    EditorUtility.SetDirty(selectedDialogue);
+            //    ClearPopup();
+            //    ClearConnectingNodes();
+            //    Repaint();
+            //}
         }
         private void DrawGraph()
         {
@@ -253,7 +292,7 @@ namespace CoreTools.NodeSystem
         #region Mouse Events
         protected virtual void OnLeftClick()
         {
-            float yOffset = (topToolbarCount + 2) * 2;
+            float yOffset = topToolbarCount * (EditorGUIUtility.singleLineHeight + 2);
             focusedNode = GetNodeAtPoint(Event.current.mousePosition + scrollPosition - new Vector2(0, yOffset));
             draggedNode = focusedNode;
 

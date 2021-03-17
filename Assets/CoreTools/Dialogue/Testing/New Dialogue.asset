@@ -19,8 +19,8 @@ MonoBehaviour:
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 285
-    y: 86
+    x: 195
+    y: 62
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}
@@ -42,8 +42,8 @@ MonoBehaviour:
   children: []
   rect:
     serializedVersion: 2
-    x: 1069
-    y: 268
+    x: 954
+    y: 181
     width: 250
     height: 95
   channel: {fileID: 0}
@@ -99,8 +99,8 @@ MonoBehaviour:
     childId: 
   choiceRect:
     serializedVersion: 2
-    x: 669
-    y: 170
+    x: 588
+    y: 98
     width: 300
     height: 200
 --- !u!114 &7263299689667506199
