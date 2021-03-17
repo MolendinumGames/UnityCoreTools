@@ -10,6 +10,7 @@ namespace CoreTools.DialogueSystem
     {
         public string text;
 
+        // UNDO IN CHOICE NODE
         [SerializeField]
         private string childId;
         public virtual string ChildID
@@ -23,6 +24,17 @@ namespace CoreTools.DialogueSystem
                     childId = value;
                 }
             }
+        }
+
+        public void ClearChild()
+        {
+            ChildID = null;
+        }
+
+        public void ClearChild(string id)
+        {
+            if (ChildID == id)
+                ClearChild();
         }
 #endif
 

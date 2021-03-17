@@ -33,6 +33,43 @@ namespace CoreTools.NodeSystem
         public int ChildAmount => children.Count;
 
         public bool HasChild() => !string.IsNullOrWhiteSpace(childID) || ChildAmount > 0;
+        public bool HasChild(string id)
+        {
+            return children.Contains(id) || childID == id;
+        }
+        public void ClearChild()
+        {
+            Undo.RecordObject(this, "Cleared Children from Event Node");
+            children.Clear();
+            childID = null;
+        }
+        public void ClearChild(string id)
+        {
+            if (HasChild(id))
+            {
+                Undo.RecordObject(this, "Cleaer Child from Event Node");
+                if (id == ChildID)
+                    ChildID = null;
+                if (children.Contains(id))
+                    children.Remove(id);
+            }
+        }
+        public void ClearAllChildren()
+        {
+            ClearChild();
+        }
+
+        public void AddChild(string id)
+        {
+            if (ChildID != id)
+                ChildID = id;
+
+            if (!children.Contains(id))
+            {
+                Undo.RecordObject(this, "Added Child to Event Node");
+                children.Add(id);
+            }
+        }
 
 #if UNITY_EDITOR
         [SerializeField]

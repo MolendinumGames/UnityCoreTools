@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CoreTools;
+using CoreTools.NodeSystem;
 
-public class Quest : MonoBehaviour
+
+namespace CoreTools.QuestSystem
 {
-    // Start is called before the first frame update
-    void Start()
+    [CreateAssetMenu(fileName = "New Quest", menuName = "Quest")]
+    public class Quest : NodeHolder
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected override void SetupRootNode()
+        {
+            // Create QuestEntryNode that implements IMultiChild
+            // Add entryNode to Quest
+            // make entryNode == null check here
+        }
     }
 }

@@ -36,6 +36,17 @@ namespace CoreTools.NodeSystem
         {
             ChildID = null;
         }
+
+        public void ClearChild()
+        {
+            ChildID = null;
+        }
+
+        public void ClearChild(string id)
+        {
+            if (ChildID == id)
+                ClearChild();
+        }
 #endif
     }
 }

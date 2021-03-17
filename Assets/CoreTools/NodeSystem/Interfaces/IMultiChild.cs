@@ -11,7 +11,8 @@ namespace CoreTools.NodeSystem
         public bool HasChild(string id);
         public void ClearChild(string id);
         public void AddChild(string id);
-
+        public bool HasChild();
+        public void ClearAllChildren();
         public int ChildAmount { get; }
     }
 }

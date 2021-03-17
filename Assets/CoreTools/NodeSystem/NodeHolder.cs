@@ -1,20 +1,20 @@
+using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using CoreTools;
-using System.IO;
-using System;
 
 namespace CoreTools.NodeSystem
 {
     public abstract class NodeHolder : ScriptableObject, ISerializationCallbackReceiver
     {
         [SerializeField]
-        protected List<GraphNode> allNodes = new();
+        protected List<GraphNode> allNodes = new List<GraphNode>();
 
         [SerializeField]
-        protected Dictionary<string, GraphNode> nodeLookup = new();
+        protected Dictionary<string, GraphNode> nodeLookup = new Dictionary<string, GraphNode>();
 
         [SerializeField]
         protected GraphNode entryNode;
@@ -46,15 +46,21 @@ namespace CoreTools.NodeSystem
         public void RemoveNode(GraphNode node)
         {
             Undo.RecordObject(this, "Removed Node");
+
+            // Clear from Data
             string removeId = node.UniqueID;
             allNodes.Remove(node);
             nodeLookup.Remove(removeId);
             ClearFromAllChildren(removeId);
+
+            // Kill
             Undo.DestroyObjectImmediate(node);
+
+            // Reconfigure Data
             PopulateNodeLookup();
             EditorUtility.SetDirty(this);
         }
-        protected void ClearFromAllChildren(string id)
+        protected virtual void ClearFromAllChildren(string id)
         {
             foreach (GraphNode node in GetAllGraphNodes())
             {
@@ -68,13 +74,10 @@ namespace CoreTools.NodeSystem
                     if (multiParent.HasChild(id))
                         multiParent.ClearChild(id);
                 }
-
-
-                //ISingleChild parent = (ISingleChild)node;
-                //if (node is ChoiceNode choiceNode)
-                //    choiceNode.ClearIdFromChoices(id);
-                //else if (parent.ChildID == id)
-                //    parent.ChildID = null;
+                else if (node is IChoiceContainer choiceNode)
+                {
+                    choiceNode.ClearChild(id);
+                }
             }
         }
         protected abstract void SetupRootNode();
@@ -101,6 +104,14 @@ namespace CoreTools.NodeSystem
                 if (parent is IMultiChild multiParent)
                 {
                     multiParent.AddChild(parent.UniqueID);
+                }
+
+                if (parent is IMultiChild == false
+                    && parent is ISingleChild == false
+                    && parent is IChoiceContainer)
+                {
+                    Debug.LogWarning("Cannot add child to choice node!" +
+                        $" ParentID: {parent.UniqueID}, ChildID: {child}");
                 }
             }
         }

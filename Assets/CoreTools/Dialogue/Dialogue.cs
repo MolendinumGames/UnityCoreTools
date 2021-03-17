@@ -10,14 +10,14 @@ using CoreTools.NodeSystem;
 namespace CoreTools
 {
     [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue")]
-    public class Dialogue : NodeHolder/*, ISerializationCallbackReceiver*/
+    public class Dialogue : NodeHolder
     {
-        public DialogueNode GetStartNode()
+        public TextNode GetStartNode()
         {
             GraphNode currentNode = GetEntryNode();
             return GetNextDialogue(currentNode);
         }
-        public DialogueNode Next(string currentId)
+        public TextNode Next(string currentId)
         {
             GraphNode currentNode = GetAnyGraphNode(currentId);
             if (currentNode != null)
@@ -35,7 +35,7 @@ namespace CoreTools
                 return null;
             }
         }
-        public DialogueNode Next(string currentId, int choice)
+        public TextNode Next(string currentId, int choice)
         {
             ChoiceNode currentNode = GetAnyGraphNode(currentId) as ChoiceNode;
             if (currentNode != null)
@@ -53,7 +53,7 @@ namespace CoreTools
                         e.Raise();
                         return GetNextDialogue(e);
                     }
-                    else return childNode as DialogueNode;
+                    else return childNode as TextNode;
                 }
                 else return null;
             }
@@ -62,17 +62,17 @@ namespace CoreTools
                 return Next(currentId);
             }
         }
-        private DialogueNode GetNextDialogue(GraphNode fromNode)
+        private TextNode GetNextDialogue(GraphNode fromNode)
         {
             GraphNode currentNode = fromNode;
-            DialogueNode nextNode = null;
+            TextNode nextNode = null;
             while (nextNode == null)
             {
                 currentNode = GetChildNode(currentNode);
 
                 if (currentNode == null)
                     return null;
-                else if (currentNode is DialogueNode dNode)
+                else if (currentNode is TextNode dNode)
                 {
                     nextNode = dNode;
                 }
@@ -85,10 +85,10 @@ namespace CoreTools
         }
 
         #region GetNodes Methodes
-        public DialogueNode GetDialogueNode(string id)
+        public TextNode GetDialogueNode(string id)
         {
             if (nodeLookup.ContainsKey(id))
-                return nodeLookup[id] as DialogueNode;
+                return nodeLookup[id] as TextNode;
             else return null;
         }
         public EventNode GetEventNode(string id)
@@ -111,14 +111,21 @@ namespace CoreTools
             string id = node.UniqueID;
             foreach (GraphNode checkNode in GetAllGraphNodes())
             {
-                ISingleChild parent = (ISingleChild)checkNode;
-                if (checkNode is ChoiceNode choiceNode)
+                if (checkNode is IChoiceContainer choiceParent)
                 {
-                    if (choiceNode.GetAllChildren().Contains(node.UniqueID))
-                        yield return choiceNode;
+                    if (choiceParent.HasChild(id))
+                        yield return checkNode;
                 }
-                if (parent.ChildID.Equals(id))
-                    yield return checkNode;
+                else if (checkNode is IMultiChild multiParent)
+                {
+                    if (multiParent.HasChild(id))
+                        yield return checkNode;
+                }
+                else if (checkNode is ISingleChild singleParent)
+                {
+                    if (singleParent.ChildID == id)
+                        yield return checkNode;
+                }
             }
         }
         #endregion
@@ -126,11 +133,13 @@ namespace CoreTools
         #region Node Validation
         public bool HasValidChild(GraphNode node)
         {
-            if (node is ChoiceNode)
-                return false; // Drawn differntly
-
-            GraphNode child = GetChildNode(node);
-            return child != null;
+            return node switch
+            {
+                ISingleChild n => n.HasChild(),
+                IMultiChild n => n.HasChild(),
+                IChoiceContainer n => n.HasChild(),
+                _ => false
+            };
         }
         public bool HasValidParent(GraphNode node)
         {
@@ -143,13 +152,14 @@ namespace CoreTools
 
             foreach (GraphNode parent in GetAllGraphNodes())
             {
-                if (parent is ChoiceNode choiceNode)
+                if (parent is IChoiceContainer choiceNode)
                 {
-                    if (choiceNode.GetAllChildren().Contains(id))
-                        return true;
+                    return choiceNode.GetAllChildren().Contains(id);
                 }
-                else if (((ISingleChild)parent).ChildID == id)
-                    return true;
+                else if (parent is ISingleChild singleParent)
+                {
+                    return singleParent.ChildID == id;
+                }
             }
             return false;
         }
@@ -167,16 +177,16 @@ namespace CoreTools
         }
 
         #region Node Creation
-        public DialogueNode CreateDialogueNode()
+        public TextNode CreateDialogueNode()
         {
-            DialogueNode newNode = CreateInstance<DialogueNode>();
+            TextNode newNode = CreateInstance<TextNode>();
             Undo.RegisterCreatedObjectUndo(newNode, "New Node Created");
             SetupNewNode(newNode);
             return newNode;
         }
-        public DialogueNode CreateDialogueNode(GraphNode parent)
+        public TextNode CreateDialogueNode(GraphNode parent)
         {
-            DialogueNode newNode = CreateDialogueNode();
+            TextNode newNode = CreateDialogueNode();
             AddChildToParent(parent, newNode.UniqueID);
             return newNode;
         }

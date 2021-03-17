@@ -8,27 +8,26 @@ using CoreTools.NodeSystem;
 
 namespace CoreTools.DialogueSystem.Editor
 {
-    public class DialogueNodeDrawer
+    public class DialogueDrawer : NodeDrawer
     {
         protected readonly DialogueEditorWindow dialogueEditor;
-        private readonly float tangentOffset = 100f;
 
-        public readonly Vector2 radioButtonSize = new Vector2(15f, 15f);
         public GUIStyle radioActiveStyle;
         public GUIStyle nodeStyle;
         private GUIStyle selectedStyle;
         public GUIStyle entryStyle;
         public GUIStyle headerStyle;
         private float oldLabelWidth;
-        public DialogueNodeDrawer(DialogueEditorWindow dialogueEditor)
+        public DialogueDrawer(DialogueEditorWindow dialogueEditor, NodeEditorWindow nodeEditor) : base(nodeEditor)
         {
+            this.nodeEditor = nodeEditor;
             this.dialogueEditor = dialogueEditor;
 
             oldLabelWidth = EditorGUIUtility.labelWidth;
             GenerateStyles();
         }
 
-        public void DrawGraphNode(GraphNode node)
+        public override void DrawGraphNode(GraphNode node)
         {
             switch (node)
             {
@@ -38,7 +37,7 @@ namespace CoreTools.DialogueSystem.Editor
                 case ChoiceNode n:
                     DrawChoiceNode(n);
                     break;
-                case DialogueNode n:
+                case TextNode n:
                     DrawStandardNode(n);
                     break;
                 case VoidEventNode n:
@@ -213,7 +212,7 @@ namespace CoreTools.DialogueSystem.Editor
             DrawInConnector(node);
             DrawChoiceOutConnectors(node);
         }
-        private void DrawStandardNode(DialogueNode node)
+        private void DrawStandardNode(TextNode node)
         {
             GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
             GUILayout.BeginArea(node.NodeRect, useStyle);

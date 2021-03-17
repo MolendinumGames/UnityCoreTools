@@ -6,30 +6,10 @@ using CoreTools.NodeSystem;
 
 namespace CoreTools.DialogueSystem
 {
-    public class DialogueNode : GraphNode, ISingleChild
+    public class DialogueNode : GraphNode
     {
-
         [SerializeField]
-        string childID;
-        public virtual string ChildID
-        {
-            get => childID;
-#if UNITY_EDITOR
-            set
-            {
-                if (childID != value)
-                {
-                    Undo.RecordObject(this, "Changed Dialogue Node childID");
-                    childID = value;
-                    EditorUtility.SetDirty(this);
-                }
-            }
-#endif
-        }
-        public bool HasChild() => !string.IsNullOrWhiteSpace(childID);
-
-        [SerializeField]
-        private string text = "New Dialogue Text";
+        protected string text = "New Dialogue Text";
         public string Text
         {
             get => text;
@@ -47,7 +27,7 @@ namespace CoreTools.DialogueSystem
         }
 
         [SerializeField]
-        private Sprite portrait;
+        protected Sprite portrait;
         public Sprite Portrait
         {
             get => portrait;
@@ -65,7 +45,7 @@ namespace CoreTools.DialogueSystem
         }
 
         [SerializeField]
-        private string speaker;
+        protected string speaker;
         public string Speaker
         {
             get => speaker;
@@ -81,8 +61,9 @@ namespace CoreTools.DialogueSystem
             }
 #endif
         }
+
         [SerializeField]
-        private DialogueOrientation orientation = DialogueOrientation.Left;
+        protected DialogueOrientation orientation = DialogueOrientation.Left;
         public DialogueOrientation Orientation
         {
             get => orientation;
@@ -97,7 +78,6 @@ namespace CoreTools.DialogueSystem
             }
         }
 
-
 #if UNITY_EDITOR
         [SerializeField]
         protected Rect rect = new Rect(10, 10, 300, 180);
@@ -108,11 +88,12 @@ namespace CoreTools.DialogueSystem
             Undo.RecordObject(this, "Reset DialogueNode");
             speaker = null;
             portrait = null;
-            ChildID = null;
             text = "";
             orientation = DialogueOrientation.Left;
+            OnReset();
             EditorUtility.SetDirty(this);
         }
+        protected virtual void OnReset() { }
         public Vector2 boxScroll = Vector2.zero;
 #endif
     }

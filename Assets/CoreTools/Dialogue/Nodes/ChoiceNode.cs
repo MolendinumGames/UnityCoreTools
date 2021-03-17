@@ -9,16 +9,24 @@ using CoreTools.NodeSystem;
 
 namespace CoreTools.DialogueSystem
 {
-    public class ChoiceNode : DialogueNode
+    public class ChoiceNode : DialogueNode, IChoiceContainer
     {
-        public override string ChildID
+        public virtual bool HasChild()
         {
-            get
-            {
-                Debug.Log("Cannot get childId from Choice node! Returning null");
-                return null;
-            }
-            set => base.ChildID = value; // irrelevant
+            return choices.Where(x => !string.IsNullOrEmpty(x.ChildID)).ToArray().Length > 0;
+        }
+        public virtual bool HasChild(string childId)
+        {
+            return choices.Where(x => x.ChildID == childId).ToArray().Length > 0;
+        }
+        public void ClearAllChildren()
+        {
+            Undo.RecordObject(this, "Cleared all choices form ChoiceNode");
+            choices.Clear();
+        }
+        public void ClearChild(string id)
+        {
+            ClearIdFromChoices(id);
         }
 
         [SerializeField]
@@ -63,7 +71,7 @@ namespace CoreTools.DialogueSystem
         }
         public void SetChildOfChoice(int id, string childId)
         {
-            ISingleChild choiceAsParent = (ISingleChild)choices[id];
+            ISingleChild choiceAsParent = choices[id];
             if (choiceAsParent.ChildID != childId)
             {
                 Undo.RecordObject(this, "Changed Choices child of node");
@@ -117,14 +125,12 @@ namespace CoreTools.DialogueSystem
         {
             return choiceRect;
         }
-    #endregion
-        public override void Reset()
+        protected override void OnReset()
         {
-            // Undo records in base
-            base.Reset();
+            // Undo records in Reset of base
             choices.Clear();
         }
+    #endregion
 #endif
-
     }
 }
