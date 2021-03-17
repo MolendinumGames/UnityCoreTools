@@ -46,12 +46,14 @@ namespace CoreTools.NodeSystem
 
         // Popup
         private bool popupOpen = false;
-        private Vector2 creationPopupPosition = Vector2.zero;
-        private readonly Vector2 popupSize = new Vector2(160f, 210f);
+        protected Vector2 creationPopupPosition = Vector2.zero;
+        private readonly Vector2 popupSize = new Vector2(160f, 40f);
 
         // Drawn last (on top)
         [NonSerialized]
         public GraphNode focusedNode = null;
+
+        protected abstract int popupButtonCount { get; }
 
         protected virtual void OnEnable()
         {
@@ -208,60 +210,13 @@ namespace CoreTools.NodeSystem
             popupStyle.padding = new RectOffset(20, 20, 15, 15);
             popupStyle.border = new RectOffset(33, 33, 33, 33);
 
-
-            Rect popupRect = new Rect(creationPopupPosition, popupSize);
+            float popupHeight = popupSize.y + (EditorGUIUtility.singleLineHeight + 1f) * popupButtonCount;
+            Vector2 newPopupSize = new Vector2(popupSize.x, popupSize.y + popupHeight);
+            Rect popupRect = new Rect(creationPopupPosition, newPopupSize);
             GUILayout.BeginArea(popupRect, popupStyle);
 
-            bool buttonPressed = false;
             GUILayout.Label("Create New Node: ", EditorStyles.boldLabel);
-            //if (GUILayout.Button("Dialogue Node"))
-            //{
-            //    GraphNode newNode = selectedGraph.CreateDialogueNode();
-            //    newNode.SetPosition(creationPopupPosition);
-            //    buttonPressed = true;
-            //}
-            //if (GUILayout.Button("Choice Node"))
-            //{
-            //    GraphNode newNode = selectedGraph.CreateChoiceNode();
-            //    newNode.SetPosition(creationPopupPosition);
-            //    buttonPressed = true;
-            //}
-            //if (GUILayout.Button("Void Event Node"))
-            //{
-            //    GraphNode newNode = selectedGraph.CreateVoidEventNode();
-            //    newNode.SetPosition(creationPopupPosition);
-            //    buttonPressed = true;
-            //}
-            //if (GUILayout.Button("Bool Event Node"))
-            //{
-            //    GraphNode newNode = selectedGraph.CreateBoolEventNode();
-            //    newNode.SetPosition(creationPopupPosition);
-            //    buttonPressed = true;
-            //}
-            //if (GUILayout.Button("String Event Node"))
-            //{
-            //    GraphNode newNode = selectedGraph.CreateStringEventNode();
-            //    newNode.SetPosition(creationPopupPosition);
-            //    buttonPressed = true;
-            //}
-            //if (GUILayout.Button("Int Event Node"))
-            //{
-            //    GraphNode newNode = selectedGraph.CreateIntEventNode();
-            //    newNode.SetPosition(creationPopupPosition);
-            //    buttonPressed = true;
-            //}
-            //if (GUILayout.Button("Float Event Node"))
-            //{
-            //    GraphNode newNode = selectedGraph.CreateFloatEventNode();
-            //    newNode.SetPosition(creationPopupPosition);
-            //    buttonPressed = true;
-            //}
-            //if (buttonPressed)
-            //{
-            //    EditorUtility.SetDirty(selectedGraph);
-            //    ClearPopup();
-            //    Repaint();
-            //}
+            OnDrawPopupContent(Event.current.mousePosition);
 
             GUILayout.EndArea();
         }
@@ -415,7 +370,7 @@ namespace CoreTools.NodeSystem
             Repaint();
         }
         protected abstract void OnDrawPopupContent(Vector2 position);
-        private void ClearPopup()
+        protected void ClearPopup()
         {
             popupOpen = false;
             creationPopupPosition = Vector2.zero;

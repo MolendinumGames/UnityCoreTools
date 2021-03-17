@@ -1,5 +1,30 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5704079239871701668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: c4332b10-c687-4490-9369-89d6b807c772
+  m_EditorClassIdentifier: 
+  uniqueID: c4332b10-c687-4490-9369-89d6b807c772
+  text: 
+  portrait: {fileID: 0}
+  speaker: 
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 302
+    y: 71
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,6 +39,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allNodes:
   - {fileID: 7263299689667506199}
+  - {fileID: -5704079239871701668}
   entryNode: {fileID: 7263299689667506199}
 --- !u!114 &7263299689667506199
 MonoBehaviour:
@@ -28,4 +54,4 @@ MonoBehaviour:
   m_Name: EntryNode
   m_EditorClassIdentifier: 
   uniqueID: 46e885df-320c-49d2-b8a3-85ba4f2998e1
-  childID: 
+  childID: c4332b10-c687-4490-9369-89d6b807c772

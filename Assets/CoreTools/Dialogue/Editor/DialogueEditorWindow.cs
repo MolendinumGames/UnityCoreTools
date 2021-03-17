@@ -12,6 +12,8 @@ namespace CoreTools.DialogueSystem.Editor
     {
         public Dialogue selectedDialogue;
         private DialogueDrawer dialogueDrawer;
+
+        protected override int popupButtonCount => 7;
         //private static readonly string windowTitle = "Dialogue Window";
 
         //DialogueDrawer nodeDrawer;
@@ -573,7 +575,55 @@ namespace CoreTools.DialogueSystem.Editor
         }
         protected override void OnDrawPopupContent(Vector2 position)
         {
-            throw new NotImplementedException();
+            bool buttonPressed = false;
+            if (GUILayout.Button("Dialogue Node"))
+            {
+                GraphNode newNode = selectedDialogue.CreateDialogueNode();
+                newNode.SetPosition(creationPopupPosition);
+                buttonPressed = true;
+            }
+            if (GUILayout.Button("Choice Node"))
+            {
+                GraphNode newNode = selectedDialogue.CreateChoiceNode();
+                newNode.SetPosition(creationPopupPosition);
+                buttonPressed = true;
+            }
+            if (GUILayout.Button("Void Event Node"))
+            {
+                GraphNode newNode = selectedDialogue.CreateVoidEventNode();
+                newNode.SetPosition(creationPopupPosition);
+                buttonPressed = true;
+            }
+            if (GUILayout.Button("Bool Event Node"))
+            {
+                GraphNode newNode = selectedDialogue.CreateBoolEventNode();
+                newNode.SetPosition(creationPopupPosition);
+                buttonPressed = true;
+            }
+            if (GUILayout.Button("String Event Node"))
+            {
+                GraphNode newNode = selectedDialogue.CreateStringEventNode();
+                newNode.SetPosition(creationPopupPosition);
+                buttonPressed = true;
+            }
+            if (GUILayout.Button("Int Event Node"))
+            {
+                GraphNode newNode = selectedDialogue.CreateIntEventNode();
+                newNode.SetPosition(creationPopupPosition);
+                buttonPressed = true;
+            }
+            if (GUILayout.Button("Float Event Node"))
+            {
+                GraphNode newNode = selectedDialogue.CreateFloatEventNode();
+                newNode.SetPosition(creationPopupPosition);
+                buttonPressed = true;
+            }
+            if (buttonPressed)
+            {
+                EditorUtility.SetDirty(selectedDialogue);
+                ClearPopup();
+                Repaint();
+            }
         }
 
         protected override bool ProcessSelection()
