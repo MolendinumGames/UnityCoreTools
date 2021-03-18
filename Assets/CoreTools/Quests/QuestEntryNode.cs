@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using CoreTools.NodeSystem;
 
 namespace CoreTools.QuestSystem
 {
-    public class TaskNode : GraphNode, IMultiChild
+    public class QuestEntryNode : GraphNode, IMultiChild
     {
         [SerializeField]
         private List<string> children = new List<string>();
@@ -24,7 +25,7 @@ namespace CoreTools.QuestSystem
         {
             if (!children.Contains(id))
             {
-                Undo.RecordObject(this, "Added child to TaskNode");
+                Undo.RecordObject(this, "Added child to quest entry node");
                 children.Add(id);
                 EditorUtility.SetDirty(this);
             }
@@ -32,7 +33,7 @@ namespace CoreTools.QuestSystem
 
         public void ClearAllChildren()
         {
-            Undo.RecordObject(this, "Cleared TaskNode children");
+            Undo.RecordObject(this, "Cleared quest entry node children");
             children.Clear();
             EditorUtility.SetDirty(this);
         }
@@ -41,7 +42,7 @@ namespace CoreTools.QuestSystem
         {
             if (children.Contains(id))
             {
-                Undo.RecordObject(this, "Cleared child from Quest Task");
+                Undo.RecordObject(this, "Cleared child from Quest entry");
                 children.Remove(id);
                 EditorUtility.SetDirty(this);
             }
@@ -53,7 +54,7 @@ namespace CoreTools.QuestSystem
         public override Rect GetBaseRect() => rect;
         public override void Reset()
         {
-            Undo.RecordObject(this, "Reset QuestTaskNode");
+            Undo.RecordObject(this, "Reset QuestNode");
             children.Clear();
             EditorUtility.SetDirty(this);
         }

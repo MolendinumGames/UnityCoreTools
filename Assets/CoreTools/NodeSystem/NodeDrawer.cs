@@ -11,11 +11,68 @@ public abstract class NodeDrawer
     public NodeDrawer(NodeEditorWindow nodeEditor)
     {
         this.nodeEditor = nodeEditor;
+        GenerateStyles();
     }
+
+    protected GUIStyle nodeStyle;
+    protected GUIStyle selectedStyle;
+    protected GUIStyle entryStyle;
+
     public readonly float tangentOffset = 100f;
     public readonly float connectionWidth = 4f;
     protected readonly Vector2 radioButtonSize = new Vector2(15f, 15f);
+
     public abstract void DrawGraphNode(GraphNode node);
+
+    protected void GenerateStyles()
+    {
+        // Standard Node Style
+        nodeStyle = new GUIStyle()
+        {
+            padding = new RectOffset(20, 20, 15, 15),
+            border = new RectOffset(33, 33, 33, 33),
+        };
+        nodeStyle.normal.background = EditorGUIUtility.Load("node0") as Texture2D;
+        nodeStyle.normal.textColor = Color.white;
+
+        // Entry Node Style
+        entryStyle = new GUIStyle()
+        {
+            border = new RectOffset(22, 22, 22, 22),
+            padding = new RectOffset(20, 20, 15, 15),
+            alignment = TextAnchor.MiddleCenter,
+        };
+        entryStyle.normal.textColor = Color.white;
+        entryStyle.normal.background = EditorGUIUtility.Load("node3") as Texture2D;
+        entryStyle.fontSize *= 2;
+
+        // Selected Node Style
+        selectedStyle = new GUIStyle(nodeStyle);
+        selectedStyle.normal.background = EditorGUIUtility.Load("node1") as Texture2D;
+
+        // setting ehader style here based on EditorStyles.boldLabel will cause NullRef
+        // create new headerstyle inside DrawHeader instead
+    }
+
+    protected void DrawHeader(GraphNode node)
+    {
+        var headerStyle = new GUIStyle(EditorStyles.boldLabel)
+        {
+            alignment = TextAnchor.UpperLeft
+        };
+        string headerName = node.GetType().GetLastTypeAsString();
+
+        GUILayout.BeginHorizontal();
+
+        GUILayout.Label(headerName, headerStyle);
+        if (GUILayout.Button("Delete", GUILayout.Width(80f)))
+        {
+            nodeEditor.MarkNodeToRemove(node);
+        }
+
+        GUILayout.EndHorizontal();
+    }
+
     public Vector2 GetSingleInConnectorPos(GraphNode node)
     {
         var nodePos = node.NodeRect.position;

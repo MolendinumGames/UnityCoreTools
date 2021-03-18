@@ -13,6 +13,7 @@ namespace CoreTools.QuestSystem.Editor
     public class QuestEditorWindow : NodeEditorWindow
     {
         public Quest selectedQuest;
+        protected QuestDrawer questDrawer;
         protected override string NoGraphMessage => "Node Quest Selected!";
         protected override int popupButtonCount => 6;
         protected override int topToolbarCount => 1;
@@ -38,12 +39,18 @@ namespace CoreTools.QuestSystem.Editor
         protected override void OnEnable()
         {
             base.OnEnable();
-            //questDrawer = new QuestDrawer(this, this);
-            //nodeDrawer = questDrawer;
+            questDrawer = new QuestDrawer(this, this);
+            nodeDrawer = questDrawer;
         }
         protected override void OnDrawPopupContent(Vector2 position)
         {
-            throw new NotImplementedException();
+            if (GUILayout.Button("TaskNode"))
+            {
+                // selectedQuest.CreateTaskNode();
+                ClearPopup();
+                ClearConnectingNodes();
+                Repaint();
+            }
         }
 
         protected override bool ProcessSelection()

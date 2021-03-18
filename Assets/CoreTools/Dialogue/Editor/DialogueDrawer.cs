@@ -13,10 +13,10 @@ namespace CoreTools.DialogueSystem.Editor
         protected readonly DialogueEditorWindow dialogueEditor;
 
         public GUIStyle radioActiveStyle;
-        public GUIStyle nodeStyle;
-        private GUIStyle selectedStyle;
-        public GUIStyle entryStyle;
-        public GUIStyle headerStyle;
+        //public GUIStyle nodeStyle;
+        //private GUIStyle selectedStyle;
+        //public GUIStyle entryStyle;
+        //public GUIStyle headerStyle;
         private float oldLabelWidth;
         public DialogueDrawer(DialogueEditorWindow dialogueEditor, NodeEditorWindow nodeEditor) : base(nodeEditor)
         {
@@ -24,7 +24,6 @@ namespace CoreTools.DialogueSystem.Editor
             this.dialogueEditor = dialogueEditor;
 
             oldLabelWidth = EditorGUIUtility.labelWidth;
-            GenerateStyles();
         }
 
         public override void DrawGraphNode(GraphNode node)
@@ -247,51 +246,51 @@ namespace CoreTools.DialogueSystem.Editor
         }
         #endregion
 
-        private void GenerateStyles()
-        {
-            nodeStyle = new GUIStyle()
-            {
-                padding = new RectOffset(20, 20, 15, 15),
-                border = new RectOffset(33, 33, 33, 33),
-            };
-            nodeStyle.normal.background = EditorGUIUtility.Load("node0") as Texture2D;
-            nodeStyle.normal.textColor = Color.white;
+        //private void GenerateStyles()
+        //{
+        //    nodeStyle = new GUIStyle()
+        //    {
+        //        padding = new RectOffset(20, 20, 15, 15),
+        //        border = new RectOffset(33, 33, 33, 33),
+        //    };
+        //    nodeStyle.normal.background = EditorGUIUtility.Load("node0") as Texture2D;
+        //    nodeStyle.normal.textColor = Color.white;
 
-            entryStyle = new GUIStyle()
-            {
-                border = new RectOffset(22, 22, 22, 22),
-                padding = new RectOffset(20, 20, 15, 15),
-                alignment = TextAnchor.MiddleCenter,
-            };
-            entryStyle.normal.textColor = Color.white;
-            entryStyle.normal.background = EditorGUIUtility.Load("node3") as Texture2D;
-            entryStyle.fontSize *= 2;
+        //    entryStyle = new GUIStyle()
+        //    {
+        //        border = new RectOffset(22, 22, 22, 22),
+        //        padding = new RectOffset(20, 20, 15, 15),
+        //        alignment = TextAnchor.MiddleCenter,
+        //    };
+        //    entryStyle.normal.textColor = Color.white;
+        //    entryStyle.normal.background = EditorGUIUtility.Load("node3") as Texture2D;
+        //    entryStyle.fontSize *= 2;
 
-            selectedStyle = new GUIStyle(nodeStyle);
-            selectedStyle.normal.background = EditorGUIUtility.Load("node1") as Texture2D;
+        //    selectedStyle = new GUIStyle(nodeStyle);
+        //    selectedStyle.normal.background = EditorGUIUtility.Load("node1") as Texture2D;
 
-            // setting ehader style here based on EditorStyles.boldLabel will cause NullRef
-            // create new headerstyle inside DrawHeader instead
-        }
+        //    // setting ehader style here based on EditorStyles.boldLabel will cause NullRef
+        //    // create new headerstyle inside DrawHeader instead
+        //}
 
-        private void DrawHeader(GraphNode node)
-        {
-            headerStyle = new GUIStyle(EditorStyles.boldLabel)
-            {
-                alignment = TextAnchor.UpperLeft
-            };
-            string headerName = node.GetType().GetLastTypeAsString();
+        //private void DrawHeader(GraphNode node)
+        //{
+        //    var headerStyle = new GUIStyle(EditorStyles.boldLabel)
+        //    {
+        //        alignment = TextAnchor.UpperLeft
+        //    };
+        //    string headerName = node.GetType().GetLastTypeAsString();
 
-            GUILayout.BeginHorizontal();
+        //    GUILayout.BeginHorizontal();
 
-            GUILayout.Label(headerName, headerStyle);
-            if (GUILayout.Button("Delete", GUILayout.Width(80f)))
-            {
-                dialogueEditor.MarkNodeToRemove(node);
-            }
+        //    GUILayout.Label(headerName, headerStyle);
+        //    if (GUILayout.Button("Delete", GUILayout.Width(80f)))
+        //    {
+        //        dialogueEditor.MarkNodeToRemove(node);
+        //    }
 
-            GUILayout.EndHorizontal();
-        }
+        //    GUILayout.EndHorizontal();
+        //}
         private Sprite DrawIconField(DialogueNode node)
         {
             EditorGUIUtility.labelWidth = .001f;
