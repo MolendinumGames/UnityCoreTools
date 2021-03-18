@@ -14,9 +14,9 @@ namespace CoreTools.QuestSystem.Editor
     {
         public Quest selectedQuest;
         protected QuestDrawer questDrawer;
-        protected override string NoGraphMessage => "Node Quest Selected!";
-        protected override int popupButtonCount => 6;
-        protected override int topToolbarCount => 1;
+        protected override string NoGraphMessage => "No Quest Selected!";
+        protected override int PopupButtonCount => 6;
+        protected override int TopToolbarCount => 1;
 
         private static readonly string windowTitle = "Quest Editor";
         [MenuItem("Tools/QuestEditor")]
@@ -44,9 +44,44 @@ namespace CoreTools.QuestSystem.Editor
         }
         protected override void OnDrawPopupContent(Vector2 position)
         {
-            if (GUILayout.Button("TaskNode"))
+            if (GUILayout.Button("Task Node"))
             {
-                // selectedQuest.CreateTaskNode();
+                selectedQuest.CreateTaskNode();
+                ClearPopup();
+                ClearConnectingNodes();
+                Repaint();
+            }
+            if (GUILayout.Button("Void Event Node"))
+            {
+                selectedQuest.CreateVoidEventNode();
+                ClearPopup();
+                ClearConnectingNodes();
+                Repaint();
+            }
+            if (GUILayout.Button("Bool Event Node"))
+            {
+                selectedQuest.CreateBoolEventNode();
+                ClearPopup();
+                ClearConnectingNodes();
+                Repaint();
+            }
+            if (GUILayout.Button("String Event Node"))
+            {
+                selectedQuest.CreateStringEventNode();
+                ClearPopup();
+                ClearConnectingNodes();
+                Repaint();
+            }
+            if (GUILayout.Button("Int Event Node"))
+            {
+                selectedQuest.CreateIntEventNode();
+                ClearPopup();
+                ClearConnectingNodes();
+                Repaint();
+            }
+            if (GUILayout.Button("Float Event Node"))
+            {
+                selectedQuest.CreateFloatEventNode();
                 ClearPopup();
                 ClearConnectingNodes();
                 Repaint();

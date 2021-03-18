@@ -43,6 +43,48 @@ namespace CoreTools.NodeSystem
                 return nodeLookup[id];
             else return null;
         }
+        public bool NodeHasParent(GraphNode childNode)
+        {
+            string id = childNode.UniqueID;
+            foreach (var node in GetAllGraphNodes())
+            {
+                if (node is ISingleChild singleParent)
+                {
+                    if (singleParent.ChildID == id)
+                        return true;
+                }
+                if (node is IMultiChild multiParent)
+                {
+                    if (multiParent.HasChild(id))
+                        return true;
+                }
+                if (node is IChoiceContainer choiceParent)
+                {
+                    if (choiceParent.HasChild(id))
+                        return true;
+                }
+            }
+            return false;
+        }
+        public bool NodeHasChild(GraphNode parentNode)
+        {
+            if (parentNode is ISingleChild singleParent
+                && singleParent.HasChild())
+            {
+                return true;
+            }
+            if (parentNode is IMultiChild multiParent
+                && multiParent.HasChild())
+            {
+                return true;
+            }
+            if (parentNode is IChoiceContainer choiceParent
+                && choiceParent.HasChild())
+            {
+                return true;
+            }
+            return false;
+        }
         public void RemoveNode(GraphNode node)
         {
             Undo.RecordObject(this, "Removed Node");

@@ -20,5 +20,13 @@ namespace CoreTools.QuestSystem
                 entryNode.name = "Entry Node";
             }
         }
+
+        public TaskNode CreateTaskNode()
+        {
+            var newNode = CreateInstance<TaskNode>();
+            Undo.RegisterCreatedObjectUndo(newNode, "Created new task node");
+            SetupNewNode(newNode);
+            return newNode;
+        }
     }
 }

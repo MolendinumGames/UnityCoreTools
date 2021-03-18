@@ -19,12 +19,12 @@ MonoBehaviour:
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 195
-    y: 62
+    x: 210
+    y: 43
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}
-  childID: 902dad39-18d1-44db-86f2-e0ae54a749fa
+  childID: 
 --- !u!114 &-1642522298482719888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,8 +42,8 @@ MonoBehaviour:
   children: []
   rect:
     serializedVersion: 2
-    x: 954
-    y: 181
+    x: 223
+    y: 240
     width: 250
     height: 95
   channel: {fileID: 0}
@@ -65,6 +65,7 @@ MonoBehaviour:
   - {fileID: -5704079239871701668}
   - {fileID: 94253134069542185}
   - {fileID: -1642522298482719888}
+  - {fileID: 7554353293607133125}
   entryNode: {fileID: 7263299689667506199}
 --- !u!114 &94253134069542185
 MonoBehaviour:
@@ -92,15 +93,15 @@ MonoBehaviour:
   boxScroll: {x: 0, y: 0}
   choices:
   - text: 
-    childId: f7fb2edc-39d4-4872-b682-41e8094f44bc
+    childId: 
   - text: 
     childId: 
   - text: 
     childId: 
   choiceRect:
     serializedVersion: 2
-    x: 588
-    y: 98
+    x: 665
+    y: 65
     width: 300
     height: 200
 --- !u!114 &7263299689667506199
@@ -117,3 +118,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uniqueID: 46e885df-320c-49d2-b8a3-85ba4f2998e1
   childID: c4332b10-c687-4490-9369-89d6b807c772
+--- !u!114 &7554353293607133125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 7b3ab049-a66f-4f11-8a72-84a819aea155
+  m_EditorClassIdentifier: 
+  uniqueID: 7b3ab049-a66f-4f11-8a72-84a819aea155
+  text: 
+  portrait: {fileID: 0}
+  speaker: 
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 194
+    y: 359
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 902dad39-18d1-44db-86f2-e0ae54a749fa

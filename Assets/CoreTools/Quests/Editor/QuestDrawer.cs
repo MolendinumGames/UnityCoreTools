@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace CoreTools.QuestSystem.Editor
 {
-    public class QuestDrawer : NodeDrawer
+    public class QuestDrawer : GraphDrawer
     {
         private QuestEditorWindow questEditor;
         private float oldLabelWidth;
@@ -37,7 +37,12 @@ namespace CoreTools.QuestSystem.Editor
         }
         private void DrawEntryNode(QuestEntryNode node)
         {
-
+            GUILayout.BeginArea(node.NodeRect, entryStyle);
+            GUIStyle headerStyle = new GUIStyle(EditorStyles.boldLabel);
+            headerStyle.fontSize = Mathf.CeilToInt(headerStyle.fontSize * 1.5f);
+            EditorGUILayout.LabelField("Entry", headerStyle, GUILayout.Height(headerStyle.lineHeight * 1.8f));
+            GUILayout.EndArea();
+            DrawOutConnector(node);
         }
         private void DrawTaskNode(TaskNode node)
         {
@@ -45,6 +50,8 @@ namespace CoreTools.QuestSystem.Editor
             GUILayout.BeginArea(node.NodeRect, targetStyle);
             DrawHeader(node);
             GUILayout.EndArea();
+            DrawInConnector(node);
+            DrawOutConnector(node);
         }
     }
 }

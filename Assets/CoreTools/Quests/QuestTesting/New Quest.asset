@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8800565110582079681
+--- !u!114 &-6944756393190839818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,12 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ec516cbd1b125344874c0c44fc535b2, type: 3}
   m_Name: Entry Node
   m_EditorClassIdentifier: 
-  uniqueID: 2e3b6668-7be0-423d-9a8e-9294db17fde2
+  uniqueID: 4a9d0042-b3fb-4e28-ac18-2744e6803daa
+  children:
+  - 9ad44ffc-09ad-421a-bba2-417ae074e8d8
+  rect:
+    serializedVersion: 2
+    x: 42
+    y: 49
+    width: 100
+    height: 80
+--- !u!114 &-4754322582494936978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31105ae68ceec8c488d474822622696f, type: 3}
+  m_Name: 9ad44ffc-09ad-421a-bba2-417ae074e8d8
+  m_EditorClassIdentifier: 
+  uniqueID: 9ad44ffc-09ad-421a-bba2-417ae074e8d8
   children: []
   rect:
     serializedVersion: 2
-    x: 434
-    y: 129
+    x: 348
+    y: 117
     width: 300
     height: 180
 --- !u!114 &11400000
@@ -33,5 +54,6 @@ MonoBehaviour:
   m_Name: New Quest
   m_EditorClassIdentifier: 
   allNodes:
-  - {fileID: -8800565110582079681}
-  entryNode: {fileID: -8800565110582079681}
+  - {fileID: -6944756393190839818}
+  - {fileID: -4754322582494936978}
+  entryNode: {fileID: -6944756393190839818}

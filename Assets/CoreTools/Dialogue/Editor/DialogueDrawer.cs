@@ -8,7 +8,7 @@ using CoreTools.NodeSystem;
 
 namespace CoreTools.DialogueSystem.Editor
 {
-    public class DialogueDrawer : NodeDrawer
+    public class DialogueDrawer : GraphDrawer
     {
         protected readonly DialogueEditorWindow dialogueEditor;
 
@@ -246,51 +246,6 @@ namespace CoreTools.DialogueSystem.Editor
         }
         #endregion
 
-        //private void GenerateStyles()
-        //{
-        //    nodeStyle = new GUIStyle()
-        //    {
-        //        padding = new RectOffset(20, 20, 15, 15),
-        //        border = new RectOffset(33, 33, 33, 33),
-        //    };
-        //    nodeStyle.normal.background = EditorGUIUtility.Load("node0") as Texture2D;
-        //    nodeStyle.normal.textColor = Color.white;
-
-        //    entryStyle = new GUIStyle()
-        //    {
-        //        border = new RectOffset(22, 22, 22, 22),
-        //        padding = new RectOffset(20, 20, 15, 15),
-        //        alignment = TextAnchor.MiddleCenter,
-        //    };
-        //    entryStyle.normal.textColor = Color.white;
-        //    entryStyle.normal.background = EditorGUIUtility.Load("node3") as Texture2D;
-        //    entryStyle.fontSize *= 2;
-
-        //    selectedStyle = new GUIStyle(nodeStyle);
-        //    selectedStyle.normal.background = EditorGUIUtility.Load("node1") as Texture2D;
-
-        //    // setting ehader style here based on EditorStyles.boldLabel will cause NullRef
-        //    // create new headerstyle inside DrawHeader instead
-        //}
-
-        //private void DrawHeader(GraphNode node)
-        //{
-        //    var headerStyle = new GUIStyle(EditorStyles.boldLabel)
-        //    {
-        //        alignment = TextAnchor.UpperLeft
-        //    };
-        //    string headerName = node.GetType().GetLastTypeAsString();
-
-        //    GUILayout.BeginHorizontal();
-
-        //    GUILayout.Label(headerName, headerStyle);
-        //    if (GUILayout.Button("Delete", GUILayout.Width(80f)))
-        //    {
-        //        dialogueEditor.MarkNodeToRemove(node);
-        //    }
-
-        //    GUILayout.EndHorizontal();
-        //}
         private Sprite DrawIconField(DialogueNode node)
         {
             EditorGUIUtility.labelWidth = .001f;
@@ -308,7 +263,6 @@ namespace CoreTools.DialogueSystem.Editor
         }
         private string DrawDialogueBox(DialogueNode node)
         {
-            //EditorGUILayout.LabelField("Dialogue: ");
             GUIStyle newStyle = new GUIStyle
             {
                 fixedHeight = EditorGUIUtility.singleLineHeight * 3 + 5f
@@ -325,70 +279,70 @@ namespace CoreTools.DialogueSystem.Editor
 
             return newText;
         }
-        private void DrawInConnector(GraphNode node)
-        {
-            if (node is DialogueEntryNode)
-                return;
+        //private void DrawInConnector(GraphNode node)
+        //{
+        //    if (node is DialogueEntryNode)
+        //        return;
 
-            Vector2 pos = GetSingleInConnectorPos(node);
-            Rect buttonRect = new Rect(pos, radioButtonSize);
-            GUIStyle style = new GUIStyle(EditorStyles.radioButton);
-            if (dialogueEditor.selectedDialogue.HasValidParent(node))
-            {
-                style.normal = style.onActive;
-            }
+        //    Vector2 pos = GetSingleInConnectorPos(node);
+        //    Rect buttonRect = new Rect(pos, radioButtonSize);
+        //    GUIStyle style = new GUIStyle(EditorStyles.radioButton);
+        //    if (dialogueEditor.selectedDialogue.HasValidParent(node))
+        //    {
+        //        style.normal = style.onActive;
+        //    }
 
-            if (GUI.Button(buttonRect, GUIContent.none, style))
-            {
-                if (dialogueEditor.findingChildNode != null &&
-                    dialogueEditor.findingChildNode != node)
-                {
-                    if (dialogueEditor.findingChildNode is ChoiceNode choiceNode)
-                    {
-                        int id = dialogueEditor.findingChildChoiceId;
-                        ((ISingleChild)choiceNode.GetAllChoices()[id]).ChildID = node.UniqueID;
-                    }
-                    else
-                    {
-                        ((ISingleChild)dialogueEditor.findingChildNode).ChildID = node.UniqueID;
-                    }
-                    dialogueEditor.ClearConnectingNodes();
-                }
-                else
-                {
-                    dialogueEditor.findingParentNode = node;
-                    dialogueEditor.focusedNode = node;
-                }
-                dialogueEditor.Repaint();
-            }
+        //    if (GUI.Button(buttonRect, GUIContent.none, style))
+        //    {
+        //        if (dialogueEditor.findingChildNode != null &&
+        //            dialogueEditor.findingChildNode != node)
+        //        {
+        //            if (dialogueEditor.findingChildNode is ChoiceNode choiceNode)
+        //            {
+        //                int id = dialogueEditor.findingChildChoiceId;
+        //                ((ISingleChild)choiceNode.GetAllChoices()[id]).ChildID = node.UniqueID;
+        //            }
+        //            else
+        //            {
+        //                ((ISingleChild)dialogueEditor.findingChildNode).ChildID = node.UniqueID;
+        //            }
+        //            dialogueEditor.ClearConnectingNodes();
+        //        }
+        //        else
+        //        {
+        //            dialogueEditor.findingParentNode = node;
+        //            dialogueEditor.focusedNode = node;
+        //        }
+        //        dialogueEditor.Repaint();
+        //    }
 
-        }
-        private void DrawOutConnector(GraphNode node)
-        {
-            Vector2 pos = GetOutConnectorPos(node);
-            Rect buttonRect = new Rect(pos, radioButtonSize);
-            GUIStyle style = new GUIStyle(EditorStyles.radioButton);
-            if ((node as ISingleChild).HasChild())
-            {
-                style.normal = style.onActive;
-            }
+        //}
+        //private void DrawOutConnector(GraphNode node)
+        //{
+        //    Vector2 pos = GetOutConnectorPos(node);
+        //    Rect buttonRect = new Rect(pos, radioButtonSize);
+        //    GUIStyle style = new GUIStyle(EditorStyles.radioButton);
+        //    if ((node as ISingleChild).HasChild())
+        //    {
+        //        style.normal = style.onActive;
+        //    }
 
-            if (GUI.Button(buttonRect, GUIContent.none, style))
-            {
-                if (dialogueEditor.findingParentNode != null &&
-                    dialogueEditor.findingParentNode != node)
-                {
-                    ((ISingleChild)node).ChildID = dialogueEditor.findingParentNode.UniqueID;
-                    dialogueEditor.ClearConnectingNodes();
-                }
-                else
-                {
-                    dialogueEditor.findingChildNode = node;
-                    dialogueEditor.focusedNode = node;
-                }
-                dialogueEditor.Repaint();
-            }
-        }
+        //    if (GUI.Button(buttonRect, GUIContent.none, style))
+        //    {
+        //        if (dialogueEditor.findingParentNode != null &&
+        //            dialogueEditor.findingParentNode != node)
+        //        {
+        //            ((ISingleChild)node).ChildID = dialogueEditor.findingParentNode.UniqueID;
+        //            dialogueEditor.ClearConnectingNodes();
+        //        }
+        //        else
+        //        {
+        //            dialogueEditor.findingChildNode = node;
+        //            dialogueEditor.focusedNode = node;
+        //        }
+        //        dialogueEditor.Repaint();
+        //    }
+        //}
         private void DrawChoiceOutConnectors(ChoiceNode node)
         {
 

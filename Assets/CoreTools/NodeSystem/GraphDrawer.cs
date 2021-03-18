@@ -5,10 +5,10 @@ using UnityEditor;
 using CoreTools;
 using CoreTools.NodeSystem;
 
-public abstract class NodeDrawer
+public abstract class GraphDrawer
 {
     protected NodeEditorWindow nodeEditor;
-    public NodeDrawer(NodeEditorWindow nodeEditor)
+    public GraphDrawer(NodeEditorWindow nodeEditor)
     {
         this.nodeEditor = nodeEditor;
         GenerateStyles();
@@ -71,6 +71,52 @@ public abstract class NodeDrawer
         }
 
         GUILayout.EndHorizontal();
+    }
+    protected void DrawInConnector(GraphNode node)
+    {
+        Vector2 pos = GetSingleInConnectorPos(node);
+        Rect buttonRect = new Rect(pos, radioButtonSize);
+        GUIStyle style = new GUIStyle(EditorStyles.radioButton);
+        if (nodeEditor.selectedGraph.NodeHasParent(node))
+        {
+            style.normal = style.onActive;
+        }
+
+        if (GUI.Button(buttonRect, GUIContent.none, style))
+        {
+            if (nodeEditor.findingChildNode != null &&
+                nodeEditor.findingChildNode != node)
+            {
+                nodeEditor.SetChildOfFindingChildNode(node);
+            }
+            else
+            {
+                nodeEditor.SetFindingParentNode(node);
+            }
+        }
+    }
+    protected void DrawOutConnector(GraphNode node)
+    {
+        Vector2 pos = GetSingleOutConnectorPos(node);
+        Rect buttonRect = new Rect(pos, radioButtonSize);
+        GUIStyle style = new GUIStyle(EditorStyles.radioButton);
+        if (nodeEditor.selectedGraph.NodeHasChild(node))
+        {
+            style.normal = style.onActive;
+        }
+
+        if (GUI.Button(buttonRect, GUIContent.none, style))
+        {
+            if (nodeEditor.findingParentNode != null &&
+                nodeEditor.findingParentNode != node)
+            {
+                nodeEditor.SetParentOfFindingParentNode(node, -1);
+            }
+            else
+            {
+                nodeEditor.SetFindingChildNode(node);
+            }
+        }
     }
 
     public Vector2 GetSingleInConnectorPos(GraphNode node)

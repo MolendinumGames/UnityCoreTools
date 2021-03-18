@@ -49,7 +49,7 @@ namespace CoreTools.QuestSystem
         }
 
         [SerializeField]
-        protected Rect rect = new Rect(10, 10, 300, 180);
+        protected Rect rect = new Rect(10f, 10f, 100f, 80f);
         public override Rect NodeRect { get => rect; set => rect = value; }
         public override Rect GetBaseRect() => rect;
         public override void Reset()

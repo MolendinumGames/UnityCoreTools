@@ -93,7 +93,6 @@ namespace CoreTools.DialogueSystem
             Undo.RecordObject(this, "Removed child ID from all choices");
             foreach (ChoiceField field in GetAllChoices())
             {
-                ISingleChild fieldAsParent = (ISingleChild)field;
                 if (field.ChildID == id)
                     field.ChildID = null;
             }

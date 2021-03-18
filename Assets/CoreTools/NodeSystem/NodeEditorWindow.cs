@@ -11,9 +11,9 @@ namespace CoreTools.NodeSystem
     public abstract class NodeEditorWindow : EditorWindow
     {
         protected abstract string NoGraphMessage { get; }
-        protected abstract int topToolbarCount { get; }
+        protected abstract int TopToolbarCount { get; }
 
-        protected NodeDrawer nodeDrawer;
+        protected GraphDrawer nodeDrawer;
 
         public NodeHolder selectedGraph;
 
@@ -54,7 +54,7 @@ namespace CoreTools.NodeSystem
         [NonSerialized]
         public GraphNode focusedNode = null;
 
-        protected abstract int popupButtonCount { get; }
+        protected abstract int PopupButtonCount { get; }
 
         protected virtual void OnEnable()
         {
@@ -157,39 +157,12 @@ namespace CoreTools.NodeSystem
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label("Editing: " + selectedGraph.name, EditorStyles.toolbarButton, GUILayout.Width(200f));
-            //string[] tools = { "New Dialogue Node", "New Choice Node", "Save" };
-            //int newSelection = GUILayout.Toolbar(-1, tools);
             GUILayout.Label("(!) Right click to open creation menu");
             if (GUILayout.Button("Save"))
             {
                 AssetDatabase.SaveAssets();
             }
             GUILayout.EndHorizontal();
-
-            //// Process Button Press:
-            //switch (newSelection)
-            //{
-            //    case 0:
-            //        GraphNode node = selectedDialogue.CreateDialogueNode();
-            //        node.SetPosition(standardNodePosition);
-            //        break;
-            //    case 1:
-            //        GraphNode newNode = selectedDialogue.CreateChoiceNode();
-            //        newNode.SetPosition(standardNodePosition);
-            //        break;
-            //    case 2:
-            //        AssetDatabase.SaveAssets();
-            //        break;
-            //    default:
-            //        break;
-            //}
-            //if (newSelection >= 0)
-            //{
-            //    EditorUtility.SetDirty(selectedDialogue);
-            //    ClearPopup();
-            //    ClearConnectingNodes();
-            //    Repaint();
-            //}
         }
         private void DrawGraph()
         {
@@ -197,19 +170,9 @@ namespace CoreTools.NodeSystem
             {
                 if (node != focusedNode)
                     nodeDrawer.DrawGraphNode(node);
-
-                //if (node is ChoiceNode choiceNode)
-                //{
-                //    nodeDrawer.DrawChoiceNodeConnections(choiceNode);
-                //}
-                //else
-                //{
-                //    var child = selectedDialogue.GetChildNode(node);
-                //    if (child != null)
-                //        nodeDrawer.DrawConnection(node, child);
-                //}
             }
-            // Draw selected Node last / on top
+
+            // Draw selected Node last / on top:
             DrawSelectedNode();
         }
         private void DrawSelectedNode()
@@ -250,7 +213,7 @@ namespace CoreTools.NodeSystem
             popupStyle.padding = new RectOffset(20, 20, 15, 15);
             popupStyle.border = new RectOffset(33, 33, 33, 33);
 
-            float popupHeight = popupSize.y + (EditorGUIUtility.singleLineHeight + 1f) * popupButtonCount;
+            float popupHeight = popupSize.y + (EditorGUIUtility.singleLineHeight + 1f) * PopupButtonCount;
             Vector2 newPopupSize = new Vector2(popupSize.x, popupSize.y + popupHeight);
             Rect popupRect = new Rect(creationPopupPosition, newPopupSize);
             GUILayout.BeginArea(popupRect, popupStyle);
@@ -292,7 +255,7 @@ namespace CoreTools.NodeSystem
         #region Mouse Events
         protected virtual void OnLeftClick()
         {
-            float yOffset = topToolbarCount * (EditorGUIUtility.singleLineHeight + 2);
+            float yOffset = TopToolbarCount * (EditorGUIUtility.singleLineHeight + 2);
             focusedNode = GetNodeAtPoint(Event.current.mousePosition + scrollPosition - new Vector2(0, yOffset));
             draggedNode = focusedNode;
 
@@ -354,6 +317,61 @@ namespace CoreTools.NodeSystem
             }
 
             ClearConnectingNodes();
+            Repaint();
+        }
+        public virtual void SetChildOfFindingChildNode(GraphNode node)
+        {
+            if (node == null)
+                return;
+
+            if (findingChildNode is ISingleChild singleParent)
+                singleParent.ChildID = node.UniqueID;
+
+            if (findingChildNode is IMultiChild multiParent)
+                multiParent.AddChild(node.UniqueID);
+
+            if (findingChildNode is IChoiceContainer choiceParent)
+                choiceParent.SetChildOfChoice(findingChildChoiceId, node.UniqueID);
+
+            ClearConnectingNodes();
+            Repaint();
+        }
+        public virtual void SetParentOfFindingParentNode(GraphNode newParent, int choiceId)
+        {
+            if (newParent == null)
+                return;
+
+            if (newParent is ISingleChild singleParent)
+                singleParent.ChildID = findingParentNode.UniqueID;
+
+            if (newParent is IMultiChild multiParent)
+                multiParent.AddChild(findingParentNode.UniqueID);
+
+            if (newParent is IChoiceContainer choiceParent
+                && choiceId > 0)
+                choiceParent.SetChildOfChoice(choiceId, findingParentNode.UniqueID);
+
+            ClearConnectingNodes();
+            Repaint();
+        }
+        public void SetFindingParentNode(GraphNode node)
+        {
+            ClearConnectingNodes();
+            findingParentNode = node;
+            focusedNode = node;
+            Repaint();
+        }
+        public void SetFindingChildNode(GraphNode node)
+        {
+            ClearConnectingNodes();
+            findingChildNode = node;
+            Repaint();
+        }
+        public void SetFindingChildNode(GraphNode node, int choiceId)
+        {
+            ClearConnectingNodes();
+            findingChildChoiceId = choiceId;
+            findingChildNode = node;
             Repaint();
         }
         protected virtual void OnRightClick()

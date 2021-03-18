@@ -13,8 +13,8 @@ namespace CoreTools.DialogueSystem.Editor
         public Dialogue selectedDialogue;
         private DialogueDrawer dialogueDrawer;
 
-        protected override int popupButtonCount => 7;
-        protected override int topToolbarCount => 1;
+        protected override int PopupButtonCount => 7;
+        protected override int TopToolbarCount => 1;
         //private static readonly string windowTitle = "Dialogue Window";
 
         //DialogueDrawer nodeDrawer;
@@ -573,6 +573,23 @@ namespace CoreTools.DialogueSystem.Editor
             base.OnEnable();
             dialogueDrawer = new DialogueDrawer(this, this);
             nodeDrawer = dialogueDrawer;
+        }
+        public override void SetChildOfFindingChildNode(GraphNode node)
+        {
+            if (node == null)
+                return;
+
+            if (findingChildNode is ISingleChild singleParent)
+                singleParent.ChildID = node.UniqueID;
+
+            //if (findingChildNode is IMultiChild multiParent)
+            //    multiParent.AddChild(node.UniqueID);
+
+            if (findingChildNode is IChoiceContainer choiceParent)
+                choiceParent.SetChildOfChoice(findingChildChoiceId, node.UniqueID);
+
+            ClearConnectingNodes();
+            Repaint();
         }
         protected override void OnDrawPopupContent(Vector2 position)
         {
