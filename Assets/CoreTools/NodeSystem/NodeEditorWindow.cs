@@ -88,41 +88,28 @@ namespace CoreTools.NodeSystem
                 return;
             }
 
-            // Header toolbar here?
-            // Name - UsageInfo - Save
-
-            // toolbar not handled here
-
-            // Draw usage tips?
             DrawHeaderToolbar();
 
-            //handled here
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, true, true);
 
-            // handled here
             DrawBackGround();
 
             DrawGraph();
 
             DrawSearchingNodeConnection();
 
-            // Handled here but gives OnPopupGUI
-            // maybe bool if implemented?
             DrawPopup();
 
-            // handled here
             EditorGUILayout.EndScrollView();
 
-            // handled here. Gives virtual OnEvent functions
             ProcessEvents();
 
-            // handled here
             HandleRemoveNode();
 
             if (dragginViewPort)
                 Repaint();
         }
-        private void ProcessEvents() // handled here
+        private void ProcessEvents()
         {
             if (Event.current.type == EventType.MouseDown)
             {
@@ -264,6 +251,14 @@ namespace CoreTools.NodeSystem
                 // start drag
                 nodeDragOffset = draggedNode.NodeRect.position - (Event.current.mousePosition + scrollPosition);
 
+                // Don't let EntryNode eb set as child
+                if (focusedNode.IsEntry)
+                {
+                    ClearConnectingNodes();
+                    Repaint();
+                    return;
+                }
+
                 // check if making connection
                 if (findingParentNode != null && findingParentNode != focusedNode)
                 {
@@ -289,8 +284,6 @@ namespace CoreTools.NodeSystem
             }
             else
             {
-                focusedNode = null;
-
                 // start dragging viewport
                 dragginViewPort = true;
                 viewPortDragStartPoint = Event.current.mousePosition + scrollPosition;
@@ -348,7 +341,7 @@ namespace CoreTools.NodeSystem
                 multiParent.AddChild(findingParentNode.UniqueID);
 
             if (newParent is IChoiceContainer choiceParent
-                && choiceId > 0)
+                && choiceId >= 0)
                 choiceParent.SetChildOfChoice(choiceId, findingParentNode.UniqueID);
 
             ClearConnectingNodes();

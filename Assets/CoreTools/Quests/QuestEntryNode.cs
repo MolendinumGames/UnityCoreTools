@@ -9,6 +9,8 @@ namespace CoreTools.QuestSystem
 {
     public class QuestEntryNode : GraphNode, IMultiChild
     {
+        public override bool IsEntry => true;
+
         [SerializeField]
         private List<string> children = new List<string>();
 

@@ -15,12 +15,33 @@ MonoBehaviour:
   uniqueID: 4a9d0042-b3fb-4e28-ac18-2744e6803daa
   children:
   - 9ad44ffc-09ad-421a-bba2-417ae074e8d8
+  - 274a4ba9-9f0a-43ab-99bc-e5340ab84ad1
   rect:
     serializedVersion: 2
-    x: 42
-    y: 49
+    x: 139
+    y: 88
     width: 100
     height: 80
+--- !u!114 &-6635245158027783202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31105ae68ceec8c488d474822622696f, type: 3}
+  m_Name: a8d086a1-60ef-4e0a-ad60-36205cc374b4
+  m_EditorClassIdentifier: 
+  uniqueID: a8d086a1-60ef-4e0a-ad60-36205cc374b4
+  children: []
+  rect:
+    serializedVersion: 2
+    x: 792
+    y: 147
+    width: 300
+    height: 180
 --- !u!114 &-4754322582494936978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34,11 +55,12 @@ MonoBehaviour:
   m_Name: 9ad44ffc-09ad-421a-bba2-417ae074e8d8
   m_EditorClassIdentifier: 
   uniqueID: 9ad44ffc-09ad-421a-bba2-417ae074e8d8
-  children: []
+  children:
+  - a8d086a1-60ef-4e0a-ad60-36205cc374b4
   rect:
     serializedVersion: 2
-    x: 348
-    y: 117
+    x: 387
+    y: 268
     width: 300
     height: 180
 --- !u!114 &11400000
@@ -56,4 +78,27 @@ MonoBehaviour:
   allNodes:
   - {fileID: -6944756393190839818}
   - {fileID: -4754322582494936978}
+  - {fileID: 369213481607703890}
+  - {fileID: -6635245158027783202}
   entryNode: {fileID: -6944756393190839818}
+--- !u!114 &369213481607703890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31105ae68ceec8c488d474822622696f, type: 3}
+  m_Name: 274a4ba9-9f0a-43ab-99bc-e5340ab84ad1
+  m_EditorClassIdentifier: 
+  uniqueID: 274a4ba9-9f0a-43ab-99bc-e5340ab84ad1
+  children:
+  - a8d086a1-60ef-4e0a-ad60-36205cc374b4
+  rect:
+    serializedVersion: 2
+    x: 386
+    y: 37
+    width: 300
+    height: 180

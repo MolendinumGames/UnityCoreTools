@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CoreTools.DialogueSystem;
 
 namespace CoreTools.NodeSystem
 {
@@ -12,6 +13,8 @@ namespace CoreTools.NodeSystem
         public List<string> GetAllChildren();
         public bool HasChild();
         public bool HasChild(string child);
+        
+        public abstract int ChoiceAmount { get; }
 
 #if UNITY_EDITOR
         public float GetChoiceHeight();

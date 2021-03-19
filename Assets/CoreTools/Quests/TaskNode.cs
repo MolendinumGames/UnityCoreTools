@@ -8,12 +8,15 @@ namespace CoreTools.QuestSystem
 {
     public class TaskNode : GraphNode, IMultiChild
     {
+        public override bool IsEntry => false;
+
         [SerializeField]
         private List<string> children = new List<string>();
 
         public IEnumerable<string> GetChildren() => children;
 
         public bool HasChild(string id) => children.Contains(id);
+
 
         public bool HasChild() => children.Count > 0;
         public int ChildAmount => children.Count;

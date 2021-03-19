@@ -19,12 +19,34 @@ MonoBehaviour:
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 210
-    y: 43
+    x: 222
+    y: 0
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}
+  childID: 7b3ab049-a66f-4f11-8a72-84a819aea155
+--- !u!114 &-3666398769719099517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003576829ee10f144a4ff48b71d72031, type: 3}
+  m_Name: 5e8f342a-cb6e-4f14-80bc-aff99aa2bfca
+  m_EditorClassIdentifier: 
+  uniqueID: 5e8f342a-cb6e-4f14-80bc-aff99aa2bfca
   childID: 
+  children: []
+  rect:
+    serializedVersion: 2
+    x: 1746
+    y: 234
+    width: 250
+    height: 95
+  channel: {fileID: 0}
 --- !u!114 &-1642522298482719888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38,12 +60,13 @@ MonoBehaviour:
   m_Name: f7fb2edc-39d4-4872-b682-41e8094f44bc
   m_EditorClassIdentifier: 
   uniqueID: f7fb2edc-39d4-4872-b682-41e8094f44bc
-  childID: 
-  children: []
+  childID: 902dad39-18d1-44db-86f2-e0ae54a749fa
+  children:
+  - 902dad39-18d1-44db-86f2-e0ae54a749fa
   rect:
     serializedVersion: 2
-    x: 223
-    y: 240
+    x: 1020
+    y: 118
     width: 250
     height: 95
   channel: {fileID: 0}
@@ -66,6 +89,7 @@ MonoBehaviour:
   - {fileID: 94253134069542185}
   - {fileID: -1642522298482719888}
   - {fileID: 7554353293607133125}
+  - {fileID: -3666398769719099517}
   entryNode: {fileID: 7263299689667506199}
 --- !u!114 &94253134069542185
 MonoBehaviour:
@@ -93,15 +117,15 @@ MonoBehaviour:
   boxScroll: {x: 0, y: 0}
   choices:
   - text: 
-    childId: 
+    childId: 5e8f342a-cb6e-4f14-80bc-aff99aa2bfca
   - text: 
     childId: 
   - text: 
     childId: 
   choiceRect:
     serializedVersion: 2
-    x: 665
-    y: 65
+    x: 1369
+    y: 172
     width: 300
     height: 200
 --- !u!114 &7263299689667506199
@@ -137,9 +161,9 @@ MonoBehaviour:
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 194
-    y: 359
+    x: 619
+    y: 0
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}
-  childID: 902dad39-18d1-44db-86f2-e0ae54a749fa
+  childID: f7fb2edc-39d4-4872-b682-41e8094f44bc

@@ -8,6 +8,8 @@ namespace CoreTools.DialogueSystem
 {
     public class DialogueNode : GraphNode
     {
+        public override bool IsEntry => false;
+
         [SerializeField]
         protected string text = "New Dialogue Text";
         public string Text
@@ -77,6 +79,7 @@ namespace CoreTools.DialogueSystem
                 }
             }
         }
+
 
 #if UNITY_EDITOR
         [SerializeField]

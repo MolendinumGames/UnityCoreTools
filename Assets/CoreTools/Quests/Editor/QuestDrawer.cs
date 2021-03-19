@@ -8,14 +8,11 @@ namespace CoreTools.QuestSystem.Editor
 {
     public class QuestDrawer : GraphDrawer
     {
-        private QuestEditorWindow questEditor;
-        private float oldLabelWidth;
+        protected QuestEditorWindow questEditor;
         public QuestDrawer(QuestEditorWindow questEditor, NodeEditorWindow nodeEditor) : base(nodeEditor)
         {
             this.questEditor = questEditor;
             this.nodeEditor = nodeEditor;
-
-            oldLabelWidth = EditorGUIUtility.labelWidth;
         }
         public override void DrawGraphNode(GraphNode node)
         {
@@ -30,10 +27,7 @@ namespace CoreTools.QuestSystem.Editor
                 default:
                     break;
             }
-            if (node is IMultiChild multiParent)
-            {
-                // DrawAllConnections ? 
-            }
+            DrawConnections(node);
         }
         private void DrawEntryNode(QuestEntryNode node)
         {

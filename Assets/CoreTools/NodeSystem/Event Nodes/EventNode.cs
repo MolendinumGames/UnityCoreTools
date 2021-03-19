@@ -9,6 +9,8 @@ namespace CoreTools.NodeSystem
     {
         public abstract void Raise();
 
+        public override bool IsEntry => false;
+
         [SerializeField]
         string childID;
         public virtual string ChildID

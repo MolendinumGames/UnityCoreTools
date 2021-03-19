@@ -13,17 +13,11 @@ namespace CoreTools.DialogueSystem.Editor
         protected readonly DialogueEditorWindow dialogueEditor;
 
         public GUIStyle radioActiveStyle;
-        //public GUIStyle nodeStyle;
-        //private GUIStyle selectedStyle;
-        //public GUIStyle entryStyle;
-        //public GUIStyle headerStyle;
-        private float oldLabelWidth;
+        //private float oldLabelWidth;
         public DialogueDrawer(DialogueEditorWindow dialogueEditor, NodeEditorWindow nodeEditor) : base(nodeEditor)
         {
             this.nodeEditor = nodeEditor;
             this.dialogueEditor = dialogueEditor;
-
-            oldLabelWidth = EditorGUIUtility.labelWidth;
         }
 
         public override void DrawGraphNode(GraphNode node)
@@ -35,7 +29,6 @@ namespace CoreTools.DialogueSystem.Editor
                     break;
                 case ChoiceNode n:
                     DrawChoiceNode(n);
-                    DrawChoiceNodeConnections(n);
                     break;
                 case TextNode n:
                     DrawStandardNode(n);
@@ -56,98 +49,95 @@ namespace CoreTools.DialogueSystem.Editor
                     DrawStringEventNode(n);
                     break;
             }
-            if (node is ISingleChild singleParent && singleParent.HasChild())
-            {
-                DrawConnection(node, dialogueEditor.selectedDialogue.GetAnyGraphNode(singleParent.ChildID));
-            }
+            DrawConnections(node);
         }
 
         #region DrawNode Methods
-        private void DrawFloatEventNode(FloatEventNode node)
-        {
-            GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-            GUILayout.BeginArea(node.NodeRect, useStyle);
+        //private void DrawFloatEventNode(FloatEventNode node)
+        //{
+        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
+        //    GUILayout.BeginArea(node.NodeRect, useStyle);
 
-            DrawHeader(node);
-            EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-            node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(FloatChannelSO), false) as FloatChannelSO;
-            node.Value = EditorGUILayout.FloatField("Value: ", node.Value);
-            EditorGUIUtility.labelWidth = oldLabelWidth;
+        //    DrawHeader(node);
+        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
+        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(FloatChannelSO), false) as FloatChannelSO;
+        //    node.Value = EditorGUILayout.FloatField("Value: ", node.Value);
+        //    EditorGUIUtility.labelWidth = oldLabelWidth;
 
-            GUILayout.EndArea();
+        //    GUILayout.EndArea();
 
-            DrawInConnector(node);
-            DrawOutConnector(node);
-        }
+        //    DrawInConnector(node);
+        //    DrawOutConnector(node);
+        //}
 
-        private void DrawStringEventNode(StringEventNode node)
-        {
-            GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-            GUILayout.BeginArea(node.NodeRect, useStyle);
+        //private void DrawStringEventNode(StringEventNode node)
+        //{
+        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
+        //    GUILayout.BeginArea(node.NodeRect, useStyle);
 
-            DrawHeader(node);
-            EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-            node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(StringChannelSO), false) as StringChannelSO;
-            node.Value = EditorGUILayout.TextField("Value: ", node.Value);
-            EditorGUIUtility.labelWidth = oldLabelWidth;
+        //    DrawHeader(node);
+        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
+        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(StringChannelSO), false) as StringChannelSO;
+        //    node.Value = EditorGUILayout.TextField("Value: ", node.Value);
+        //    EditorGUIUtility.labelWidth = oldLabelWidth;
 
-            GUILayout.EndArea();
+        //    GUILayout.EndArea();
 
-            DrawInConnector(node);
-            DrawOutConnector(node);
-        }
+        //    DrawInConnector(node);
+        //    DrawOutConnector(node);
+        //}
 
-        private void DrawIntEventNode(IntEventNode node)
-        {
-            GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-            GUILayout.BeginArea(node.NodeRect, useStyle);
+        //private void DrawIntEventNode(IntEventNode node)
+        //{
+        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
+        //    GUILayout.BeginArea(node.NodeRect, useStyle);
 
-            DrawHeader(node);
+        //    DrawHeader(node);
 
-            EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-            node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(IntChannelSO), false) as IntChannelSO;
-            node.Value = EditorGUILayout.IntField("Value: ", node.Value);
-            EditorGUIUtility.labelWidth = oldLabelWidth;
+        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
+        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(IntChannelSO), false) as IntChannelSO;
+        //    node.Value = EditorGUILayout.IntField("Value: ", node.Value);
+        //    EditorGUIUtility.labelWidth = oldLabelWidth;
 
-            GUILayout.EndArea();
+        //    GUILayout.EndArea();
 
-            DrawInConnector(node);
-            DrawOutConnector(node);
-        }
+        //    DrawInConnector(node);
+        //    DrawOutConnector(node);
+        //}
 
-        private void DrawBoolEventNode(BoolEventNode node)
-        {
-            GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-            GUILayout.BeginArea(node.NodeRect, useStyle);
+        //private void DrawBoolEventNode(BoolEventNode node)
+        //{
+        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
+        //    GUILayout.BeginArea(node.NodeRect, useStyle);
 
-            DrawHeader(node);
+        //    DrawHeader(node);
 
-            EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-            node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(BoolChannelSO), false) as BoolChannelSO;
-            node.Value = EditorGUILayout.Toggle("Value: ", node.Value);
-            EditorGUIUtility.labelWidth = oldLabelWidth;
+        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
+        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(BoolChannelSO), false) as BoolChannelSO;
+        //    node.Value = EditorGUILayout.Toggle("Value: ", node.Value);
+        //    EditorGUIUtility.labelWidth = oldLabelWidth;
 
-            GUILayout.EndArea();
+        //    GUILayout.EndArea();
 
-            DrawInConnector(node);
-            DrawOutConnector(node);
-        }
+        //    DrawInConnector(node);
+        //    DrawOutConnector(node);
+        //}
 
-        private void DrawVoidEventNode(VoidEventNode node)
-        {
-            GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-            GUILayout.BeginArea(node.NodeRect, useStyle);
+        //private void DrawVoidEventNode(VoidEventNode node)
+        //{
+        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
+        //    GUILayout.BeginArea(node.NodeRect, useStyle);
 
-            DrawHeader(node);
+        //    DrawHeader(node);
 
-            EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-            node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(VoidChannelSO), false) as VoidChannelSO;
+        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
+        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(VoidChannelSO), false) as VoidChannelSO;
 
-            GUILayout.EndArea();
+        //    GUILayout.EndArea();
 
-            DrawInConnector(node);
-            DrawOutConnector(node);
-        }
+        //    DrawInConnector(node);
+        //    DrawOutConnector(node);
+        //}
         private void DrawEntryNode(DialogueEntryNode node)
         {
             GUILayout.BeginArea(node.NodeRect, entryStyle);
@@ -343,113 +333,107 @@ namespace CoreTools.DialogueSystem.Editor
         //        dialogueEditor.Repaint();
         //    }
         //}
-        private void DrawChoiceOutConnectors(ChoiceNode node)
-        {
+        //protected void DrawChoiceOutConnectors(GraphNode node)
+        //{
+        //    IChoiceContainer choiceParent = (IChoiceContainer)node;
+        //    for (int i = 0; i < choiceParent.ChoiceAmount; i++)
+        //    {
+        //        Vector2 pos = GetChoiceOutConnectorPos(node, i);
+        //        Rect buttonRect = new Rect(pos, radioButtonSize);
 
-            List<ChoiceField> choices = node.GetAllChoices();
-            for (int i = 0; i < choices.Count; i++)
-            {
-                Vector2 pos = GetChoiceConnectorPosition(node, i);
-                Rect buttonRect = new Rect(pos, radioButtonSize);
+        //        bool hasChild = !string.IsNullOrEmpty(choiceParent.GetChildOfChoice(i));
+        //        GUIStyle style = new GUIStyle(EditorStyles.radioButton);
+        //        if (hasChild)
+        //            style.normal = style.onActive;
 
-                GraphNode child = dialogueEditor.selectedDialogue.GetAnyGraphNode(((ISingleChild)choices[i]).ChildID);
-                GUIStyle style = new GUIStyle(EditorStyles.radioButton);
-                if (child != null)
-                    style.normal = style.onActive;
+        //        if (GUI.Button(buttonRect, GUIContent.none, style))
+        //        {
+        //            if (nodeEditor.findingParentNode != null &&
+        //                nodeEditor.findingParentNode != node)
+        //            {
+        //                nodeEditor.SetParentOfFindingParentNode(node, i);
+        //            }
+        //            else
+        //            {
+        //                nodeEditor.SetFindingChildNode(node, i);
+        //            }
+        //        }
+        //    }
+        //}
+        //public Vector2 GetChoiceConnectorPosition(ChoiceNode node, int id)
+        //{
+        //    Vector2 nodePos = node.NodeRect.position;
+        //    float xOffset = node.GetBaseRect().width - 15f;
+        //    float yOffset = node.GetBaseRect().height - 16f;
+        //    Vector2 baselineOutPos = nodePos + new Vector2(xOffset, yOffset);
 
-                if (GUI.Button(buttonRect, GUIContent.none, style))
-                {
-                    if (dialogueEditor.findingParentNode != null &&
-                        dialogueEditor.findingParentNode != node)
-                    {
-                        ((ISingleChild)node.GetAllChoices()[i]).ChildID = dialogueEditor.findingParentNode.UniqueID;
-                        dialogueEditor.ClearConnectingNodes();
-                    }
-                    else
-                    {
-                        dialogueEditor.ClearConnectingNodes();
-                        dialogueEditor.findingChildChoiceId = i;
-                        dialogueEditor.focusedNode = node;
-                        dialogueEditor.findingChildNode = node;
-                    }
-                    dialogueEditor.Repaint();
-                }
-            }
-        }
-        public Vector2 GetChoiceConnectorPosition(ChoiceNode node, int id)
-        {
-            Vector2 nodePos = node.NodeRect.position;
-            float xOffset = node.GetBaseRect().width - 15f;
-            float yOffset = node.GetBaseRect().height - 16f;
-            Vector2 baselineOutPos = nodePos + new Vector2(xOffset, yOffset);
+        //    float offSet = id * (node.GetChoiceHeight()) - (0.5f * node.GetChoiceHeight());
+        //    Vector2 pos = baselineOutPos + new Vector2(0, offSet);
+        //    return pos;
+        //}
 
-            float offSet = id * (node.GetChoiceHeight()) - (0.5f * node.GetChoiceHeight());
-            Vector2 pos = baselineOutPos + new Vector2(0, offSet);
-            return pos;
-        }
+        //public Vector2 GetInConnectorPos(GraphNode node)
+        //{
+        //    var nodePos = node.NodeRect.position;
+        //    var xOffset = 0f;
+        //    var yOffset = node.NodeRect.height * 0.5f - 5f;
+        //    if (node is ChoiceNode choiceNode)
+        //    {
+        //        nodePos = choiceNode.GetBaseRect().position;
+        //        yOffset = choiceNode.GetBaseRect().height * 0.5f - 5f;
+        //    }
+        //    Vector2 target = nodePos + new Vector2(xOffset, yOffset);
+        //    return target;
+        //}
+        //public Vector2 GetOutConnectorPos(GraphNode node)
+        //{
+        //    Vector2 nodePos = node.NodeRect.position;
+        //    float xOffset = node.NodeRect.width - 15f;
+        //    float yOffset = node.NodeRect.height * .5f - 5f;
+        //    Vector2 target = nodePos + new Vector2(xOffset, yOffset);
+        //    return target;
+        //}
+        //public void DrawConnection(GraphNode parentNode, GraphNode childNode)
+        //{
+        //    float offsetValue = radioButtonSize.x * .5f;
+        //    Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0);
+        //    Vector3 startPoint = (Vector3)GetSingleOutConnectorPos(parentNode) + offsetVector;
+        //    Vector3 endPoint = (Vector3)GetSingleInConnectorPos(childNode) + offsetVector;
 
-        public Vector2 GetInConnectorPos(GraphNode node)
-        {
-            var nodePos = node.NodeRect.position;
-            var xOffset = 0f;
-            var yOffset = node.NodeRect.height * 0.5f - 5f;
-            if (node is ChoiceNode choiceNode)
-            {
-                nodePos = choiceNode.GetBaseRect().position;
-                yOffset = choiceNode.GetBaseRect().height * 0.5f - 5f;
-            }
-            Vector2 target = nodePos + new Vector2(xOffset, yOffset);
-            return target;
-        }
-        public Vector2 GetOutConnectorPos(GraphNode node)
-        {
-            Vector2 nodePos = node.NodeRect.position;
-            float xOffset = node.NodeRect.width - 15f;
-            float yOffset = node.NodeRect.height * .5f - 5f;
-            Vector2 target = nodePos + new Vector2(xOffset, yOffset);
-            return target;
-        }
-        public void DrawConnection(GraphNode parentNode, GraphNode childNode)
-        {
-            float offsetValue = radioButtonSize.x * .5f;
-            Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0);
-            Vector3 startPoint = (Vector3)GetOutConnectorPos(parentNode) + offsetVector;
-            Vector3 endPoint = (Vector3)GetInConnectorPos(childNode) + offsetVector;
+        //    float yDistance = Mathf.Abs(parentNode.NodeRect.position.y - childNode.NodeRect.position.y);
+        //    Vector3 startTangent = startPoint + (Vector3.right * tangentOffset);
+        //    Vector3 endTangent = endPoint + (Vector3.left * tangentOffset);
+        //    Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.white, null, 3f);
+        //}
+        //public void DrawChoiceNodeConnections(ChoiceNode node)
+        //{
+        //    var choices = node.GetAllChoices();
+        //    for (int i = 0; i < choices.Count; i++)
+        //    {
+        //        ISingleChild choiceAsParent = (ISingleChild)choices[i];
+        //        if (!string.IsNullOrEmpty(choiceAsParent.ChildID))
+        //        {
+        //            GraphNode child = dialogueEditor.selectedDialogue.GetAnyGraphNode(choiceAsParent.ChildID);
+        //            if (child == null)
+        //            {
+        //                choiceAsParent.ChildID = null;
+        //                EditorUtility.SetDirty(dialogueEditor.selectedDialogue);
+        //                continue;
+        //            }
+        //            else
+        //            {
+        //                float offsetValue = radioButtonSize.x * .5f;
+        //                Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0); // to draw into the middle of the button
+        //                Vector3 endPos = (Vector3)GetSingleInConnectorPos(child) + offsetVector;
+        //                Vector3 startPos = (Vector3)GetChoiceOutConnectorPos(node, i) + offsetVector;
 
-            float yDistance = Mathf.Abs(parentNode.NodeRect.position.y - childNode.NodeRect.position.y);
-            Vector3 startTangent = startPoint + (Vector3.right * tangentOffset);
-            Vector3 endTangent = endPoint + (Vector3.left * tangentOffset);
-            Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Color.white, null, 3f);
-        }
-        public void DrawChoiceNodeConnections(ChoiceNode node)
-        {
-            var choices = node.GetAllChoices();
-            for (int i = 0; i < choices.Count; i++)
-            {
-                ISingleChild choiceAsParent = (ISingleChild)choices[i];
-                if (!string.IsNullOrEmpty(choiceAsParent.ChildID))
-                {
-                    GraphNode child = dialogueEditor.selectedDialogue.GetAnyGraphNode(choiceAsParent.ChildID);
-                    if (child == null)
-                    {
-                        choiceAsParent.ChildID = null;
-                        EditorUtility.SetDirty(dialogueEditor.selectedDialogue);
-                        continue;
-                    }
-                    else
-                    {
-                        float offsetValue = radioButtonSize.x * .5f;
-                        Vector3 offsetVector = new Vector3(offsetValue, offsetValue, 0); // to draw into the middle of the button
-                        Vector3 endPos = (Vector3)GetInConnectorPos(child) + offsetVector;
-                        Vector3 startPos = (Vector3)GetChoiceConnectorPosition(node, i) + offsetVector;
-
-                        float yDistance = Mathf.Abs(node.NodeRect.position.y - child.NodeRect.position.y);
-                        Vector3 startTangent = startPos + (Vector3.right * tangentOffset);
-                        Vector3 endTangent = endPos + (Vector3.left * tangentOffset);
-                        Handles.DrawBezier(startPos, endPos, startTangent, endTangent, Color.white, null, 3f);
-                    }
-                }
-            }
-        }
+        //                float yDistance = Mathf.Abs(node.NodeRect.position.y - child.NodeRect.position.y);
+        //                Vector3 startTangent = startPos + (Vector3.right * tangentOffset);
+        //                Vector3 endTangent = endPos + (Vector3.left * tangentOffset);
+        //                Handles.DrawBezier(startPos, endPos, startTangent, endTangent, Color.white, null, 3f);
+        //            }
+        //        }
+        //    }
+        //}
     }
 }
