@@ -64,6 +64,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uniqueID: 3067121f-b300-4118-8d34-92086fd3d0e3
   childID: d1068817-82cd-4676-860a-73e528a2bcc2
+--- !u!114 &-1492652245131629336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 659cd060-6579-40df-89e1-3eb62efde8eb
+  m_EditorClassIdentifier: 
+  uniqueID: 659cd060-6579-40df-89e1-3eb62efde8eb
+  text: chose option c!
+  portrait: {fileID: 21300000, guid: f1dd815974b2d4240a6bc912d6585497, type: 3}
+  speaker: a blue potion
+  orientation: 1
+  rect:
+    serializedVersion: 2
+    x: 924
+    y: 300
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,8 +106,7 @@ MonoBehaviour:
   - {fileID: 1006946192861984744}
   - {fileID: 1562759331738971220}
   - {fileID: 1498490390180040825}
-  - {fileID: -6723412252119204735}
-  - {fileID: -4402528751777573958}
+  - {fileID: -1492652245131629336}
   entryNode: {fileID: -2044620717739359850}
 --- !u!114 &1006946192861984744
 MonoBehaviour:
@@ -98,13 +122,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uniqueID: d1068817-82cd-4676-860a-73e528a2bcc2
   text: first node
-  portrait: {fileID: 21300000, guid: b1d45f9bd58bdc94cb745038422e7406, type: 3}
-  speaker: clsoe button
+  portrait: {fileID: 21300000, guid: 7bc1735dbd43dcc41a66fff73f44fbce, type: 3}
+  speaker: Name 1
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 180
-    y: 64
+    x: 188
+    y: 71
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}
@@ -122,18 +146,18 @@ MonoBehaviour:
   m_Name: 9f1f56c0-e961-49e8-9027-cbe7f1bb9cb2
   m_EditorClassIdentifier: 
   uniqueID: 9f1f56c0-e961-49e8-9027-cbe7f1bb9cb2
-  text: qwdwadwqadwad
-  portrait: {fileID: 21300000, guid: 373773b6623f4fb4c89ed91602df42dd, type: 3}
-  speaker: third
-  orientation: 0
+  text: 'chose a or b! '
+  portrait: {fileID: 21300000, guid: aba0f700d91d4fc4fa8c724899ab04ab, type: 3}
+  speaker: Another speaker
+  orientation: 1
   rect:
     serializedVersion: 2
-    x: 970
-    y: 249
+    x: 927
+    y: 110
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}
-  childID: 591ecb80-aaa6-4fba-90cb-8991ed1adcc6
+  childID: 
 --- !u!114 &1562759331738971220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,9 +171,9 @@ MonoBehaviour:
   m_Name: b0eda115-ccee-4599-bd0e-0b8bba52d04d
   m_EditorClassIdentifier: 
   uniqueID: b0eda115-ccee-4599-bd0e-0b8bba52d04d
-  text: 
+  text: Select an option (this text is optional)
   portrait: {fileID: 21300000, guid: 65d466afcff75fa428a0b237f81846d6, type: 3}
-  speaker: armor icon
+  speaker: Choice Speaker
   orientation: 1
   rect:
     serializedVersion: 2
@@ -159,15 +183,15 @@ MonoBehaviour:
     height: 180
   boxScroll: {x: 0, y: 0}
   choices:
-  - text: aaaaa
+  - text: Option A
     childId: 9f1f56c0-e961-49e8-9027-cbe7f1bb9cb2
-  - text: bbbb
+  - text: Option B
     childId: 9f1f56c0-e961-49e8-9027-cbe7f1bb9cb2
-  - text: cccc
-    childId: 9f1f56c0-e961-49e8-9027-cbe7f1bb9cb2
+  - text: Option C
+    childId: 659cd060-6579-40df-89e1-3eb62efde8eb
   choiceRect:
     serializedVersion: 2
-    x: 553
-    y: 134
+    x: 537
+    y: 100
     width: 300
     height: 200
