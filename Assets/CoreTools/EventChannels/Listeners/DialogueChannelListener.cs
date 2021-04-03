@@ -8,7 +8,7 @@ namespace CoreTools
     public class DialogueChannelListener : MonoBehaviour
     {
         [SerializeField]
-        private DialogueChannelSO channel = null;
+        private DialogueChannel channel = null;
 
         public UnityEvent<Dialogue> OnEventRaised;
 

@@ -12,30 +12,32 @@ namespace CoreTools
     [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue")]
     public class Dialogue : NodeHolder
     {
-        public TextNode GetStartNode()
+        public DialogueNode GetFirstNode()
         {
             GraphNode currentNode = GetEntryNode();
             return GetNextDialogue(currentNode);
         }
-        public TextNode Next(string currentId)
+        public DialogueNode Next(string currentId)
         {
-            GraphNode currentNode = GetAnyGraphNode(currentId);
+            DialogueNode currentNode = GetAnyGraphNode(currentId) as DialogueNode;
             if (currentNode != null)
             {
                 if (currentNode is ChoiceNode)
                 {
-                    Debug.LogWarning($"Next called on choice node without index being passed in! Dialogue: {this.name}. NodeID{currentId}.");
+                    Debug.LogWarning($"Next called on choice node without index being passed in!" +
+                        $" Dialogue: {this.name}. NodeID{currentId}.");
                     return Next(currentId, 0);
                 }
                 else return GetNextDialogue(currentNode);
             }
             else
             {
-                Debug.LogWarning($"Cannot current node. Dialogue: {this.name}. CurrentID: {currentId}. Returning null.");
+                Debug.LogWarning($"Cannot find current node. Dialogue: {this.name}. " +
+                    $"CurrentID: {currentId}. Returning null.");
                 return null;
             }
         }
-        public TextNode Next(string currentId, int choice)
+        public DialogueNode Next(string currentId, int choice)
         {
             ChoiceNode currentNode = GetAnyGraphNode(currentId) as ChoiceNode;
             if (currentNode != null)
@@ -53,26 +55,36 @@ namespace CoreTools
                         e.Raise();
                         return GetNextDialogue(e);
                     }
-                    else return childNode as TextNode;
+                    else return childNode as DialogueNode;
                 }
-                else return null;
+                else
+                {
+                    Debug.LogError($"Tried to access choice Index out of range. " +
+                        $"Dialogue: {name}, NodeID: {currentId}, Index: {choice}.");
+                    return null;
+                }
+
             }
             else
             {
+                Debug.LogError($"Trying to Next() choide node with ID but node is null. " +
+                    $"Processing as non-choicenode next.");
                 return Next(currentId);
             }
         }
-        private TextNode GetNextDialogue(GraphNode fromNode)
+        private DialogueNode GetNextDialogue(GraphNode fromNode)
         {
             GraphNode currentNode = fromNode;
-            TextNode nextNode = null;
+            DialogueNode nextNode = null;
             while (nextNode == null)
             {
                 currentNode = GetChildNode(currentNode);
 
                 if (currentNode == null)
+                {
                     return null;
-                else if (currentNode is TextNode dNode)
+                }
+                else if (currentNode is DialogueNode dNode)
                 {
                     nextNode = dNode;
                 }
@@ -85,7 +97,7 @@ namespace CoreTools
         }
 
         #region GetNodes Methodes
-        public TextNode GetDialogueNode(string id)
+        public DialogueNode GetDialogueNode(string id)
         {
             if (nodeLookup.ContainsKey(id))
                 return nodeLookup[id] as TextNode;

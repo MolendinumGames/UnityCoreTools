@@ -7,6 +7,7 @@ using CoreTools.Pooling;
 
 namespace CoreTools.UI
 {
+    // !!! DEPRICATED !!!
     [CustomEditor(typeof(PoolManager))]
     public class PoolEditor : Editor
     {
@@ -24,13 +25,11 @@ namespace CoreTools.UI
         {
             serializedObject.Update();
 
-            SerializedProperty list = serializedObject.FindProperty("poolItems");
+            SerializedProperty list = serializedObject.FindProperty("poolData");
             EditorGUI.indentLevel++;
             // Display
-            //EditorGUILayout.PropertyField(list, false); will display standard list (+new features)
             if (list.isExpanded)
             {
-                //EditorGUILayout.PropertyField(list.FindPropertyRelative("Array.size"));
                 for (int i = 0; i < list.arraySize; i++)
                 {
                     EditorGUILayout.BeginHorizontal();

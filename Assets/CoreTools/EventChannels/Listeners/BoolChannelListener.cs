@@ -5,7 +5,7 @@ namespace CoreTools
 {
     public class BoolChannelListener : MonoBehaviour
     {
-        [SerializeField] private BoolChannelSO channel = default;
+        [SerializeField] private BoolChannel channel = default;
 
         public UnityEvent<bool> OnEventRaised;
 

@@ -5,7 +5,7 @@ namespace CoreTools
 {
     public class Vector3IntChannelListener : MonoBehaviour
     {
-        [SerializeField] private Vector3IntChannelSO channel = default;
+        [SerializeField] private Vector3IntChannel channel = default;
 
         public UnityEvent<Vector3Int> OnEventRaised;
 

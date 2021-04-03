@@ -9,8 +9,8 @@ namespace CoreTools.NodeSystem
     public class VoidEventNode : EventNode
     {
         [SerializeField]
-        VoidChannelSO channel;
-        public VoidChannelSO Channel
+        VoidChannel channel;
+        public VoidChannel Channel
         {
             get => channel;
 #if UNITY_EDITOR

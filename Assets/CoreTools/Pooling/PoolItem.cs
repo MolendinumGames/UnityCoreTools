@@ -5,11 +5,30 @@ namespace CoreTools.Pooling
     [System.Serializable]
     public class PoolItem
     {
-        public string key;
-        public GameObject prefab;
-        public int startingAmount;
-        public int maxAmount;
-        public bool reuseOnFull = false;
+        [SerializeField]
+        string key;
+        public string Key { get => key; }
+
+        [SerializeField]
+        GameObject prefab;
+        public GameObject Prefab { get => prefab; }
+
+        [SerializeField]
+        int startingAmount;
+        public int StartingAmount { get => startingAmount; }
+
+        [SerializeField]
+        int maxAmount;
+        public int MaxAmount { get => maxAmount; }
+
+        [SerializeField]
+        bool reuseOnFull = false;
+        public bool ReuseOnFull { get => reuseOnFull; }
+
+        [SerializeField]
+        bool createOnStart = true;
+        public bool CreateOnStart { get => createOnStart; }
+
         public PoolItem(string key, GameObject prefab, int startingAmount, int maxAmount)
         {
             this.key = key;

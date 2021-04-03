@@ -5,7 +5,7 @@ namespace CoreTools
 {
     public class FloatChannelListener : MonoBehaviour
     {
-        [SerializeField] private FloatChannelSO channel = default;
+        [SerializeField] private FloatChannel channel = default;
 
         public UnityEvent<float> OnEventRaised;
 

@@ -5,7 +5,7 @@ namespace CoreTools
 {
     public class IntChannelListener : MonoBehaviour
     {
-        [SerializeField] private IntChannelSO channel = default;
+        [SerializeField] private IntChannel channel = default;
 
         public UnityEvent<int> OnEventRaised;
 

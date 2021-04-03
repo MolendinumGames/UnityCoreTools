@@ -13,40 +13,18 @@ MonoBehaviour:
   m_Name: c4332b10-c687-4490-9369-89d6b807c772
   m_EditorClassIdentifier: 
   uniqueID: c4332b10-c687-4490-9369-89d6b807c772
-  text: 
-  portrait: {fileID: 0}
+  text: There is no Speaker
+  portrait: {fileID: 21300000, guid: 7bcee3dac4c974d43b329ee45aef4c99, type: 3}
   speaker: 
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 222
-    y: 0
+    x: 259
+    y: 73
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}
   childID: 7b3ab049-a66f-4f11-8a72-84a819aea155
---- !u!114 &-3666398769719099517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 003576829ee10f144a4ff48b71d72031, type: 3}
-  m_Name: 5e8f342a-cb6e-4f14-80bc-aff99aa2bfca
-  m_EditorClassIdentifier: 
-  uniqueID: 5e8f342a-cb6e-4f14-80bc-aff99aa2bfca
-  childID: 
-  children: []
-  rect:
-    serializedVersion: 2
-    x: 1746
-    y: 234
-    width: 250
-    height: 95
-  channel: {fileID: 0}
 --- !u!114 &-1642522298482719888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,8 +43,8 @@ MonoBehaviour:
   - 902dad39-18d1-44db-86f2-e0ae54a749fa
   rect:
     serializedVersion: 2
-    x: 1020
-    y: 118
+    x: 952
+    y: 196
     width: 250
     height: 95
   channel: {fileID: 0}
@@ -89,7 +67,6 @@ MonoBehaviour:
   - {fileID: 94253134069542185}
   - {fileID: -1642522298482719888}
   - {fileID: 7554353293607133125}
-  - {fileID: -3666398769719099517}
   entryNode: {fileID: 7263299689667506199}
 --- !u!114 &94253134069542185
 MonoBehaviour:
@@ -105,8 +82,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uniqueID: 902dad39-18d1-44db-86f2-e0ae54a749fa
   text: 
-  portrait: {fileID: 0}
-  speaker: 
+  portrait: {fileID: 21300000, guid: 0101b6a410154cf41842be260971c5a8, type: 3}
+  speaker: Option No text
   orientation: 0
   rect:
     serializedVersion: 2
@@ -116,16 +93,16 @@ MonoBehaviour:
     height: 180
   boxScroll: {x: 0, y: 0}
   choices:
-  - text: 
-    childId: 5e8f342a-cb6e-4f14-80bc-aff99aa2bfca
-  - text: 
+  - text: lala one
     childId: 
-  - text: 
+  - text: lala two
+    childId: 
+  - text: lala three
     childId: 
   choiceRect:
     serializedVersion: 2
-    x: 1369
-    y: 172
+    x: 1271
+    y: 205
     width: 300
     height: 200
 --- !u!114 &7263299689667506199
@@ -156,13 +133,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uniqueID: 7b3ab049-a66f-4f11-8a72-84a819aea155
   text: 
-  portrait: {fileID: 0}
-  speaker: 
+  portrait: {fileID: 21300000, guid: f1dd815974b2d4240a6bc912d6585497, type: 3}
+  speaker: We will skip this
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 619
-    y: 0
+    x: 617
+    y: 204
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}

@@ -5,7 +5,7 @@ namespace CoreTools
 {
     public class StringChannelListener : MonoBehaviour
     {
-        [SerializeField] private StringChannelSO channel = default;
+        [SerializeField] private StringChannel channel = default;
 
         public UnityEvent<string> OnEventRaised;
 

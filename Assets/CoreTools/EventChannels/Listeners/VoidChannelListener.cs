@@ -5,7 +5,7 @@ namespace CoreTools
 {
 	public class VoidChannelListener : MonoBehaviour
 	{
-		[SerializeField] private VoidChannelSO channel = default;
+		[SerializeField] private VoidChannel channel = default;
 
 		public UnityEvent OnEventRaised;
 

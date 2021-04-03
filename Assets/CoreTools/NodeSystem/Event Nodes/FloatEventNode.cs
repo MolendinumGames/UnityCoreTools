@@ -9,8 +9,8 @@ namespace CoreTools.NodeSystem
     public class FloatEventNode : EventNode
     {
         [SerializeField]
-        FloatChannelSO channel;
-        public FloatChannelSO Channel
+        FloatChannel channel;
+        public FloatChannel Channel
         {
             get => channel;
 #if UNITY_EDITOR

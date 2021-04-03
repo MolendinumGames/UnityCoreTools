@@ -6,106 +6,137 @@ using CoreTools.Pooling;
 
 namespace CoreTools
 {
-    public class PoolManager : MonoBehaviour
+    public class PoolManager : Singleton<PoolManager>
     {
-        #region Singleton
-        private static PoolManager instance;
-        public static PoolManager Instance
-        {
-            get
-            {
-                if (!instance)
-                    instance = FindObjectOfType(typeof(PoolManager)) as PoolManager;
-                if (!instance)
-                    Debug.LogError("No PoolManager found!");
-                return instance;
-            }
-        }
-        #endregion
+        protected override bool Persistent => true;
 
-        private Transform transf;
         [SerializeField]
-        private PoolItem[] poolItems;
-        private Dictionary<string, List<GameObject>> allPools = new Dictionary<string, List<GameObject>>();
-        private Dictionary<string, PoolItem> allPoolItems = new Dictionary<string, PoolItem>();
+        PoolItem[] poolData;
 
-        [SerializeField] bool logOnCreate = true;
-        [SerializeField] bool logOnNull = true;
+        Dictionary<string, List<GameObject>> activePools = new Dictionary<string, List<GameObject>>();
+        Dictionary<string, PoolItem> allPoolItems = new Dictionary<string, PoolItem>();
 
-        private void Awake()
+        [Header("Debugging")]
+        [SerializeField]
+        bool onNewMemberCreated = true;
+        [SerializeField] 
+        bool onNullMember = true;
+        [SerializeField]
+        bool onPoolLoaded = false;
+        [SerializeField]
+        bool onPoolUnloaded = true;
+
+
+        protected override void OnAwake()
         {
-            instance = this;
-            transf = transform;
             GeneratePoolItemDict();
-            GeneratePoolDict();
-
+            GeneratePoolLookup();
         }
 
         #region Public Methods
         public GameObject RequestItem(string key)
         {
-            if (!allPools.ContainsKey(key))
+            if (!activePools.ContainsKey(key))
             {
                 Debug.LogError($"The key <{key}> was not found in the pool. Returning null.");
                 return null;
             }
 
             // Try find existing obj in list
-            for (int i = 0; i < allPools[key].Count; i++)
+            for (int i = 0; i < activePools[key].Count; i++)
             {
-                GameObject target = allPools[key][i];
-                if (target == null && logOnNull)
+                GameObject target = activePools[key][i];
+                if (target == null && onNullMember)
                 {
                     Debug.LogWarning($"PoolItem with key: <{key}> at index {i} is null!");
                 }
                 else if (!target.activeInHierarchy)
                 {
                     target.SetActive(true);
-                    allPools[key].MoveToIndex(i, allPools[key].Count - 1);
+                    activePools[key].MoveToIndex(i, activePools[key].Count - 1);
                     return target;
                 }
             }
 
             // Create a new obj, add it and return it
-            if (allPools[key].Count < allPoolItems[key].maxAmount)
+            if (activePools[key].Count < allPoolItems[key].MaxAmount)
             {
-                if (logOnCreate)
+                if (onNewMemberCreated)
                     Debug.LogWarning($"Creating new GO with key <{key}>.");
 
-                return CreateAndAdd(allPoolItems[key].prefab, allPools[key]);
+                return CreateAndAdd(allPoolItems[key].Prefab, activePools[key]);
             }
 
-            if (allPoolItems[key].reuseOnFull)
+            if (allPoolItems[key].ReuseOnFull)
             {
-                var item = allPools[key][0];
+                var item = activePools[key][0];
                 item.SetActive(false);
                 item.SetActive(true); // trigger OnEnable
-                allPools[key].MoveToIndex(0, allPools[key].Count - 1);
+                activePools[key].MoveToIndex(0, activePools[key].Count - 1);
                 return item;
             }
 
-            if (logOnNull)
+            if (onNullMember)
                 Debug.LogWarning($"Pool with key <{key}> reached the limit and is returning null!");
             return null;
         }
+        public void LoadPool(string key)
+        {
+            if (activePools.ContainsKey(key))
+            {
+                Debug.Log($"Pool with key {key} already loaded!");
+                return;
+            }
+            else if (allPoolItems.ContainsKey(key))
+            {
+                activePools.Add(key, CreatePool(allPoolItems[key].Prefab, 
+                                                allPoolItems[key].StartingAmount));
+                if (onPoolLoaded)
+                    Debug.Log($"Pool with key {key} has been loaded.");
+            }
+            else
+            {
+                Debug.LogWarning($"Pool with key {key} cannot be loaded. Data is missing.");
+            }
+        }
+        public void UnloadPool(string key)
+        {
+            if (activePools.ContainsKey(key))
+            {
+                foreach (var go in activePools[key])
+                {
+                    Destroy(go);
+                }
+                activePools.Remove(key);
+                if (onPoolUnloaded)
+                    Debug.Log($"Pool with Key {key} has been unloaded.");
+            }
+            else
+            {
+                Debug.LogWarning($"Cannot unload pool with key: {key}. " +
+                    $"Pool is either not loaded or key doesn't exist.");
+            }
+        }
         public void EmptyPool(string key)
         {
-            Debug.Log($"Pool with key <{key}> was cleared. {allPools[key].Count} GameObjects destroyed.");
-            for (int i = 0; i < allPools[key].Count; i++)
-                if (allPools[key][i] != null)
-                    Destroy(allPools[key][i]);
-            allPools[key].Clear();
+            Debug.Log($"Pool with key <{key}> was cleared. {activePools[key].Count} GameObjects destroyed.");
+            for (int i = 0; i < activePools[key].Count; i++)
+            {
+                if (activePools[key][i] != null)
+                    Destroy(activePools[key][i]);
+            }
+            activePools[key].Clear();
         }
         public void CullPoolOverhead(string key)
         {
-            if (!allPools.ContainsKey(key))
+            if (!activePools.ContainsKey(key))
             {
                 Debug.LogWarning($"Pool with key <{key}> wasn't found and cannot be culled.");
                 return;
             }
 
-            int n = allPoolItems[key].startingAmount;
-            var pool = allPools[key];
+            int n = allPoolItems[key].StartingAmount;
+            var pool = activePools[key];
             while (pool.Count > n)
             {
                 int index = -1;
@@ -127,33 +158,36 @@ namespace CoreTools
         #endregion
 
         #region Private Methods
-        private void GeneratePoolDict()
+        private void GeneratePoolLookup()
         {
-            for (int i = 0; i < poolItems.Length; i++)
+            for (int i = 0; i < poolData.Length; i++)
             {
-                if (!CheckPoolItem(poolItems[i]))
+                if (!CheckPoolItem(poolData[i]) || !poolData[i].CreateOnStart)
+                {
                     continue;
-
-                if (!allPools.ContainsKey(poolItems[i].key))
-                    allPools.Add(poolItems[i].key, CreatePool(poolItems[i].prefab, poolItems[i].startingAmount));
+                }
+                else if (!activePools.ContainsKey(poolData[i].Key))
+                {
+                    LoadPool(poolData[i].Key);
+                }
                 else
-                    Debug.LogWarning($"Duplicate key: {poolItems[i].key}!");
+                    Debug.LogWarning($"Duplicate key: {poolData[i].Key}!");
             }
         }
         private void GeneratePoolItemDict()
         {
-            for (int i = 0; i < poolItems.Length; i++)
+            for (int i = 0; i < poolData.Length; i++)
             {
-                if (!CheckPoolItem(poolItems[i]))
+                if (!CheckPoolItem(poolData[i]))
                 {
                     Debug.LogWarning($"Poolitem number {i} didn't pass the check. Pool will be skipped.");
                     continue;
                 }
 
-                if (!allPoolItems.ContainsKey(poolItems[i].key))
-                    allPoolItems.Add(poolItems[i].key, poolItems[i]);
+                if (!allPoolItems.ContainsKey(poolData[i].Key))
+                    allPoolItems.Add(poolData[i].Key, poolData[i]);
                 else
-                    Debug.LogWarning($"Duplicate key: {poolItems[i].key}!");
+                    Debug.LogWarning($"Duplicate key: {poolData[i].Key}!");
             }
         }
         private List<GameObject> CreatePool(GameObject prefab, int amount)
@@ -168,18 +202,18 @@ namespace CoreTools
         }
         private GameObject CreateAndAdd(GameObject prefab, List<GameObject> targetList)
         {
-            GameObject go = Instantiate(prefab, transf.position, Quaternion.identity);
+            GameObject go = Instantiate(prefab, transform.position, Quaternion.identity);
             go.transform.parent = transform;
             targetList.Add(go);
             return go;
         }
-        private bool CheckPoolItem(PoolItem item)
+        protected bool CheckPoolItem(PoolItem item)
         {
-            bool check = string.IsNullOrWhiteSpace(item.key)
-                      && item.maxAmount > 0
-                      && item.prefab != null;
+            bool check = string.IsNullOrWhiteSpace(item.Key)
+                         && item.MaxAmount > 0
+                         && item.Prefab != null;
             if (!check)
-                Debug.LogWarning($"A Poolitem <{item.key}> failed a check.");
+                Debug.LogWarning($"A Poolitem <{item.Key}> failed a check.");
             return check;
         }
         #endregion
