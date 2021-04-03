@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   channel: {fileID: 11400000, guid: d8150b7e45758e94eb770f2a2457a28c, type: 2}
-  dialogue: {fileID: 11400000, guid: 16af418922d30794b87bd57861cf32e8, type: 2}
+  dialogue: {fileID: 0}
 --- !u!65 &239294905
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -667,7 +667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9584142d1c2a274ca8542b914701c7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueParent: {fileID: 773997294}
+  dialogueParent: {fileID: 1310393214}
   textArea: {fileID: 1747098236}
   speakerField: {fileID: 809273676}
   orientateSpeaker: 0

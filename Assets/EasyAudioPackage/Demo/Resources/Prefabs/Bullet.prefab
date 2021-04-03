@@ -49,9 +49,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionSound:
-    easyAudio: {fileID: 11400000, guid: 9eb2a9a5a6eec6a4c80c7928e8599a2c, type: 2}
-    audioSource: {fileID: 3434413822569519775}
-  audioSource: {fileID: 3434413822569519775}
+    easyAudio: {fileID: 0}
+    audioSource: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!33 &7679538464084609432
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -95,11 +95,19 @@ namespace CoreTools.NodeSystem
             nodeLookup.Remove(removeId);
             ClearFromAllChildren(removeId);
 
-            // Kill
+            // Destory
             Undo.DestroyObjectImmediate(node);
+
+            // Force asset file in project folder to update:
+            // Shouldn't be needed as long as we mark the parent as dirty
+            // Reconsider this approach in case nodes aren't being cleared properly
+            //string[] resPaths = new string[] { AssetDatabase.GetAssetPath(this) };
+            //AssetDatabase.ForceReserializeAssets(resPaths);
 
             // Reconfigure Data
             PopulateNodeLookup();
+
+            // Undo doesn't seem to set the parent asset file dirty so we do it manually
             EditorUtility.SetDirty(this);
         }
         protected virtual void ClearFromAllChildren(string id)
