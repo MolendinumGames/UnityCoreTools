@@ -20,5 +20,7 @@ Demo scene usage:
 - use own assets for UI/icons if you like
 
 
-* See Assets/CoreTools/Dialogue/DialoguePushText.cs for example
+* See Demoscene hierarchy => StartDialoguePusher and
+Assets/CoreTools/Dialogue/DialoguePushText.cs for example
+
 ** See demo scene in hierarchy -> DialogueContoller
