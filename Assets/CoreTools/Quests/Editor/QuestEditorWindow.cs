@@ -53,35 +53,35 @@ namespace CoreTools.QuestSystem.Editor
             }
             if (GUILayout.Button("Void Event Node"))
             {
-                selectedQuest.CreateVoidEventNode();
+                selectedQuest.CreateEventNode<VoidEventNode>();
                 ClearPopup();
                 ClearConnectingNodes();
                 Repaint();
             }
             if (GUILayout.Button("Bool Event Node"))
             {
-                selectedQuest.CreateBoolEventNode();
+                selectedQuest.CreateEventNode<BoolEventNode>();
                 ClearPopup();
                 ClearConnectingNodes();
                 Repaint();
             }
             if (GUILayout.Button("String Event Node"))
             {
-                selectedQuest.CreateStringEventNode();
+                selectedQuest.CreateEventNode<StringEventNode>();
                 ClearPopup();
                 ClearConnectingNodes();
                 Repaint();
             }
             if (GUILayout.Button("Int Event Node"))
             {
-                selectedQuest.CreateIntEventNode();
+                selectedQuest.CreateEventNode<IntEventNode>();
                 ClearPopup();
                 ClearConnectingNodes();
                 Repaint();
             }
             if (GUILayout.Button("Float Event Node"))
             {
-                selectedQuest.CreateFloatEventNode();
+                selectedQuest.CreateEventNode<FloatEventNode>();
                 ClearPopup();
                 ClearConnectingNodes();
                 Repaint();

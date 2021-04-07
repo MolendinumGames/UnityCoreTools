@@ -608,31 +608,37 @@ namespace CoreTools.DialogueSystem.Editor
             }
             if (GUILayout.Button("Void Event Node"))
             {
-                GraphNode newNode = selectedDialogue.CreateVoidEventNode();
+                GraphNode newNode = selectedDialogue.CreateEventNode<VoidEventNode>();
+                newNode.SetPosition(creationPopupPosition);
+                buttonPressed = true;
+            }
+            if (GUILayout.Button("Dialogue Event Node"))
+            {
+                GraphNode newNode = selectedDialogue.CreateEventNode<DialogueEventNode>();
                 newNode.SetPosition(creationPopupPosition);
                 buttonPressed = true;
             }
             if (GUILayout.Button("Bool Event Node"))
             {
-                GraphNode newNode = selectedDialogue.CreateBoolEventNode();
+                GraphNode newNode = selectedDialogue.CreateEventNode<BoolEventNode>();
                 newNode.SetPosition(creationPopupPosition);
                 buttonPressed = true;
             }
             if (GUILayout.Button("String Event Node"))
             {
-                GraphNode newNode = selectedDialogue.CreateStringEventNode();
+                GraphNode newNode = selectedDialogue.CreateEventNode<StringEventNode>();
                 newNode.SetPosition(creationPopupPosition);
                 buttonPressed = true;
             }
             if (GUILayout.Button("Int Event Node"))
             {
-                GraphNode newNode = selectedDialogue.CreateIntEventNode();
+                GraphNode newNode = selectedDialogue.CreateEventNode<IntEventNode>();
                 newNode.SetPosition(creationPopupPosition);
                 buttonPressed = true;
             }
             if (GUILayout.Button("Float Event Node"))
             {
-                GraphNode newNode = selectedDialogue.CreateFloatEventNode();
+                GraphNode newNode = selectedDialogue.CreateEventNode<FloatEventNode>();
                 newNode.SetPosition(creationPopupPosition);
                 buttonPressed = true;
             }

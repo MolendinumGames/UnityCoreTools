@@ -21,7 +21,7 @@ namespace CoreTools.NodeSystem
 
         protected void OnValidate()
         {
-            // will not get called in final build!
+            // will not get called in final build
             this.name = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(this));
             PopulateNodeLookup();
         }
@@ -107,7 +107,7 @@ namespace CoreTools.NodeSystem
             // Reconfigure Data
             PopulateNodeLookup();
 
-            // Undo doesn't seem to set the parent asset file dirty so we do it manually
+            // Undo doesn't set the parent asset file dirty so we do it manually
             EditorUtility.SetDirty(this);
         }
         protected virtual void ClearFromAllChildren(string id)
@@ -164,86 +164,25 @@ namespace CoreTools.NodeSystem
                         $" ParentID: {parent.UniqueID}, ChildID: {child}");
                 }
             }
+            else
+            {
+                Debug.LogError($"Unable to add childId: {child} to parent: {parent}.");
+            }
         }
 
-        #region Create Event Nodes
-
-        public VoidEventNode CreateVoidEventNode()
+        public T CreateEventNode<T>() where T : EventNode
         {
-            VoidEventNode newNode = CreateInstance<VoidEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New Void Node");
+            T newNode = CreateInstance<T>();
+            Undo.RegisterCreatedObjectUndo(newNode, $"Created new {newNode.name}");
             SetupNewNode(newNode);
             return newNode;
-
         }
-        public VoidEventNode CreateVoidEventNode(GraphNode parent)
+        public T CreateEventNode<T>(GraphNode parent) where T : EventNode
         {
-            VoidEventNode newNode = CreateVoidEventNode();
+            T newNode = CreateEventNode<T>();
             AddChildToParent(parent, newNode.UniqueID);
             return newNode;
         }
-
-        public BoolEventNode CreateBoolEventNode()
-        {
-            BoolEventNode newNode = CreateInstance<BoolEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New Int Node");
-            SetupNewNode(newNode);
-            return newNode;
-
-        }
-        public BoolEventNode CreateBoolEventNode(GraphNode parent)
-        {
-            BoolEventNode newNode = CreateBoolEventNode();
-            AddChildToParent(parent, newNode.UniqueID);
-            return newNode;
-        }
-
-        public IntEventNode CreateIntEventNode()
-        {
-            IntEventNode newNode = CreateInstance<IntEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New Int Node");
-            SetupNewNode(newNode);
-            return newNode;
-
-        }
-        public IntEventNode CreateIntEventNode(GraphNode parent)
-        {
-            IntEventNode newNode = CreateIntEventNode();
-            AddChildToParent(parent, newNode.UniqueID);
-            return newNode;
-        }
-
-        public FloatEventNode CreateFloatEventNode()
-        {
-            FloatEventNode newNode = CreateInstance<FloatEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New Float Node");
-            SetupNewNode(newNode);
-            return newNode;
-
-        }
-        public FloatEventNode CreateFloatEventNode(GraphNode parent)
-        {
-            FloatEventNode newNode = CreateFloatEventNode();
-            AddChildToParent(parent, newNode.UniqueID);
-            return newNode;
-        }
-
-        public StringEventNode CreateStringEventNode()
-        {
-            StringEventNode newNode = CreateInstance<StringEventNode>();
-            Undo.RegisterCreatedObjectUndo(newNode, "Created New String Node");
-            SetupNewNode(newNode);
-            return newNode;
-
-        }
-        public StringEventNode CreateStringEventNode(GraphNode parent)
-        {
-            StringEventNode newNode = CreateStringEventNode();
-            AddChildToParent(parent, newNode.UniqueID);
-            return newNode;
-        }
-
-        #endregion
 
         #region Serialization
         public void OnBeforeSerialize()
