@@ -13,8 +13,8 @@ namespace CoreTools.DialogueSystem.Editor
         protected readonly DialogueEditorWindow dialogueEditor;
 
         public GUIStyle radioActiveStyle;
-        //private float oldLabelWidth;
-        public DialogueDrawer(DialogueEditorWindow dialogueEditor, NodeEditorWindow nodeEditor) : base(nodeEditor)
+        public DialogueDrawer(DialogueEditorWindow dialogueEditor, NodeEditorWindow nodeEditor) 
+            : base(nodeEditor)
         {
             this.nodeEditor = nodeEditor;
             this.dialogueEditor = dialogueEditor;
@@ -48,96 +48,13 @@ namespace CoreTools.DialogueSystem.Editor
                 case StringEventNode n:
                     DrawStringEventNode(n);
                     break;
+                case DialogueEventNode n:
+                    DrawDialogueEventNode(n);
+                    break;
             }
             DrawConnections(node);
         }
 
-        #region DrawNode Methods
-        //private void DrawFloatEventNode(FloatEventNode node)
-        //{
-        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-        //    GUILayout.BeginArea(node.NodeRect, useStyle);
-
-        //    DrawHeader(node);
-        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(FloatChannelSO), false) as FloatChannelSO;
-        //    node.Value = EditorGUILayout.FloatField("Value: ", node.Value);
-        //    EditorGUIUtility.labelWidth = oldLabelWidth;
-
-        //    GUILayout.EndArea();
-
-        //    DrawInConnector(node);
-        //    DrawOutConnector(node);
-        //}
-
-        //private void DrawStringEventNode(StringEventNode node)
-        //{
-        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-        //    GUILayout.BeginArea(node.NodeRect, useStyle);
-
-        //    DrawHeader(node);
-        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(StringChannelSO), false) as StringChannelSO;
-        //    node.Value = EditorGUILayout.TextField("Value: ", node.Value);
-        //    EditorGUIUtility.labelWidth = oldLabelWidth;
-
-        //    GUILayout.EndArea();
-
-        //    DrawInConnector(node);
-        //    DrawOutConnector(node);
-        //}
-
-        //private void DrawIntEventNode(IntEventNode node)
-        //{
-        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-        //    GUILayout.BeginArea(node.NodeRect, useStyle);
-
-        //    DrawHeader(node);
-
-        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(IntChannelSO), false) as IntChannelSO;
-        //    node.Value = EditorGUILayout.IntField("Value: ", node.Value);
-        //    EditorGUIUtility.labelWidth = oldLabelWidth;
-
-        //    GUILayout.EndArea();
-
-        //    DrawInConnector(node);
-        //    DrawOutConnector(node);
-        //}
-
-        //private void DrawBoolEventNode(BoolEventNode node)
-        //{
-        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-        //    GUILayout.BeginArea(node.NodeRect, useStyle);
-
-        //    DrawHeader(node);
-
-        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(BoolChannelSO), false) as BoolChannelSO;
-        //    node.Value = EditorGUILayout.Toggle("Value: ", node.Value);
-        //    EditorGUIUtility.labelWidth = oldLabelWidth;
-
-        //    GUILayout.EndArea();
-
-        //    DrawInConnector(node);
-        //    DrawOutConnector(node);
-        //}
-
-        //private void DrawVoidEventNode(VoidEventNode node)
-        //{
-        //    GUIStyle useStyle = dialogueEditor.focusedNode == node ? selectedStyle : nodeStyle;
-        //    GUILayout.BeginArea(node.NodeRect, useStyle);
-
-        //    DrawHeader(node);
-
-        //    EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
-        //    node.Channel = EditorGUILayout.ObjectField("Channel: ", node.Channel, typeof(VoidChannelSO), false) as VoidChannelSO;
-
-        //    GUILayout.EndArea();
-
-        //    DrawInConnector(node);
-        //    DrawOutConnector(node);
-        //}
         private void DrawEntryNode(DialogueEntryNode node)
         {
             GUILayout.BeginArea(node.NodeRect, entryStyle);
@@ -234,7 +151,6 @@ namespace CoreTools.DialogueSystem.Editor
             DrawInConnector(node);
             DrawOutConnector(node);
         }
-        #endregion
 
         private Sprite DrawIconField(DialogueNode node)
         {

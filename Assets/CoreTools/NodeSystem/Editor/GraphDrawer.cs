@@ -22,9 +22,7 @@ public abstract class GraphDrawer
 
     public readonly float tangentOffset = 100f;
     public readonly float connectionWidth = 4f;
-#pragma warning disable IDE0090 // "new(...)" verwenden
     protected readonly Vector2 radioButtonSize = new Vector2(15f, 15f);
-#pragma warning restore IDE0090 // "new(...)" verwenden
 
     public abstract void DrawGraphNode(GraphNode node);
 
@@ -54,7 +52,7 @@ public abstract class GraphDrawer
         selectedStyle = new GUIStyle(nodeStyle);
         selectedStyle.normal.background = EditorGUIUtility.Load("node1") as Texture2D;
 
-        // setting ehader style here based on EditorStyles.boldLabel will cause NullRef
+        // setting header style here based on EditorStyles.boldLabel will cause NullRef
         // create new headerstyle inside DrawHeader instead
     }
 
@@ -367,6 +365,22 @@ public abstract class GraphDrawer
 
         GUILayout.EndArea();
 
+        DrawInConnector(node);
+        DrawOutConnector(node);
+    }
+    protected virtual void DrawDialogueEventNode(DialogueEventNode node)
+    {
+        GUIStyle useStyle = nodeEditor.focusedNode == node ? selectedStyle : nodeStyle;
+        GUILayout.BeginArea(node.NodeRect, useStyle);
+
+        DrawHeader(node);
+
+        EditorGUIUtility.labelWidth = Mathf.FloorToInt(oldLabelWidth * .4f);
+        node.Channel = EditorGUILayout.ObjectField("Channel: ",
+                                                   node.Channel,
+                                                   typeof(DialogueChannel),
+                                                   false) as DialogueChannel;
+        GUILayout.EndArea();
         DrawInConnector(node);
         DrawOutConnector(node);
     }
