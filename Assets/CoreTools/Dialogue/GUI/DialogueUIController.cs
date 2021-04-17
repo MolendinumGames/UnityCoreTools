@@ -22,6 +22,8 @@ namespace CoreTools.DialogueSystem
         private TextMeshProUGUI textArea;
         [SerializeField]
         private TextMeshProUGUI speakerField;
+        [SerializeField]
+        TextAnimator textAnim;
 
         [SerializeField]
         private bool orientateSpeaker = false;
@@ -79,7 +81,7 @@ namespace CoreTools.DialogueSystem
             if (!string.IsNullOrWhiteSpace(node.Text))
             {
                 textArea.gameObject.SetActive(true);
-                textArea.text = node.Text;
+                textAnim.PlayText(node.Text);
             }
             else
             {

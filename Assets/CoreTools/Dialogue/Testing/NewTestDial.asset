@@ -17,8 +17,8 @@ MonoBehaviour:
   children: []
   rect:
     serializedVersion: 2
-    x: 472
-    y: 281
+    x: 321
+    y: 164
     width: 250
     height: 95
   channel: {fileID: 0}
