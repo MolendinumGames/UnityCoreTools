@@ -755,8 +755,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2911b48794517c40b371b6f66bec904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationStyle: 0
-  waitAmount: 0.03
+  animationStyle: 2
+  waitAmount: 0.05
   textField: {fileID: 1747098236}
 --- !u!1 &809273674
 GameObject:
