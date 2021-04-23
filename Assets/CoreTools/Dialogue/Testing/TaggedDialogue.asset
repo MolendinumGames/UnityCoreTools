@@ -43,14 +43,15 @@ MonoBehaviour:
   m_Name: 1bf49508-57fc-462d-8808-c70aca0fd333
   m_EditorClassIdentifier: 
   uniqueID: 1bf49508-57fc-462d-8808-c70aca0fd333
-  text: <b>Does this</b> <i>even work</i>
+  text: <b>Does this</b> <i>even work</i> <b>Does this</b> <i>even work</i> <b>Does
+    this</b> <i>even work</i>
   portrait: {fileID: 0}
   speaker: 
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 385
-    y: 78
+    x: 334
+    y: 79
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}

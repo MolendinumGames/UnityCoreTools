@@ -34,7 +34,6 @@ namespace CoreTools.DialogueSystem
         public bool recolor = false;
         public Color color = Color.white;
 
-
         public void PlayText(string t)
         {
             if (textField == null)
@@ -59,7 +58,7 @@ namespace CoreTools.DialogueSystem
                     StartCoroutine(nameof(PlayByLetter), t);
                     break;
                 case TextAnimationStyle.PerWord:
-                    StartCoroutine(nameof(PlayByWordHighlighted), t);
+                    StartCoroutine(nameof(PlayByWord), t);
                     break;
                 case TextAnimationStyle.Typewriter:
                     throw new Exception("Typewriter animation not implemented!");
@@ -69,42 +68,75 @@ namespace CoreTools.DialogueSystem
         {
             textField.text = t;
             textField.maxVisibleCharacters = 0;
-            WaitForSeconds wait = new WaitForSeconds(waitAmount);
 
-            for (int i = 0; i < t.Length; i++)
+            string cleanedText = t.StripHTMLLazy();
+            WaitForSeconds wait = new WaitForSeconds(waitAmount);
+            (string frontTags, string endTags) = GetHighligthTags();
+
+            int clipCounter = 0;
+
+            for (int i = 0; i < cleanedText.Length; i++)
             {
-                textField.maxVisibleCharacters = i;
-                if (textAudio != null)
+                // Reset the text to clear last char animation
+                textField.text = t;
+                // increases visible char count. Rich text will be auto skipped
+                textField.maxVisibleCharacters = i + 1;
+
+                // Get the last visible characters index wihtin the original uncleaned string
+                int index = textField.GetTextInfo(t).characterInfo[i].index;
+                // Insert new animation tags
+
+                textField.text = textField.text.Insert(index, frontTags);
+                textField.text += endTags;
+
+                clipCounter++;
+                if (textAudio != null && clipCounter % 2 == 0)
                     textAudio.Play();
+
                 yield return wait;
             }
-        }
+            // clear animation of last word
+            textField.text = t;
+        }        
         IEnumerator PlayByWord(string t)
         {
             textField.text = t;
             textField.maxVisibleCharacters = 0;
-            string[] words = t.Split(' ');
+
+            string originalText = t;
+            string[] unclearedWords = GetWordsFromDialogue(t, false);
+            string[] clearedWords = GetWordsFromDialogue(t, true);
+            
             WaitForSeconds wait = new WaitForSeconds(waitAmount);
 
-            int visible = 0;
-            for (int i = 0; i < words.Length; i++)
+            (string frontTags, string endTags) = GetHighligthTags();
+            
+            int visible = 0;  // Tags are not counted by maxVisibleCharacters in TMPro
+            for (int i = 0; i < clearedWords.Length; i++)
             {
-                visible += words[i].Length + 1;
+                if (string.IsNullOrEmpty(clearedWords[i])) continue;
+                // Make another word + one whitespace visible
+                visible += clearedWords[i].Length + 1;
                 textField.maxVisibleCharacters = visible;
+
+                // Reset the text and reinsert the tags for the newest word animation
+                textField.text = originalText;
+                textField.text = textField.text.Insert(GetCombinedWordLength(unclearedWords.Take(i)),
+                                                       frontTags);
+                textField.text = textField.text.Insert(GetCombinedWordLength(unclearedWords.Take(i+1)) + frontTags.Length -1,
+                                                       endTags);
+                textField.SetAllDirty();
+
                 if (textAudio != null)
                     textAudio.Play();
+
                 yield return wait;
             }
+            // clear animation of last word
+            textField.text = originalText;
         }
-        
-        IEnumerator PlayByWordHighlighted(string t)
+        (string, string) GetHighligthTags()
         {
-            textField.text = t;
-            string originalText = t;
-            textField.maxVisibleCharacters = 0;
-            string[] words = t.Split(' ');
-            WaitForSeconds wait = new WaitForSeconds(waitAmount);
-
             string frontTags = "";
             string endTags = "";
             if (bold)
@@ -127,92 +159,29 @@ namespace CoreTools.DialogueSystem
                 frontTags += $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>";
                 endTags += "</color>";
             }
-            
-
-            int visible = 0;
-            for (int i = 0; i < words.Length; i++)
-            {
-                visible += words[i].Length + 1;
-                textField.maxVisibleCharacters = visible;
-
-                // reset the text and reinsert the tags for the newest word
-                textField.text = originalText;
-                textField.text = textField.text.Insert(visible - words[i].Length -1, frontTags);
-                textField.text = textField.text + endTags;
-                textField.SetAllDirty();
-
-                if (textAudio != null)
-                    textAudio.Play();
-
-                yield return wait;
-            }
-            textField.text = originalText;
+            return (frontTags, endTags);
         }
-        //int rolloverCharacterSpread = 1;
-        //Color colorTint;
-        //float fadeSpeed = 1f;
-        //IEnumerator AnimateVertexColors()
-        //{
-        //    // Need to force the text object to be generated so we have valid data to work with right from the start.
-        //    textField.ForceMeshUpdate();
-        //    TMP_TextInfo textInfo = textField.textInfo;
-        //    Color32[] newVertexColors;
-        //    int currentCharacter = 0;
-        //    int startingCharacterRange = currentCharacter;
-        //    bool isRangeMax = false;
-
-        //    while (!isRangeMax)
-        //    {
-        //        int characterCount = textInfo.characterCount;
-        //        // Spread should not exceed the number of characters.
-        //        byte fadeSteps = (byte)Mathf.Max(1, 255 / RolloverCharacterSpread);
-        //        for (int i = startingCharacterRange; i < currentCharacter + 1; i++)
-        //        {
-        //            // Skip characters that are not visible
-        //            if (!textInfo.characterInfo[i].isVisible)
-        //                continue;
-        //            // Get the index of the material used by the current character.
-        //            int materialIndex = textInfo.characterInfo[i].materialReferenceIndex;
-        //            // Get the vertex colors of the mesh used by this text element (character or sprite).
-        //            newVertexColors = textInfo.meshInfo[materialIndex].colors32;
-        //            // Get the index of the first vertex used by this text element.
-        //            int vertexIndex = textInfo.characterInfo[i].vertexIndex;
-        //            // Get the current character's alpha value.
-        //            byte alpha = (byte)Mathf.Clamp(newVertexColors[vertexIndex + 0].a - fadeSteps, 0, 255);
-        //            // Set new alpha values.
-        //            newVertexColors[vertexIndex + 0].a = alpha;
-        //            newVertexColors[vertexIndex + 1].a = alpha;
-        //            newVertexColors[vertexIndex + 2].a = alpha;
-        //            newVertexColors[vertexIndex + 3].a = alpha;
-        //            // Tint vertex colors
-        //            // Note: Vertex colors are Color32 so we need to cast to Color to multiply with tint which is Color.
-        //            newVertexColors[vertexIndex + 0] = (Color)newVertexColors[vertexIndex + 0] * colorTint;
-        //            newVertexColors[vertexIndex + 1] = (Color)newVertexColors[vertexIndex + 1] * colorTint;
-        //            newVertexColors[vertexIndex + 2] = (Color)newVertexColors[vertexIndex + 2] * colorTint;
-        //            newVertexColors[vertexIndex + 3] = (Color)newVertexColors[vertexIndex + 3] * colorTint;
-        //            if (alpha == 0)
-        //            {
-        //                startingCharacterRange += 1;
-        //                if (startingCharacterRange == characterCount)
-        //                {
-        //                    // Update mesh vertex data one last time.
-        //                    textField.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
-        //                    yield return new WaitForSeconds(1.0f);
-        //                    // Reset the text object back to original state.
-        //                    textField.ForceMeshUpdate();
-        //                    yield return new WaitForSeconds(1.0f);
-        //                    // Reset our counters.
-        //                    currentCharacter = 0;
-        //                    startingCharacterRange = 0;
-        //                    //isRangeMax = true; // Would end the coroutine.
-        //                }
-        //            }
-        //        }
-        //        // Upload the changed vertex colors to the Mesh.
-        //        textField.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
-        //        if (currentCharacter + 1 < characterCount) currentCharacter += 1;
-        //        yield return new WaitForSeconds(0.25f - fadeSpeed * 0.01f);
-        //    }
-        //}
+        private string[] GetWordsFromDialogue(string d, bool cleaned)
+        {
+            string[] words = d.Split(' ');
+            if (cleaned)
+                for (int i = 0; i < words.Length; i++)
+                {
+                    // The array is used to calculate the visible characters per loop so
+                    // tags have to be stripped to get the correct number.
+                    // However the final TMPro field will ignore tags for visible count.
+                    words[i] = words[i].StripHTMLLazy();
+                }
+            return words;
+        }
+        private int GetCombinedWordLength(IEnumerable<string> words)
+        {
+            int counter = 0;
+            foreach (string w in words)
+            {
+                counter += w.Length + 1; // +1 for whitespace used to split
+            }
+            return counter;
+        }
     }
 }
