@@ -12,13 +12,14 @@ namespace CoreTools
         [Header("Audio")]
         [SerializeField]
         AudioMixer masterMixer;
+
         [SerializeField]
         Vector2Int minMaxVolumeLevel = new Vector2Int(-80, 0);
 
-        private readonly string volumeId = "volume";
-        private readonly string vSyncId = "vsync";
-        private readonly string fullscreenId = "fullscreen";
-        private readonly string resolutionId = "resolution";
+        private const string volumeId = "volume";
+        private const string vSyncId = "vsync";
+        private const string fullscreenId = "fullscreen";
+        private const string resolutionId = "resolution";
 
         private void Awake()
         {
@@ -26,13 +27,11 @@ namespace CoreTools
         }
         public void SaveSettings()
         {
-            float volume;
-            masterMixer.GetFloat("volume", out volume);
+            masterMixer.GetFloat("volume", out float volume);
             PlayerPrefs.SetFloat(volumeId, volume);
             PlayerPrefs.SetInt(vSyncId, QualitySettings.vSyncCount);
             PlayerPrefs.SetString(resolutionId, Screen.currentResolution.ToString());
             PlayerPrefs.SetString(fullscreenId, Screen.fullScreen.ToString());
-
         }
         public void LoadSettings()
         {

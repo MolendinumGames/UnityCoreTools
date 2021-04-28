@@ -1,4 +1,4 @@
-﻿namespace SaveSystem
+﻿namespace CoreTools.SaveSystem
 {
 	public interface ISaveable
 	{

@@ -7,21 +7,17 @@ using UnityEngine;
 using CoreTools;
 using UnityEngine.SceneManagement;
 
-namespace SaveSystem
+namespace CoreTools.SaveSystem
 {
 	public class SavingManager : Singleton<SavingManager>
 	{
         protected override bool Persistent => true;
 
-        private readonly string lastSceneKey = "lastSceneBuildIndex";
+        private const string lastSceneKey = "lastSceneBuildIndex";
 
+        protected override void OnAwake() { }
 
-        #region EventFunctions
-        protected override void OnAwake()
-        {
-            
-        }
-        #endregion
+        protected List<SaveableEntity> saveEntities = new List<SaveableEntity>();
 
         #region Public
         public void Save(string saveFile)
@@ -30,52 +26,67 @@ namespace SaveSystem
             CaptureSaveState(saveState);
             SaveFile(saveFile, saveState);
         }
-        public void LoadLastSave(string saveFile)
-        {
+
+        public void LoadLastSave(string saveFile) =>
             StartCoroutine(LoadLastScene(saveFile));
-        }
-        public void ApplyLastSaveState(string saveFile)
-        {
+
+        public void ApplyLastSaveState(string saveFile) =>
             RestoreSaveState(LoadFile(saveFile));
+
+        public void RegisterSaveEntitiy(SaveableEntity e)
+        {
+            if (!saveEntities.Contains(e))
+                saveEntities.Add(e);
+        }
+        public void DeregisterSaveEntity(SaveableEntity e)
+        {
+            if (saveEntities.Contains(e))
+                saveEntities.Remove(e);
         }
         #endregion
+
         private Dictionary<string, object> LoadFile(string saveFile)
         {
             string path = GetPathFromSaveFile(saveFile);
             if (!File.Exists(path))
-                return new Dictionary<string, object>();
-            using (FileStream stream = File.Open(path, FileMode.Open))
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                return (Dictionary<string, object>)formatter.Deserialize(stream);
+                Debug.LogError($"Trying to load from nonexisting savefile: {saveFile}");
+                return new Dictionary<string, object>();
             }
+            Debug.Log($"Loading saveile: {saveFile}");
+            using FileStream stream = File.Open(path, FileMode.Open);
+            BinaryFormatter formatter = new BinaryFormatter();
+            return (Dictionary<string, object>)formatter.Deserialize(stream);
         }
         private void SaveFile(string saveFile, object saveState)
         {
             string path = GetPathFromSaveFile(saveFile);
             Debug.Log($"Saving to {path}");
-            using (FileStream stream = File.Open(path, FileMode.Open))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, saveState);
-            }
+
+            using FileStream stream = File.Open(path, FileMode.Open);
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(stream, saveState);
         }
 
         private void CaptureSaveState(Dictionary<string, object> saveState)
         {
-            foreach (SaveableEntity saveable in FindObjectsOfType<SaveableEntity>())
+            foreach (SaveableEntity saveable in saveEntities)
             {
-                saveState[saveable.GetUniqueID()] = saveable.CaptureStates();
+                if (saveable.enabled)
+                    saveState[saveable.UniqueID] = saveable.CaptureStates();
             }
             StoreSceneIndex(saveState);
         }
         private void RestoreSaveState(Dictionary<string, object> saveState)
         {
-            foreach (SaveableEntity saveable in FindObjectsOfType<SaveableEntity>())
+            foreach (SaveableEntity saveable in saveEntities)
             {
-                string id = saveable.GetUniqueID();
-                if (saveState.ContainsKey(id))
-                    saveable.RestoreStates(saveState[id]);
+                if (saveable.enabled)
+                {
+                    string id = saveable.UniqueID;
+                    if (saveState.ContainsKey(id))
+                        saveable.RestoreStates(saveState[id]);
+                }
             }
         }
         private IEnumerator LoadLastScene(string saveFile)
@@ -87,8 +98,10 @@ namespace SaveSystem
             yield return SceneManager.LoadSceneAsync(buildIndex);
             RestoreSaveState(state);
         }
-        private void StoreSceneIndex(Dictionary<string, object> saveState) => saveState[lastSceneKey] = SceneManager.GetActiveScene().buildIndex;
+        private void StoreSceneIndex(Dictionary<string, object> saveState) =>
+            saveState[lastSceneKey] = SceneManager.GetActiveScene().buildIndex;
 
-        private string GetPathFromSaveFile(string saveFile) => Path.Combine(Application.persistentDataPath, saveFile + ".sav");
+        private string GetPathFromSaveFile(string saveFile) =>
+            Path.Combine(Application.persistentDataPath, saveFile + ".sav");
     }	
 }

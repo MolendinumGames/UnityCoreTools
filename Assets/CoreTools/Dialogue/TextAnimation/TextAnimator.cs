@@ -11,9 +11,7 @@ namespace CoreTools.DialogueSystem
 {
     public class TextAnimator : MonoBehaviour
     {
-        [SerializeField]
-        TextAnimationStyle animationStyle;
-        public TextAnimationStyle AnimationStyle { get => animationStyle; set => animationStyle = value; }
+        public TextAnimationStyle animationStyle = TextAnimationStyle.Instant;
 
         [SerializeField]
         [Range(0f, 1f)]
