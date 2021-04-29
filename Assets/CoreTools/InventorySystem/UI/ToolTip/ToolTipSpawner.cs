@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace InventorySystem
+namespace CoreTools.InventorySystem
 {
-	public abstract class ToolTipSpawner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+	public abstract class TooltipSpawner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	{
         [Tooltip("Generic UIPrefab for tooltips. Will be resused after creation.")]
-        [SerializeField] GameObject tooltipPrefab = null;
+        [SerializeField]
+        GameObject tooltipPrefab = null;
 
         // Child ref
         GameObject tooltip = null;
 
         private enum RelativeScreenPosition { UpLeft, UpRigth, DownLeft, DownRight }
 
-        #region EventFunctions
         private void OnEnable() => ClearTooltip();
 
         private void OnDisable() => ClearTooltip();
@@ -45,13 +45,10 @@ namespace InventorySystem
         {
             ClearTooltip();
         }
-        #endregion
 
-        // PUBLIC ABSTRACT METHODS
         public abstract bool CanSpawnToolTip();
-        public abstract void UpdateTooltip(GameObject tip);
+        public abstract void UpdateTooltip(GameObject tipObject);
 
-        // PRIVATE METHODS
         private void ClearTooltip()
         {
             if (tooltip)
@@ -80,42 +77,27 @@ namespace InventorySystem
             Vector3 bottomRightTooltip = tooltipCorners[3];
 
             // Find position relative to screen
-            RelativeScreenPosition relativePos;
-            if (transform.position.x > Screen.width / 2f)
+            Vector3 pos = transform.position;
+            float halfWidth = Screen.width * .5f;
+            float halfHeight = Screen.height * .5f;
+            RelativeScreenPosition relativePos = 
+                (pos.x > halfWidth, pos.y > halfHeight) switch
             {
-                if (transform.position.y > Screen.height / 2f)
-                    relativePos = RelativeScreenPosition.UpRigth;
-                else
-                    relativePos = RelativeScreenPosition.DownRight;
-            }
-            else
-            {
-                if (transform.position.y > Screen.height / 2f)
-                    relativePos = RelativeScreenPosition.UpLeft;
-                else
-                    relativePos = RelativeScreenPosition.DownLeft;
-            }
+                (true,  true)  => RelativeScreenPosition.UpRigth,
+                (true,  false) => RelativeScreenPosition.DownRight,
+                (false, true)  => RelativeScreenPosition.UpLeft,
+                (false, false) => RelativeScreenPosition.DownLeft
+            };
 
             // Set position of tooltip
-            switch (relativePos)
+            tooltip.transform.position = relativePos switch
             {
-                case RelativeScreenPosition.UpLeft:
-                    tooltip.transform.position = tooltip.transform.position + (bottomLeftSlot  - topLeftTooltip);
-                    break;
-                case RelativeScreenPosition.UpRigth:
-                    tooltip.transform.position = tooltip.transform.position + (bottomRightSlot - topRightTooltip);
-                    break;
-                case RelativeScreenPosition.DownLeft:
-                    tooltip.transform.position = tooltip.transform.position + (topLeftSlot     - bottomLeftTooltip);
-                    break;
-                case RelativeScreenPosition.DownRight:
-                    tooltip.transform.position = tooltip.transform.position + (topRightSlot    - bottomRightTooltip);
-                    break;
-                default:
-                    Debug.LogError("Tooltip couldn't determine relative screen position.");
-                    tooltip.transform.position = transform.position;
-                    break;
-            }
+                RelativeScreenPosition.UpLeft    => tooltip.transform.position + (bottomLeftSlot - topLeftTooltip),
+                RelativeScreenPosition.UpRigth   => tooltip.transform.position + (bottomRightSlot - topRightTooltip),
+                RelativeScreenPosition.DownLeft  => tooltip.transform.position + (topLeftSlot - bottomLeftTooltip),
+                RelativeScreenPosition.DownRight => tooltip.transform.position + (topRightSlot - bottomRightTooltip),
+                _ => throw new NotImplementedException("Tooltip couldn't determine relative screen position.")
+            };
         }
     }	
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CoreTools.SaveSystem;
 
-namespace InventorySystem
+namespace CoreTools.InventorySystem
 {
     public class EquipmentHolder : MonoBehaviour, ISaveable
     {
@@ -38,7 +38,7 @@ namespace InventorySystem
         public bool EquipItemIntoSlot(EquipmentItem item, string id)
         {
             EquipmentSlot slot = GetSlotByID(id);
-            if (slot != null && item.GetEquipmentType() == slot.GetEquipmentType())
+            if (slot != null && item.EquipmentType == slot.GetEquipmentType())
             {
                 slot.SetItem(item);
                 RaiseUpdate();
@@ -74,7 +74,7 @@ namespace InventorySystem
             EquipmentSlotData[] data = new EquipmentSlotData[slots.Length];
             for (int i = 0; i < data.Length; i++)
             {
-                data[i].itemId = slots[i].GetItem().GetID();
+                data[i].itemId = slots[i].GetItem().UniqueID;
                 data[i].id = slots[i].GetID();
             }
             return data;
@@ -95,7 +95,7 @@ namespace InventorySystem
                     if (data[j].id == slots[i].GetID())
                     {
                         string itemID = data[j].itemId;
-                        InventoryItem newitem = InventoryItem.GetItemByID(itemID);
+                        InventoryItem newitem = ItemLookup.GetItemByID(itemID);
 
                         slots[i].SetItem(newitem as EquipmentItem);
                         break;

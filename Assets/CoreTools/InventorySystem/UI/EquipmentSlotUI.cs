@@ -5,7 +5,7 @@ using UnityEngine;
 using InventorySystem;
 using UnityEngine.UI;
 
-namespace InventorySystem.UI
+namespace CoreTools.InventorySystem.UI
 {
 	public class EquipmentSlotUI : MonoBehaviour, IDragContainer<InventoryItem>
 	{
@@ -37,7 +37,7 @@ namespace InventorySystem.UI
             if (!holder
                 || holder.GetSlotType(connectedId) == EquipmentType.Default // This means the connectedID doesn't exist in the Equipment holder
                 || item as EquipmentItem == null
-                || ((EquipmentItem)item).GetEquipmentType() != holder.GetSlotType(connectedId))
+                || ((EquipmentItem)item).EquipmentType != holder.GetSlotType(connectedId))
                 return 0;
             else return 1;
         }
@@ -64,7 +64,7 @@ namespace InventorySystem.UI
             InventoryItem i = GetItem() as InventoryItem;
             if (i != null)
             {
-                Sprite s = i.GetIcon();
+                Sprite s = i.Icon;
                 if (s != null) // target icon
                 {
                     icon.sprite = s;

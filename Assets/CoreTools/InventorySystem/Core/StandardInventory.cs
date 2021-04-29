@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CoreTools.SaveSystem;
 
-namespace InventorySystem
+namespace CoreTools.InventorySystem
 {
     public class StandardInventory : Inventory, ISaveable
     {
@@ -19,7 +19,7 @@ namespace InventorySystem
             SlotSaveData[] saveData = new SlotSaveData[Size];
             for (int i = 0; i < Size; i++)
             {
-                saveData[i].id = GetItemInSlot(i).GetID();
+                saveData[i].id = GetItemInSlot(i).UniqueID;
                 saveData[i].amount = GetAmountIntSlot(i);
             }
             return saveData;
@@ -40,7 +40,7 @@ namespace InventorySystem
 
             for (int i = 0; i < Size; i++)
             {
-                InventoryItem item = InventoryItem.GetItemByID(saveData[i].id);
+                InventoryItem item = ItemLookup.GetItemByID(saveData[i].id);
                 int amount = saveData[i].amount;
                 TryAddItemToSlot(item, i, amount);
             }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InventorySystem
+namespace CoreTools.InventorySystem
 {
 	public class Pickup : MonoBehaviour
 	{
@@ -82,16 +82,16 @@ namespace InventorySystem
         }
         private void SetVisual()
         {
-            if (item == null || item.GetMesh() == null || item.GetMaterial() == null)
-            {
-                meshFilter.sharedMesh = standardMesh;
-                meshRenderer.sharedMaterial = standardMat;
-            }
-            else
-            {
-                meshFilter.sharedMesh = item.GetMesh();
-                meshRenderer.sharedMaterial = item.GetMaterial();
-            }
+            //if (item == null || item.GetMesh() == null || item.GetMaterial() == null)
+            //{
+            //    meshFilter.sharedMesh = standardMesh;
+            //    meshRenderer.sharedMaterial = standardMat;
+            //}
+            //else
+            //{
+            //    meshFilter.sharedMesh = item.GetMesh();
+            //    meshRenderer.sharedMaterial = item.GetMaterial();
+            //}
         }
 	}	
 }

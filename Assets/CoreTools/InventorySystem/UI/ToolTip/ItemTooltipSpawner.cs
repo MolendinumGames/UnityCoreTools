@@ -3,23 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InventorySystem.UI
+namespace CoreTools.InventorySystem.UI
 {
-    public class ItemTooltipSpawner : ToolTipSpawner
+    public class ItemTooltipSpawner : TooltipSpawner
     {
-        public override bool CanSpawnToolTip()
-        {
-            return GetComponent<InventorySlotUI>().GetItem() != null;
-        }
+        public override bool CanSpawnToolTip() => GetComponent<InventorySlotUI>().GetItem() != null;
 
-        public override void UpdateTooltip(GameObject tip)
+        public override void UpdateTooltip(GameObject tipObject)
         {
-            ItemTooltip toolTip = tip.GetComponent<ItemTooltip>();
+            Tooltip itemTooltip = tipObject.GetComponent<Tooltip>();
             InventoryItem item = GetComponent<InventorySlotUI>().GetItem();
-
-            if (toolTip)
+            if (itemTooltip != null && item != null)
             {
-                toolTip.SetUp(item);
+                itemTooltip.Initialitze(item.ItemName, item.Description);
             }
         }
     }

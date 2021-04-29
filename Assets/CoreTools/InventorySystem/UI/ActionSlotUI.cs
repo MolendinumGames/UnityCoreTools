@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NewNameSpace
+namespace CoreTools.InventorySystem
 {
 	public class ActionSlotUI : MonoBehaviour
 	{

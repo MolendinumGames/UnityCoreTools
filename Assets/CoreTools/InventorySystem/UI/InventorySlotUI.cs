@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using InventorySystem;
+using CoreTools.InventorySystem;
 
-namespace InventorySystem.UI
+namespace CoreTools.InventorySystem.UI
 {
     public class InventorySlotUI : MonoBehaviour, IDragContainer<InventoryItem>
     {
@@ -22,7 +22,7 @@ namespace InventorySystem.UI
         public int MaxAcceptable(InventoryItem item)
         {
             if (inventory.GetItemInSlot(slotID) == null)
-                return item.GetMaxStack();
+                return item.MaxStack;
             else
                 return inventory.GetAmountIntSlot(slotID);
         }
@@ -42,7 +42,7 @@ namespace InventorySystem.UI
 
         private void SetIcon(InventoryItem item)
         {
-            Sprite icon = item.GetIcon();
+            Sprite icon = item.Icon;
             iconImage.color = Color.white;
             if (icon != null)
                 iconImage.sprite = icon;

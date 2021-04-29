@@ -1,81 +1,41 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
-namespace InventorySystem
+namespace CoreTools.InventorySystem
 {
     public class InventoryItem : ScriptableObject, ISerializationCallbackReceiver
     {
-        [SerializeField] new string name;
-        [SerializeField] string uniqueID;
-        [SerializeField] string description;
-        [SerializeField] string tooltip;
-        [SerializeField] Sprite icon;
-        [SerializeField] int maxStack;
-        [SerializeField] Mesh mesh;
-        [SerializeField] Material material;
+        public string UniqueID { get; private set; } = "";
 
-        #region Public Properties
-        public string GetName() => name;
-        public string GetID() => uniqueID;
-        public string GetDescription() => description;
-        public string GetToolTip() => tooltip;
-        public Sprite GetIcon() => icon;
-        public int GetMaxStack() => maxStack;
-        public Mesh GetMesh() => mesh;
-        public Material GetMaterial() => material;
-        #endregion
+        [SerializeField]
+        string itemName;
+        public string ItemName { get => itemName; }
 
-        private static Dictionary<string, InventoryItem> itemLookup;
+        [SerializeField] 
+        string description;
+        public string Description { get => description; }
 
-        #region Static Methods
-        public static InventoryItem GetItemByID(string id)
-        {
-            if (itemLookup == null)
-                PopulateItemLookup();
+        [SerializeField] 
+        string tooltip;
+        public string Tooltip { get => tooltip; }
 
-            if (id == null || !itemLookup.ContainsKey(id))
-            {
-                Debug.LogWarning($"No Item with ID: '{id}' found. Returning null.");
-                return null;
-            }
-            else return itemLookup[id];
-        }
-        private static void PopulateItemLookup()
-        {
-            itemLookup = new Dictionary<string, InventoryItem>();
-            InventoryItem[] items = Resources.LoadAll<InventoryItem>("");
-            for (int i = 0; i < items.Length; i++)
-            {
-                string id = items[i].uniqueID;
-                if (!itemLookup.ContainsKey(id))
-                    itemLookup[id] = items[i];
-                else
-                    Debug.LogWarning($"Dublicate Item ID. Names: {items[i].GetName()}, {itemLookup[id].GetName()}. ID: {id}");
-            }
-        }
-        #endregion
+        [SerializeField] 
+        Sprite icon;
+        public Sprite Icon { get => icon; }
 
-        #region Public Methods
-        public void OnAfterDeserialize()
-        {
-            HandleID();
-        }
+        [SerializeField] 
+        int maxStack;
+        public int MaxStack { get => maxStack; }
 
-        public void OnBeforeSerialize()
-        {
-            // Not needed
-        }
-        #endregion
+        #region Serialization
+        public void OnAfterDeserialize() => HandleID();
 
-        #region Private Methods
+        public void OnBeforeSerialize() { } // not needed
+
         private void HandleID()
         {
-            if (string.IsNullOrWhiteSpace(uniqueID))
+            if (string.IsNullOrWhiteSpace(UniqueID))
             {
-                uniqueID = System.Guid.NewGuid().ToString();
+                UniqueID = System.Guid.NewGuid().ToString();
             }
         }
         #endregion

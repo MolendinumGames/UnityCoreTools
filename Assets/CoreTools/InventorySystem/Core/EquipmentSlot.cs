@@ -3,14 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InventorySystem
+namespace CoreTools.InventorySystem
 {
 	[System.Serializable]
 	public class EquipmentSlot
 	{
-		public  EquipmentItem item;
+		public EquipmentItem item;
+
 		[SerializeField]
 		private EquipmentType type;
+
 		[SerializeField]
 		private string uniqueId;
 

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InventorySystem
+namespace CoreTools.InventorySystem
 {
     public class InventorySlot
     {
@@ -15,15 +15,16 @@ namespace InventorySystem
             item = null;
             amount = 0;
         }
-        public bool HasSpace() => item != null ? amount < item.GetMaxStack() : true;
+        public bool HasSpace() => item == null || amount < item.MaxStack;
 
-        public int GetSpace() => item != null ? item.GetMaxStack() - amount : 0;
+        public int GetSpace() => item ? item.MaxStack - amount : 0;
+
         public int AddAmountToSlot(int count)
         {
             if (count > GetSpace())
             {
                 int extra = count - GetSpace();
-                amount = item.GetMaxStack();
+                amount = item.MaxStack;
                 return extra;
             }
             else
@@ -45,7 +46,7 @@ namespace InventorySystem
         public void SetSlot(InventoryItem item, int count)
         {
             this.item = item;
-            this.amount = Mathf.Clamp(count, 0, item.GetMaxStack());
+            this.amount = Mathf.Clamp(count, 0, item.MaxStack);
         }
     }
 }

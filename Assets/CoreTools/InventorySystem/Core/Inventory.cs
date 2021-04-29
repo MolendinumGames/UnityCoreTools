@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InventorySystem
+namespace CoreTools.InventorySystem
 {
     public class Inventory : MonoBehaviour
     {
@@ -14,19 +14,12 @@ namespace InventorySystem
         private InventorySlot[] slots;
 
         [SerializeField]
-        private InventoryItem restrictTo;
+        private InventoryItem restrictedType;
 
         public event Action inventoryUpdated;
 
-        #region Unity EventCallBacks
-        private void Awake()
-        {
-            SetUpInventory();
-            OnAwake();
-        }
-        protected virtual void OnAwake() { }
+        protected void Awake() => SetUpInventory();
 
-        #endregion
         private void SetUpInventory()
         {
             slots = new InventorySlot[inventorySize];
@@ -58,6 +51,7 @@ namespace InventorySystem
             }
         }
         public int GetSpaceInSlot(int index) => slots[index].GetSpace();
+
         public void RemoveFromSlot(int index, int amount)
         {
             slots[index].RemoveAmountFromSlot(amount);
@@ -136,8 +130,11 @@ namespace InventorySystem
 
         protected void RaiseUpdateEvent() => inventoryUpdated?.Invoke();
 
-        public bool HasRestriction() => restrictTo != null;
-        public bool ItemIsCorrectType(InventoryItem item) => restrictTo == null || item.GetType() == restrictTo.GetType();
+        public bool HasRestriction() => restrictedType != null; // needed?
+        public bool ItemIsCorrectType(InventoryItem item) => 
+            restrictedType == null || item.GetType() == restrictedType.GetType();
+
+
         public int SetSlot(int slot, InventoryItem item, int amount)
         {
             slots[slot].Reset();
