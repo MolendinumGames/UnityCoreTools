@@ -2,17 +2,21 @@
 using TMPro;
 using UnityEngine.UI;
 using System;
+using CoreTools.UI;
 
-namespace CoreTools.InventorySystem.UI
+namespace CoreTools.UI
 {
-	public class Tooltip : MonoBehaviour
+    [RequireComponent(typeof(TextMeshProUGUI))]
+	public class TooltipController : MonoBehaviour
 	{
 		[SerializeField]
 		TextMeshProUGUI headerText;
 		[SerializeField]
 		TextMeshProUGUI bodyText;
 
-		public void Initialitze(string header, string body)
+		TooltipAnimator anim;
+
+        public void Initialitze(string header, string body)
         {
 			headerText.text = header;
 			bodyText.text = body;
@@ -21,6 +25,9 @@ namespace CoreTools.InventorySystem.UI
 
         private void StartAnimation()
         {
+			if (anim == null)
+				anim = GetComponent<TooltipAnimator>();
+			//if (anim != null)
 
         }
     }	

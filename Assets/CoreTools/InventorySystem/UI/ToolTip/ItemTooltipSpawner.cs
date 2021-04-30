@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CoreTools.UI;
 
 namespace CoreTools.InventorySystem.UI
 {
@@ -11,7 +12,7 @@ namespace CoreTools.InventorySystem.UI
 
         public override void UpdateTooltip(GameObject tipObject)
         {
-            Tooltip itemTooltip = tipObject.GetComponent<Tooltip>();
+            TooltipController itemTooltip = tipObject.GetComponent<TooltipController>();
             InventoryItem item = GetComponent<InventorySlotUI>().GetItem();
             if (itemTooltip != null && item != null)
             {
