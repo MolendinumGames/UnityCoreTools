@@ -16,19 +16,23 @@ namespace CoreTools.UI
 
 		TooltipAnimator anim;
 
+        private void Awake()
+        {
+            anim = GetComponent<TooltipAnimator>();
+        }
+
         public void Initialitze(string header, string body)
         {
 			headerText.text = header;
 			bodyText.text = body;
-			StartAnimation();
+
+            if (anim != null)
+			    StartAnimation();
         }
 
         private void StartAnimation()
         {
-			if (anim == null)
-				anim = GetComponent<TooltipAnimator>();
-			//if (anim != null)
-
+            anim.StartAnimation();
         }
     }	
 }
