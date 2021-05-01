@@ -52,6 +52,5 @@ namespace CoreTools.InventorySystem.UI
             iconImage.color = Color.clear;
             iconImage.sprite = null;
         }
-
     }
 }

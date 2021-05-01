@@ -14,7 +14,7 @@ namespace CoreTools.SaveSystem
         public string UniqueID { get; private set; } = "";
 
         private void OnEnable() => SavingManager.Instance.RegisterSaveEntitiy(this);
-        private void OnDisable() => SavingManager.Instance.DeregisterSaveEntity(this);
+        private void OnDisable() => SavingManager.Instance?.DeregisterSaveEntity(this);
 
         /// <summary>
         /// Read all states through ISaveable from components on this GO

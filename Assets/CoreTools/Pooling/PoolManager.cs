@@ -27,8 +27,9 @@ namespace CoreTools
         bool onPoolUnloaded = true;
 
 
-        protected override void OnAwake()
+        protected override void Awake()
         {
+            base.Awake();
             GeneratePoolItemDict();
             GeneratePoolLookup();
         }

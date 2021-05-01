@@ -14,7 +14,7 @@ namespace CoreTools.InventorySystem
         private InventorySlot[] slots;
 
         [SerializeField]
-        private InventoryItem restrictedType;
+        InventoryItem restrictedType;
 
         public event Action inventoryUpdated;
 
@@ -130,7 +130,8 @@ namespace CoreTools.InventorySystem
 
         protected void RaiseUpdateEvent() => inventoryUpdated?.Invoke();
 
-        public bool HasRestriction() => restrictedType != null; // needed?
+        public bool HasRestriction() =>
+            restrictedType != null; // needed?
         public bool ItemIsCorrectType(InventoryItem item) => 
             restrictedType == null || item.GetType() == restrictedType.GetType();
 

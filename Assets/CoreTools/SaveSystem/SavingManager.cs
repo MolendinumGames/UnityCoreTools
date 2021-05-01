@@ -15,7 +15,10 @@ namespace CoreTools.SaveSystem
 
         private const string lastSceneKey = "lastSceneBuildIndex";
 
-        protected override void OnAwake() { }
+        protected override void Awake()
+        {
+            base.Awake();
+        }
 
         protected List<SaveableEntity> saveEntities = new List<SaveableEntity>();
 

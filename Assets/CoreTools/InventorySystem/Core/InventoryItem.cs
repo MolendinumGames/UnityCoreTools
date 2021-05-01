@@ -2,7 +2,7 @@
 
 namespace CoreTools.InventorySystem
 {
-    public class InventoryItem : ScriptableObject, ISerializationCallbackReceiver
+    public abstract class InventoryItem : ScriptableObject, ISerializationCallbackReceiver
     {
         public string UniqueID { get; private set; } = "";
 

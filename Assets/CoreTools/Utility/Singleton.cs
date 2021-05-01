@@ -37,23 +37,12 @@ namespace CoreTools
                 }
             }
         }
-        private void Awake()
+        protected virtual void Awake()
         {
             if (Persistent)
                 DontDestroyOnLoad(gameObject);
-            OnAwake();
         }
-        protected virtual void OnAwake()
-        {
-
-        }
-        private void OnApplicationQuit()
-        {
-            quitting = true;
-#if UNITY_EDITOR
-            quitting = false;
-#endif
-        }
+        private void OnApplicationQuit() => quitting = true;
     }
 }
 
