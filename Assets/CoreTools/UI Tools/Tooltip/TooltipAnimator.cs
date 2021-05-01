@@ -11,10 +11,11 @@ namespace CoreTools.UI
 
         Vector3 startSize;
 
-        private void Awake()
-        {
+        private void Awake() =>
             startSize = transform.localScale;
-        }
+
+        private void OnDisable() =>
+            transform.DOKill();
 
         public void StartAnimation()
         {

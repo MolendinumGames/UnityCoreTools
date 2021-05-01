@@ -10,16 +10,47 @@ namespace CoreTools.UI
         [SerializeField]
         GameObject tooltipPrefab = null;
 
+        [Range(0f, 2f)]
+        [SerializeField]
+        float delay = .5f;
+        bool hovering = false;
+        float counter = 0f;
+
+        bool isOpen = false;
+
         // Child ref
         GameObject tooltip = null;
 
         private enum RelativeScreenPosition { UpLeft, UpRigth, DownLeft, DownRight }
 
+        public abstract bool CanSpawnToolTip();
+        public abstract void UpdateTooltip(GameObject tipObject);
+
         private void OnEnable() => ClearTooltip();
 
         private void OnDisable() => ClearTooltip();
 
-        public void OnPointerEnter(PointerEventData eventData)
+        private void Update() => HandleDelay();
+
+        public void OnPointerEnter(PointerEventData eventData) => 
+            hovering = true;
+
+        public void OnPointerExit(PointerEventData eventData) => 
+            ClearTooltip();
+
+        private void HandleDelay()
+        {
+            if (hovering && !isOpen)
+            {
+                counter += Time.deltaTime;
+                if (counter >= delay)
+                {
+                    OpenTooltip();
+                }
+            }
+        }
+
+        private void OpenTooltip()
         {
             if (!CanSpawnToolTip()) // Not allowed to show
             {
@@ -33,21 +64,17 @@ namespace CoreTools.UI
                     tooltip = Instantiate(tooltipPrefab, GetComponentInParent<Canvas>().transform);
                 else return;
             }
+            isOpen = true;
             tooltip.SetActive(true);
             UpdateTooltip(tooltip);
             PositionTooltip(tooltip);
         }
 
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            ClearTooltip();
-        }
-
-        public abstract bool CanSpawnToolTip();
-        public abstract void UpdateTooltip(GameObject tipObject);
-
         private void ClearTooltip()
         {
+            hovering = false;
+            counter = 0f;
+            isOpen = false;
             if (tooltip)
                 Destroy(tooltip);
         }

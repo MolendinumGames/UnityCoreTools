@@ -205,3 +205,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipPrefab: {fileID: 4742035906368693591, guid: eb7581e5260800c459671d9fb0ccbf83, type: 3}
+  delay: 0.5
