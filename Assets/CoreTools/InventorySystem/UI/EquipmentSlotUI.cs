@@ -12,9 +12,15 @@ namespace CoreTools.InventorySystem.UI
 		public EquipmentHolder holder;
         public string connectedId;
 
-        [SerializeField] Image icon;
+        [SerializeField]
+        Image icon;
         [SerializeField] Sprite fallbackIcon;
 
+        private void Awake()
+        {
+            icon = GetComponentInChildren<Image>();
+            ClearIcon();
+        }
         private void OnEnable() => holder.equipmentUpdated += RefreshUI;
         private void OnDisable() => holder.equipmentUpdated -= RefreshUI;
 
@@ -24,14 +30,12 @@ namespace CoreTools.InventorySystem.UI
                 return 1;
             else return 0;
         }
-
         public InventoryItem GetItem()
         {
             if (holder)
                 return holder.GetItem(connectedId);
             else return null;
         }
-
         public int MaxAcceptable(InventoryItem item)
         {
             if (!holder
@@ -41,13 +45,11 @@ namespace CoreTools.InventorySystem.UI
                 return 0;
             else return 1;
         }
-
         public void RemoveItems(int amount)
         {
             if (holder)
                 holder.RemoveItemByID(connectedId);
         }
-
         public void SetItem(InventoryItem item, int amount)
         {
             if (holder)
@@ -56,32 +58,22 @@ namespace CoreTools.InventorySystem.UI
         }
         private void RefreshUI()
         {
-            // Get Component
-            if (icon == null)
-                icon = GetComponentInChildren<Image>();
-            if (icon == null) return;
-
-            InventoryItem i = GetItem() as InventoryItem;
+            InventoryItem i = GetItem();
             if (i != null)
             {
-                Sprite s = i.Icon;
-                if (s != null) // target icon
-                {
-                    icon.sprite = s;
-                }
-                else // fallback Icon
-                {
+                if (i.Icon != null)
+                    icon.sprite = i.Icon;
+                else // fallback
                     icon.sprite = fallbackIcon;
-                }
+
                 icon.color = Color.white;
             }
-            else // empty slot
-            {
-                icon.sprite = null;
-                icon.color = Color.clear;
-            }
-
-
+            else ClearIcon();
+        }
+        private void ClearIcon()
+        {
+            icon.sprite = null;
+            icon.color = Color.clear;
         }
     }	
 }

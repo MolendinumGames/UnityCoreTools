@@ -9,11 +9,11 @@ namespace CoreTools.InventorySystem.UI
 {
     public class InventorySlotUI : MonoBehaviour, IDragContainer<InventoryItem>
     {
-        [SerializeField] Image iconImage;
+        [SerializeField] 
+        Image iconImage;
 
-        // State
-        private Inventory inventory;
-        private int slotID;
+        Inventory inventory;
+        int slotID;
 
         public int GetAmount() => inventory.GetAmountIntSlot(slotID);
 
@@ -31,7 +31,7 @@ namespace CoreTools.InventorySystem.UI
 
         public void SetItem(InventoryItem item, int amount) => inventory.TryAddItemToSlot(item, slotID, amount);
 
-        public void Setup(Inventory inventory, int slotID)
+        public void SetUp(Inventory inventory, int slotID)
         {
             this.inventory = inventory;
             this.slotID = slotID;

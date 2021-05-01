@@ -15,9 +15,9 @@ namespace NewNameSpace
 		}
         private void Update()
         {
-			float horInput = Input.GetAxisRaw("Horizontal");
-			float vertINput = Input.GetAxisRaw("Vertical");
-			transform.Translate(new Vector3(horInput, 0f, vertINput) * speed * Time.deltaTime);
+			//float horInput = Input.GetAxisRaw("Horizontal");
+			//float vertINput = Input.GetAxisRaw("Vertical");
+			//transform.Translate(new Vector3(horInput, 0f, vertINput) * speed * Time.deltaTime);
         }
         #endregion
     }	

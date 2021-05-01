@@ -8,25 +8,23 @@ namespace CoreTools.InventorySystem.UI
 {
     public class InventoryUI : MonoBehaviour
     {
-        [SerializeField] private GameObject slotPrefab;
-        [SerializeField] Inventory inventory;
+        [SerializeField]
+        GameObject slotPrefab;
+
+        public Inventory inventory;
 
         List<InventorySlotUI> slots = new List<InventorySlotUI>();
-        #region EventFunctions
+
         private void OnEnable()
         {
             Subscribe();
-            RefreshInventoryUI();
-        }
-        private void Start()
-        {
             RefreshInventoryUI();
         }
         private void OnDisable()
         {
             Unsubscribe();
         }
-        #endregion
+
         private void RefreshInventoryUI()
         {
             if (inventory == null)
@@ -35,7 +33,7 @@ namespace CoreTools.InventorySystem.UI
             Resize();
             for (int i = 0; i < slots.Count; i++)
             {
-                slots[i].Setup(inventory, i);
+                slots[i].SetUp(inventory, i);
             }
         }
         private void Resize()

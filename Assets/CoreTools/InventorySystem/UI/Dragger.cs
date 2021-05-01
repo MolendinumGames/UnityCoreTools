@@ -86,7 +86,7 @@ namespace CoreTools.InventorySystem.UI
                 {
                     return;
                 }
-                else if (acceptedAmount < originAmount) // target slot doesnt accept enough
+                else if (acceptedAmount < originAmount) // target slot doesn't accept enough
                 {
                     int remainder = originAmount - acceptedAmount;
                     destination.SetItem(targetItem, acceptedAmount + destination.GetAmount());

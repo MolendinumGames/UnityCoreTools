@@ -16,7 +16,7 @@ namespace InventorySystem.UI
         }
         private void Update()
         {
-            ReadInput();
+            //ReadInput();
         }
         #endregion
         private void ReadInput()
@@ -31,7 +31,5 @@ namespace InventorySystem.UI
             if (TargetPanel != null)
                 TargetPanel.SetActive(!TargetPanel.activeSelf);
         }
-
-
     }
 }

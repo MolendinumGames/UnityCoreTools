@@ -5,9 +5,8 @@ using UnityEngine;
 
 namespace CoreTools.InventorySystem.UI
 {
-    /// <summary>
-    /// Define the Type to drag as Sprites. Component to add to UI Elements.
-    /// </summary>
+    // Define the type to drag as InventoryItem
+    // MonoB component to be added to the child of a slot
     public class InventoryIconDragger : Dragger<InventoryItem>
     {
 

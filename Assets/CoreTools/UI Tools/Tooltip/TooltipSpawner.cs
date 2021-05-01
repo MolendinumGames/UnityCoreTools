@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -38,7 +36,6 @@ namespace CoreTools.UI
             tooltip.SetActive(true);
             UpdateTooltip(tooltip);
             PositionTooltip(tooltip);
-
         }
 
         public void OnPointerExit(PointerEventData eventData)

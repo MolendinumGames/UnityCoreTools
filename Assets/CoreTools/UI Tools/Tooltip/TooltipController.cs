@@ -1,12 +1,8 @@
 ﻿using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
-using System;
-using CoreTools.UI;
 
 namespace CoreTools.UI
 {
-    [RequireComponent(typeof(TextMeshProUGUI))]
 	public class TooltipController : MonoBehaviour
 	{
 		[SerializeField]
@@ -27,12 +23,7 @@ namespace CoreTools.UI
 			bodyText.text = body;
 
             if (anim != null)
-			    StartAnimation();
-        }
-
-        private void StartAnimation()
-        {
-            anim.StartAnimation();
+			    anim.StartAnimation();
         }
     }	
 }
