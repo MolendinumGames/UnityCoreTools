@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CoreTools.UI;
 using CoreTools.InventorySystem;
 
 namespace CoreTools.InventorySystem.UI
@@ -15,13 +16,22 @@ namespace CoreTools.InventorySystem.UI
         Inventory inventory;
         int slotID;
 
+        public void SetUp(Inventory inventory, int slotID)
+        {
+            this.inventory = inventory;
+            this.slotID = slotID;
+            if (inventory != null && inventory.GetItemInSlot(slotID) != null)
+                SetIcon(inventory.GetItemInSlot(slotID));
+            else ResetIcon();
+        }
+
         public int GetAmount() => inventory.GetAmountIntSlot(slotID);
 
         public InventoryItem GetItem() => inventory.GetItemInSlot(slotID);
 
         public int MaxAcceptable(InventoryItem item)
         {
-            if (inventory.GetItemInSlot(slotID) == null)
+            if (GetItem() == null)
                 return item.MaxStack;
             else
                 return inventory.GetAmountIntSlot(slotID);
@@ -31,14 +41,6 @@ namespace CoreTools.InventorySystem.UI
 
         public void SetItem(InventoryItem item, int amount) => inventory.TryAddItemToSlot(item, slotID, amount);
 
-        public void SetUp(Inventory inventory, int slotID)
-        {
-            this.inventory = inventory;
-            this.slotID = slotID;
-            if (inventory != null && inventory.GetItemInSlot(slotID) != null)
-                SetIcon(inventory.GetItemInSlot(slotID));
-            else ResetIcon();
-        }
 
         private void SetIcon(InventoryItem item)
         {

@@ -21,8 +21,9 @@ namespace CoreTools
         private const string fullscreenId = "fullscreen";
         private const string resolutionId = "resolution";
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             LoadSettings();
         }
         public void SaveSettings()

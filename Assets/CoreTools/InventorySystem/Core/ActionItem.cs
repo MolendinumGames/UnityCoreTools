@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace CoreTools.InventorySystem
+﻿namespace CoreTools.InventorySystem
 {
-	[CreateAssetMenu(fileName = "NewActionItem", menuName ="Inventory/Item/Action")]
-	public class ActionItem : InventoryItem
-	{
-
-	}	
+    //[CreateAssetMenu(fileName = "NewActionItem", menuName ="Inventory/Item/Action")]
+    public abstract class ActionItem : InventoryItem, IConsumable
+    {
+        public abstract void Consume();
+    }
 }

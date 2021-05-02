@@ -94,8 +94,7 @@ namespace CoreTools.InventorySystem
             }
             while (amount > 0)
             {
-                int newIndex = -1;
-                if (FindEmptySlot(out newIndex))
+                if (FindEmptySlot(out int newIndex))
                 {
                     slots[newIndex].item = item;
                     amount = slots[newIndex].AddAmountToSlot(amount);

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace CoreTools.InventorySystem.UI
+namespace CoreTools.UI
 {
     public class Dragger<T> : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler where T : class
     {

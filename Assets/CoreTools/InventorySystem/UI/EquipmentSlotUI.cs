@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using InventorySystem;
 using UnityEngine.UI;
+using CoreTools.UI;
 
 namespace CoreTools.InventorySystem.UI
 {
@@ -14,7 +15,8 @@ namespace CoreTools.InventorySystem.UI
 
         [SerializeField]
         Image icon;
-        [SerializeField] Sprite fallbackIcon;
+        [SerializeField]
+        Sprite fallbackIcon;
 
         private void Awake()
         {

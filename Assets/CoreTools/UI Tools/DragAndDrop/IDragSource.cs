@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CoreTools.InventorySystem.UI
+namespace CoreTools.UI
 {
     public interface IDragSource<T> where T : class
     {
