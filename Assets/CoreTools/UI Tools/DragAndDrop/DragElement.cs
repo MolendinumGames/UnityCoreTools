@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace CoreTools.UI
 {
-    public class Dragger<T> : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler where T : class
+    public class DragElement<T> : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler where T : class
     {
         private Canvas parentCanvas;
 
