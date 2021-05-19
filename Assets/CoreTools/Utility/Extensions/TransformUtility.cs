@@ -14,7 +14,10 @@ public static class TransformUtility
     public static void ResetScale(this Transform t) => t.localScale = Vector3.one;
     public static void ResetLocalScale(this Transform t) => t.localScale = Vector3.one;
 
-    public static void SwitchPosition(this Transform t, Transform target)
+    /// <summary>
+    /// Swappes both transforms positions
+    /// </summary>
+    public static void SwapPosition(this Transform t, Transform target)
     {
         var pos1 = t.position;
         var pos2 = target.position;
