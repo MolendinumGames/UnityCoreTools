@@ -11,7 +11,7 @@
         public override bool Process(string[] args)
         {
             if (args.Length > 0) return false;
-            DevConsoleController.ExitConsole?.Invoke();
+            DevConsoleController.RaiseExitConsole();
             return true;
         }
     }

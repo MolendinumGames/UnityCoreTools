@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace CoreTools.Console
 {
     public class DevConsoleController : MonoBehaviour
     {
         [SerializeField] GameObject consoleObject;
-        [SerializeField] KeyCode consoleKey = KeyCode.Caret;
+        [SerializeField] KeyCode consoleKey = KeyCode.F10;
 
-        public static Action ExitConsole;
+        static Action ExitConsole;
+        public static void RaiseExitConsole() => ExitConsole?.Invoke();
 
         private void OnEnable()
         {
@@ -24,14 +24,25 @@ namespace CoreTools.Console
         }
         private void Update()
         {
-            if (Input.GetKeyDown(consoleKey))
-                SwapConsoleState();
+            ReadKeyInput();
         }
         private void OnDisable()
         {
             ExitConsole -= CloseConsole;
         }
 
+        void ReadKeyInput()
+        {
+#if ENABLE_LEGACY_INPUT_MANAGER
+            if (Input.GetKeyDown(consoleKey))
+                SwapConsoleState();
+#else
+#if ENABLE_INPUT_SYSTEM
+            if (Keyboard.current.f10Key.wasPressedThisFrame)
+                SwapConsoleState();
+#endif
+#endif
+        }
         void SwapConsoleState() => consoleObject.SetActive(!consoleObject.activeInHierarchy);
         void OpenConsole() => consoleObject.SetActive(true);
         void CloseConsole() => consoleObject.SetActive(false);

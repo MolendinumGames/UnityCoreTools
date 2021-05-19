@@ -20,6 +20,8 @@ namespace CoreTools.Console
 
         DeveloperConsole console;
 
+        ConsoleScrollController scrollController;
+
         private void Awake()
         {
             console = new DeveloperConsole(
@@ -33,6 +35,7 @@ namespace CoreTools.Console
                 new ExitCommand(),
                 new CloseAppCommand()
             });
+            scrollController = GetComponentInChildren<ConsoleScrollController>();
         }
         private void OnEnable()
         {
@@ -78,6 +81,7 @@ namespace CoreTools.Console
         {
             foreach (string m in msg)
                 logArea.text += m + "<br>";
+            scrollController.MoveDown();
         }
 
         void ClearLog()
