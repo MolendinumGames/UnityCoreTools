@@ -33,7 +33,8 @@ namespace CoreTools.Console
                 new ClearCommand(),
                 new HelpCommand(),
                 new ExitCommand(),
-                new CloseAppCommand()
+                new CloseAppCommand(),
+                new LoadSceneCommand()
             });
             scrollController = GetComponentInChildren<ConsoleScrollController>();
         }
