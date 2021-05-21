@@ -15,7 +15,8 @@ namespace CoreTools.Console
         IEnumerator ResetScroll()
         {
             yield return new WaitForEndOfFrame();
-            scrollbar.value = 0;
+            if (scrollbar)
+                scrollbar.value = 0;
         }
     }
 }

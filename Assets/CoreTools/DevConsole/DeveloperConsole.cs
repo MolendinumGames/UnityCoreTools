@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace CoreTools.Console
 {
@@ -15,52 +13,61 @@ namespace CoreTools.Console
             this.prefix = prefix;
             this.commands = commands;
         }
+
         public Action<string[]> PushMessage;
         public IEnumerable<IConsoleCommand> GetAllCommands() => commands;
 
         public void ProcessInput(string userInput)
         {
+            PrintUserInput(userInput);
+
             var inputs = userInput.Split(' ');
             string commandInput = inputs[0];
+            string[] args = inputs.Skip(1).ToArray();
 
-            if (!string.IsNullOrWhiteSpace(commandInput) && commandInput.StartsWith("/"))
-            {
-                // log the actual user input
-                Print(new string[] { "<color=\"yellow\">" + userInput + "</color>" });
-
-                commandInput = commandInput.Substring(1);
-                string[] args = inputs.Skip(1).ToArray();
-                if (!ProcessCommand(commandInput, args))
-                {
-                    PrintError(new string[] { "Command not found!" });
-                }
-            }
+            if (UserInputIsValid(commandInput))
+                TryExecuteUserCommand(commandInput, args);
             else
-            {
-                PrintError(new string[] { "Illegal Input!" });
-            }
+                PrintError(new string[] { "Not a valid command!" });
         }
-        bool ProcessCommand(string commandInput, string[] args)
-        {
-            bool found = false;
-            foreach (var c in commands)
-            {
-                if (commandInput.Equals(c.Command, System.StringComparison.OrdinalIgnoreCase))
-                {
-                    if (!c.Process(args))
-                    {
-                        if(c.WrongInputMessage != null)
-                            PrintError(c.WrongInputMessage);
-                    }
-                    else if (c.SuccessMessage != null)
-                        Print(c.SuccessMessage);
 
-                    found = true;
-                    break;
-                }
-            }
-            return found;
+        bool UserInputIsValid(string userInput) => !string.IsNullOrWhiteSpace(userInput) && userInput.StartsWith("/");
+
+        #region User Command Processing
+        void TryExecuteUserCommand(string userCommand, string[] args)
+        {
+            userCommand = userCommand.Remove('/');
+            IConsoleCommand targetCommand = FindMatchingCommand(userCommand);
+
+            if (targetCommand != null)
+                CallCommand(targetCommand, args);
+            else
+                PrintError(new string[] { "Command not found!" });
         }
+        IConsoleCommand FindMatchingCommand(string userCommand)
+        {
+            foreach (IConsoleCommand consoleCommand in commands)
+            {
+                if (userCommand.Equals(consoleCommand.Command, System.StringComparison.OrdinalIgnoreCase))
+                    return consoleCommand;
+            }
+            return null;
+        }
+        void CallCommand(IConsoleCommand command, string[] args)
+        {
+            if (!command.Process(args))
+            {
+                if (command.WrongInputMessage != null)
+                    PrintError(command.WrongInputMessage);
+            }
+            else if (command.SuccessMessage != null)
+            {
+                Print(command.SuccessMessage);
+            }
+        }
+        #endregion
+
+        #region Print Functions
         void Print(string[] message)
         {
             message = AddPrefixes(message);
@@ -73,6 +80,8 @@ namespace CoreTools.Console
             message = AddPrefixes(message);
             PushMessage?.Invoke(message);
         }
+        void PrintUserInput(string userInput) =>
+            Print(new string[] { "<color=\"yellow\">" + userInput + "</color>" });
         string[] AddPrefixes(string[] message)
         {
             string[] result = new string[message.Length];
@@ -80,5 +89,6 @@ namespace CoreTools.Console
                 result[i] = prefix + message[i];
             return result;
         }
+        #endregion
     }
 }

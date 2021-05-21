@@ -22,18 +22,34 @@ namespace CoreTools.Console
                 wrongInputMsg = wrongAmountMsg;
                 return false;
             }
-            else if (Int32.TryParse(args[0], out int index) 
-                     && SceneManager.GetSceneByBuildIndex(index) != null)
+
+            string sceneArg = args[0];
+
+            if (TryLoadByIndex(sceneArg))
+                return true;
+            else if (TryLoadByName(sceneArg))
+                return true;
+
+            wrongInputMsg = notFoundMsg;
+            return false;
+        }
+        bool TryLoadByIndex(string sceneArg)
+        {
+            if (Int32.TryParse(sceneArg, out int index)
+                && SceneManager.GetSceneByBuildIndex(index) != null)
             {
                 SceneManager.LoadScene(index);
                 return true;
             }
-            else if (SceneManager.GetSceneByName(args[0]) != null)
+            return false;
+        }
+        bool TryLoadByName(string sceneArg)
+        {
+            if (SceneManager.GetSceneByName(sceneArg) != null)
             {
-                SceneManager.LoadScene(args[0]);
+                SceneManager.LoadScene(sceneArg);
                 return true;
             }
-            wrongInputMsg = notFoundMsg;
             return false;
         }
     }
