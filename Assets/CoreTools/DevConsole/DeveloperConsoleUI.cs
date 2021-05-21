@@ -20,7 +20,7 @@ namespace CoreTools.Console
 
         DeveloperConsole console;
 
-        ConsoleScrollController scrollController;
+        ConsoleScroller scrollController;
 
         private void Awake()
         {
@@ -36,7 +36,7 @@ namespace CoreTools.Console
                 new CloseAppCommand(),
                 new LoadSceneCommand()
             });
-            scrollController = GetComponentInChildren<ConsoleScrollController>();
+            scrollController = GetComponentInChildren<ConsoleScroller>();
         }
         private void OnEnable()
         {
@@ -109,7 +109,6 @@ namespace CoreTools.Console
         IEnumerator SelectInputField()
         {
             yield return new WaitForEndOfFrame();
-            //yield return new WaitForEndOfFrame();
             inputArea.ActivateInputField();
             inputArea.Select();
         }

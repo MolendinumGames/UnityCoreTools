@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace CoreTools.Console
 {
-    public class ConsoleScrollController : MonoBehaviour
+    public class ConsoleScroller : MonoBehaviour
     {
         Scrollbar scrollbar;
 
