@@ -78,10 +78,10 @@ namespace CoreTools.Console
             ResetInputField();
         }
 
-        void LogText(IEnumerable<string> msg)
+        void LogText(IEnumerable<string> messages)
         {
-            foreach (string m in msg)
-                logArea.text += m + "<br>";
+            foreach (string line in messages)
+                logArea.text += line + "<br>";
             scrollController.MoveDown();
         }
 

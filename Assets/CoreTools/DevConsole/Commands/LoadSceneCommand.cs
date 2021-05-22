@@ -33,6 +33,7 @@ namespace CoreTools.Console
             wrongInputMsg = notFoundMsg;
             return false;
         }
+
         bool TryLoadByIndex(string sceneArg)
         {
             if (Int32.TryParse(sceneArg, out int index)

@@ -25,30 +25,30 @@ namespace CoreTools.Console
             string commandInput = inputs[0];
             string[] args = inputs.Skip(1).ToArray();
 
-            if (UserInputIsValid(commandInput))
+            if (InputMatchesCommandPattern(commandInput))
                 TryExecuteUserCommand(commandInput, args);
             else
                 PrintError(new string[] { "Not a valid command!" });
         }
 
-        bool UserInputIsValid(string userInput) => !string.IsNullOrWhiteSpace(userInput) && userInput.StartsWith("/");
+        bool InputMatchesCommandPattern(string userInput) => !string.IsNullOrWhiteSpace(userInput) && userInput.StartsWith("/");
 
         #region User Command Processing
-        void TryExecuteUserCommand(string userCommand, string[] args)
+        void TryExecuteUserCommand(string userCommandInput, string[] args)
         {
-            userCommand = userCommand.Remove('/');
-            IConsoleCommand targetCommand = FindMatchingCommand(userCommand);
+            userCommandInput = userCommandInput.Remove('/');
+            IConsoleCommand targetCommand = FindMatchingCommand(userCommandInput);
 
             if (targetCommand != null)
                 CallCommand(targetCommand, args);
             else
                 PrintError(new string[] { "Command not found!" });
         }
-        IConsoleCommand FindMatchingCommand(string userCommand)
+        IConsoleCommand FindMatchingCommand(string userCommandInput)
         {
-            foreach (IConsoleCommand consoleCommand in commands)
+            foreach (IConsoleCommand consoleCommand in GetAllCommands())
             {
-                if (userCommand.Equals(consoleCommand.Command, System.StringComparison.OrdinalIgnoreCase))
+                if (userCommandInput.Equals(consoleCommand.Command, System.StringComparison.OrdinalIgnoreCase))
                     return consoleCommand;
             }
             return null;
@@ -59,8 +59,10 @@ namespace CoreTools.Console
             {
                 if (command.WrongInputMessage != null)
                     PrintError(command.WrongInputMessage);
+                else
+                    PrintError(new string[] { "Input arguments don't match command!" });
             }
-            else if (command.SuccessMessage != null)
+            else if (command.SuccessMessage != null) // Input succesfully processed
             {
                 Print(command.SuccessMessage);
             }
@@ -68,26 +70,27 @@ namespace CoreTools.Console
         #endregion
 
         #region Print Functions
-        void Print(string[] message)
+        void Print(string[] messages)
         {
-            message = AddPrefixes(message);
-            PushMessage?.Invoke(message);
+            messages = AddPrefixes(messages);
+            PushMessage?.Invoke(messages);
         }
-        void PrintError(string[] message)
+        void PrintError(string[] messages)
         {
-            string msgType = "<color=\"red\">ERROR: </color>";
-            message[0] = msgType + message[0];
-            message = AddPrefixes(message);
-            PushMessage?.Invoke(message);
+            string errorMsg = "<color=\"red\">ERROR: </color>";
+            messages[0] = errorMsg + messages[0];
+            messages = AddPrefixes(messages);
+            PushMessage?.Invoke(messages);
         }
         void PrintUserInput(string userInput) =>
             Print(new string[] { "<color=\"yellow\">" + userInput + "</color>" });
-        string[] AddPrefixes(string[] message)
+
+        string[] AddPrefixes(string[] messages)
         {
-            string[] result = new string[message.Length];
-            for (int i = 0; i < message.Length; i++)
-                result[i] = prefix + message[i];
-            return result;
+            string[] newMessages = new string[messages.Length];
+            for (int i = 0; i < messages.Length; i++)
+                newMessages[i] = prefix + messages[i];
+            return newMessages;
         }
         #endregion
     }
