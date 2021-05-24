@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace CoreTools.UI
 {
-    public class DragElement<T> : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler where T : class
+    public abstract class DragElement<T> : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler where T : class
     {
         Canvas parentCanvas = null;
         Vector3 startPos = Vector3.zero;
