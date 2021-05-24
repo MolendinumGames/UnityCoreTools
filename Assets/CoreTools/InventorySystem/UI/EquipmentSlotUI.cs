@@ -8,7 +8,7 @@ using CoreTools.UI;
 
 namespace CoreTools.InventorySystem.UI
 {
-	public class EquipmentSlotUI : MonoBehaviour, IDragContainer<InventoryItem>
+	public class EquipmentSlotUI : MonoBehaviour, IDragContainer<EquipmentItem>
 	{
 		public EquipmentHolder holder;
         public string connectedId;
@@ -32,13 +32,13 @@ namespace CoreTools.InventorySystem.UI
                 return 1;
             else return 0;
         }
-        public InventoryItem GetItem()
+        public EquipmentItem GetItem()
         {
             if (holder)
                 return holder.GetItem(connectedId);
             else return null;
         }
-        public int MaxAcceptable(InventoryItem item)
+        public int MaxAcceptable(EquipmentItem item)
         {
             if (!holder
                 || holder.GetSlotType(connectedId) == EquipmentType.Default // This means the connectedID doesn't exist in the Equipment holder
@@ -47,12 +47,12 @@ namespace CoreTools.InventorySystem.UI
                 return 0;
             else return 1;
         }
-        public void RemoveItems(int amount)
+        public void RemoveAmount(int amount)
         {
             if (holder)
                 holder.RemoveItemByID(connectedId);
         }
-        public void SetItem(InventoryItem item, int amount)
+        public void SetItem(EquipmentItem item, int amount)
         {
             if (holder)
                 holder.EquipItemIntoSlot(item as EquipmentItem, connectedId);
@@ -76,6 +76,11 @@ namespace CoreTools.InventorySystem.UI
         {
             icon.sprite = null;
             icon.color = Color.clear;
+        }
+
+        public int TryAddAmount(EquipmentItem item, int amount)
+        {
+            throw new NotImplementedException();
         }
     }	
 }

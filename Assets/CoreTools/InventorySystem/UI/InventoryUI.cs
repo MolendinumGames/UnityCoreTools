@@ -13,7 +13,7 @@ namespace CoreTools.InventorySystem.UI
 
         public Inventory inventory;
 
-        List<InventorySlotUI> slots = new List<InventorySlotUI>();
+        List<InventorySlotUI<InventoryItem>> slots = new List<InventorySlotUI<InventoryItem>>();
 
         private void OnEnable()
         {
@@ -50,7 +50,7 @@ namespace CoreTools.InventorySystem.UI
             while (slots.Count < inventory.Size)
             {
                 GameObject gO = Instantiate(slotPrefab, transform);
-                slots.Add(gO.GetComponent<InventorySlotUI>());
+                slots.Add(gO.GetComponent<InventorySlotUI<InventoryItem>>());
             }
         }
         private void ClearDead()

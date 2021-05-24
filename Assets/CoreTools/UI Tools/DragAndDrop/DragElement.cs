@@ -9,26 +9,18 @@ namespace CoreTools.UI
 {
     public class DragElement<T> : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler where T : class
     {
-        private Canvas parentCanvas;
-
-        private Vector3 startPos;
-        private Transform originParent;
-
-        private IDragSource<T> source;
+        Canvas parentCanvas = null;
+        Vector3 startPos = Vector3.zero;
+        Transform originParent = null;
+        IDragContainer<T> originContainer;
 
         private void Awake()
         {
-            parentCanvas = GetComponentInParent<Canvas>();
-            source = GetComponentInParent<IDragSource<T>>();
-
+            StoreReferences();
         }
         public void OnBeginDrag(PointerEventData eventData)
         {
-            startPos = transform.position;
-            originParent = transform.parent;
-            transform.SetParent(parentCanvas.transform, true);
-            GetComponent<CanvasGroup>().blocksRaycasts = false;
-
+            SetupTransformState();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -38,84 +30,82 @@ namespace CoreTools.UI
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            ResetDragging();
-            if (EventSystem.current.IsPointerOverGameObject()) // Is mouse over UI
+            RestoreTransformState();
+            if (IsOverUIObject(eventData))
+                FindContainerInteraction(eventData);
+        }
+        private void FindContainerInteraction(PointerEventData eventData)
+        {
+            IDragContainer<T> destinationContainer = eventData.pointerEnter.GetComponentInParent<IDragContainer<T>>();
+            if (originContainer == null || destinationContainer == null) return;
+
+            if (!ReferenceEquals(originContainer, destinationContainer))
             {
-                if (eventData.pointerEnter == null) return;
-
-                IDragDestination<T> destination = eventData.pointerEnter.GetComponentInParent<IDragDestination<T>>();
-
-                var targetContainer = destination as IDragContainer<T>;
-                var sourceContainer = source as IDragContainer<T>;
-                if (targetContainer != null && sourceContainer != null && !ReferenceEquals(source, destination))
-                {
-                    AttemptSwap(sourceContainer, targetContainer);
-                }
+                HandleContainerInteraction(originContainer, destinationContainer);
             }
         }
-        private void ResetDragging()
+        private void HandleContainerInteraction(IDragContainer<T> originContainer, IDragContainer<T> destinationContainer)
         {
-            GetComponent<CanvasGroup>().blocksRaycasts = true;
-            transform.SetParent(originParent, true);
-            transform.position = startPos;
-        }
-        private void AttemptSwap(IDragContainer<T> source, IDragContainer<T> destination)
-        {
+            T originItem = originContainer.GetItem();
+            T destinationItem = destinationContainer.GetItem();
 
-            var originItem = source.GetItem();
-            int originAmount = source.GetAmount();
-            var targetItem = destination.GetItem();
-            int targetAmount = destination.GetAmount();
-
-            if (originItem == null) // Empty slot was dragged
+            if (originItem == null)
             {
                 return;
             }
-            else if (targetItem == null) // Switch into new slot
+            else if (destinationItem == null || originItem == destinationItem)
             {
-                if (destination.MaxAcceptable(originItem) < 1)
-                    return;
-
-                destination.SetItem(originItem, originAmount);
-                source.RemoveItems(originAmount);
+                FillItemsIntoSlot(originContainer, destinationContainer);
             }
-            else if (originItem == targetItem) // fill target slot
+            else
             {
-                int acceptedAmount = destination.MaxAcceptable(originItem);
-                if (acceptedAmount < 1) // target slot is full
-                {
-                    return;
-                }
-                else if (acceptedAmount < originAmount) // target slot doesn't accept enough
-                {
-                    int remainder = originAmount - acceptedAmount;
-                    destination.SetItem(targetItem, acceptedAmount + destination.GetAmount());
-                    source.SetItem(originItem, remainder);
-                }
-                else // fill into target slot completely
-                {
-                    destination.SetItem(targetItem, targetAmount + originAmount);
-                    source.RemoveItems(originAmount);
-                }
+                SwapItemsOfSlots(originContainer, destinationContainer);
             }
-            else // swap slot items
+        }
+        private void StoreReferences()
+        {
+            parentCanvas = GetComponentInParent<Canvas>();
+            originContainer = GetComponentInParent<IDragContainer<T>>();
+        }
+        private void SwapItemsOfSlots(IDragContainer<T> originContainer, IDragContainer<T> destinationContainer)
+        {
+            T orgiginItem = originContainer.GetItem();
+            int originAmount = originContainer.GetAmount();
+            originContainer.SetItem(destinationContainer.GetItem(), destinationContainer.GetAmount());
+            destinationContainer.SetItem(orgiginItem, originAmount);
+        }
+        private void FillItemsIntoSlot(IDragContainer<T> originContainer, IDragContainer<T> destinationContainer)
+        {
+            T originItem = originContainer.GetItem();
+            int maxAcceptable = destinationContainer.MaxAcceptable(originItem);
+            if (maxAcceptable == 0)
             {
-                // Clear fields to make acceptance check possible
-                source.RemoveItems(originAmount);
-                destination.RemoveItems(targetAmount);
-
-                if (source.MaxAcceptable(targetItem) < 1
-                    || destination.MaxAcceptable(originItem) < 1)
-                {
-                    source.SetItem(originItem, originAmount);
-                    destination.SetItem(targetItem, targetAmount);
-                }
-                else
-                {
-                    source.SetItem(targetItem, targetAmount);
-                    destination.SetItem(originItem, originAmount);
-                }
+                return;
             }
+            else
+            {
+                int originAmount = originContainer.GetAmount();
+                int remainder = destinationContainer.TryAddAmount(originItem, originAmount);
+                int movedAmount = originAmount - remainder;
+                originContainer.RemoveAmount(movedAmount);
+            }
+        }
+        private void SetupTransformState()
+        {
+            startPos = transform.position;
+            originParent = transform.parent;
+            transform.SetParent(parentCanvas.transform, true);
+            GetComponent<CanvasGroup>().blocksRaycasts = false;
+        }
+        private void RestoreTransformState()
+        {
+            transform.SetParent(originParent, true);
+            transform.position = startPos;
+            GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+        private bool IsOverUIObject(PointerEventData eventData)
+        {
+            return eventData.pointerEnter != null && EventSystem.current.IsPointerOverGameObject();
         }
     }
 }
