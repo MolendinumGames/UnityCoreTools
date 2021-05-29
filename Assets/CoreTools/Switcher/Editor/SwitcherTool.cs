@@ -7,33 +7,33 @@
  * https://sundiray.itch.io/
  */
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace CoreTools.CoreEditor
+namespace CoreTools.GameObjectFinder
 {
     public class SwitcherTool : EditorWindow
     {
-        // Parameters
-        private Transform firstT;
-        private Transform secondT;
+        Transform FirstTransform { get; set; }
+        Transform SecondTransform { get; set; }
+        bool WillDrawConnection { get; set; } = true;
 
-        // Viewport
-        private bool drawGiz = true;
         private Vector2 scrollPos;
-        private static readonly GUIContent windowTitle = new GUIContent("Switcher");
+        private static readonly GUIContent Header = new GUIContent("Switcher");
 
-        [MenuItem("MyTools/Switcher")]
+        const float connectionBlobWidth = .5f;
+        const float connectionLineWidth = 1f;
+        readonly Color connectionColor = Color.red;
+
+        [MenuItem("Tools/Switcher")]
         public static void OpenWindow()
         {
             SwitcherTool switcherWindow = (SwitcherTool)GetWindow(typeof(SwitcherTool));
-            switcherWindow.titleContent = windowTitle;
+            switcherWindow.titleContent = Header;
             switcherWindow.Show();
         }
-        private void OnEnable() => SceneView.duringSceneGui += DrawConnection;
+
+        private void OnEnable()  => SceneView.duringSceneGui += DrawConnection;
         private void OnDisable() => SceneView.duringSceneGui -= DrawConnection;
 
         private void OnGUI()
@@ -41,74 +41,14 @@ namespace CoreTools.CoreEditor
             scrollPos = GUILayout.BeginScrollView(scrollPos);
 
             DrawHeader();
-
-            drawGiz = EditorGUILayout.Toggle("Draw Connection: ", drawGiz);
-
-            GUILayout.Label("Swap:", GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
-            DrawTransformField(ref firstT);
-
-            GUILayout.Label("And: ");
-            DrawTransformField(ref secondT);
-
-            GUILayout.BeginHorizontal();
-            EditorGUI.BeginDisabledGroup(firstT == null || secondT == null || firstT == secondT);
-            if (GUILayout.Button("Switch Positions"))
-            {
-                SwapPositions();
-            }
-            EditorGUI.EndDisabledGroup();
-
-            if (GUILayout.Button("Clear Fields"))
-            {
-                firstT = null;
-                secondT = null;
-                SceneView.RepaintAll();
-            }
-            GUILayout.EndHorizontal();
+            DrawConnectionToggle();
+            DrawFirstTransformField();
+            DrawSecondTransformField();
+            DrawButtons();
 
             GUILayout.EndScrollView();
         }
 
-        private void DrawTransformField(ref Transform t)
-        {
-            Transform newT = EditorGUILayout.ObjectField(t, typeof(Transform), true) as Transform;
-            if (newT != t)
-            {
-                if (newT == null)
-                {
-                    t = null;
-                }
-                else if (!EditorUtility.IsPersistent(newT))
-                {
-                    t = newT;
-                    SceneView.RepaintAll();
-                }
-
-            }
-        }
-        private void SwapPositions()
-        {
-            Vector3 first = firstT.position;
-            Vector3 second = secondT.position;
-            firstT.position = second;
-            secondT.position = first;
-        }
-        private void DrawConnection(SceneView sceneView)
-        {
-            if (!drawGiz)
-                return;
-
-            Handles.color = Color.red;
-
-            if (firstT != null)
-                Handles.SphereHandleCap(0, firstT.position, Quaternion.identity, .5f, EventType.Repaint);
-
-            if (secondT != null)
-                Handles.SphereHandleCap(0, secondT.position, Quaternion.identity, .5f, EventType.Repaint);
-
-            if (firstT != null && secondT != null)
-                Handles.DrawLine(firstT.position, secondT.position);
-        }
         private void DrawHeader()
         {
             GUIStyle headerStyle = new GUIStyle("WhiteLargeLabel")
@@ -119,6 +59,95 @@ namespace CoreTools.CoreEditor
 
             GUILayout.Label("Swap positions of two transforms.");
         }
-    }
 
+        private void DrawConnectionToggle()
+        {
+            WillDrawConnection = EditorGUILayout.Toggle("Draw Connection: ", WillDrawConnection);
+        }
+
+        private void DrawFirstTransformField()
+        {
+            GUILayout.Label("Swap:", GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
+            Transform newFirstTransform = EditorGUILayout.ObjectField(FirstTransform, typeof(Transform), true) as Transform;
+            if (newFirstTransform != FirstTransform && !EditorUtility.IsPersistent(newFirstTransform))
+                FirstTransform = newFirstTransform;
+        }
+
+        private void DrawSecondTransformField()
+        {
+            GUILayout.Label("And: ");
+            Transform secondNewTransform = EditorGUILayout.ObjectField(SecondTransform, typeof(Transform), true) as Transform;
+            if (secondNewTransform != SecondTransform && !EditorUtility.IsPersistent(secondNewTransform))
+                SecondTransform = secondNewTransform;
+        }
+
+        private void DrawButtons()
+        {
+            GUILayout.BeginHorizontal();
+            EditorGUI.BeginDisabledGroup(!SwapPossible());
+            if (GUILayout.Button("Switch Positions"))
+            {
+                SwapPositions();
+            }
+            EditorGUI.EndDisabledGroup();
+
+            if (GUILayout.Button("Clear Fields"))
+            {
+                ClearTransformFields();
+            }
+            GUILayout.EndHorizontal();
+        }
+
+        private bool SwapPossible()
+        {
+            return FirstTransform != null
+                && SecondTransform != null
+                && FirstTransform != SecondTransform;
+        }
+
+        private void SwapPositions()
+        {
+            Vector3 first = FirstTransform.position;
+            Vector3 second = SecondTransform.position;
+            FirstTransform.position = second;
+            SecondTransform.position = first;
+        }
+
+        private void ClearTransformFields()
+        {
+            FirstTransform = null;
+            SecondTransform = null;
+            SceneView.RepaintAll();
+        }
+
+        private void DrawConnection(SceneView sceneView)
+        {
+            if (!WillDrawConnection)
+                return;
+
+            Handles.color = connectionColor;
+
+            bool firstTransformSelected  = FirstTransform != null;
+            bool secondTransformSelected = SecondTransform != null;
+
+            if (firstTransformSelected)
+                DrawConnectionSphere(FirstTransform.position);
+
+            if (secondTransformSelected)
+                DrawConnectionSphere(SecondTransform.position);
+
+            if (firstTransformSelected && secondTransformSelected)
+                DrawConnectionLine(FirstTransform.position, SecondTransform.position);
+        }
+
+        private void DrawConnectionSphere(Vector3 position)
+        {
+            Handles.SphereHandleCap(0, position, Quaternion.identity, connectionBlobWidth, EventType.Repaint);
+        }
+
+        private void DrawConnectionLine(Vector3 start, Vector3 end)
+        {
+            Handles.DrawLine(start, end, connectionLineWidth);
+        }
+    }
 }
