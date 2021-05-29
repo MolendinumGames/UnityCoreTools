@@ -22,13 +22,26 @@ namespace CoreTools.GameObjectFinder
         static readonly GUIContent windowTitle = new GUIContent("Replacer Tool", 
                                                                 "Replace selected GameObjects with a Prefab.");
 
-        bool WillSelect { get; set; } = true;
-        bool WillKeepParent { get; set; } = true;
-        bool WontDestroyOld { get; set; } = false;
-        bool AppliesRotation { get; set; } = false;
-        bool AppliesScale { get; set; } = false;
-        bool AppliesTag { get; set; } = false;
-        Vector3 OffsetVector { get; set; } = Vector3.zero;
+        bool WillSelectNew { get; set; }    = true;
+        const string WillSelectNewMessage   = "Auto select new:";
+
+        bool WillKeepParent { get; set; }   = true;
+        const string WillKeepParentMessage  = "Keep Parent:";
+
+        bool WontDestroyOld { get; set; }   = false;
+        const string WontDestroyOldMessage  = "Don't destroy old:";
+
+        bool AppliesRotation { get; set; }  = false;
+        const string ApplyRotationMessage   = "Keep rotation:";
+
+        bool AppliesScale { get; set; }     = false;
+        const string ApplyScaleMessage      = "Keep local scale:";
+
+        bool AppliesTag { get; set; }       = false;
+        const string ApplyTagMessage        = "Keep Tag:";
+
+        Vector3 OffsetVector { get; set; }  = Vector3.zero;
+        const string OffsetMessage          = "Offset new by:";
 
         [MenuItem("Tools/Replacer")]
         public static void OpenReplacerWindow()
@@ -46,7 +59,7 @@ namespace CoreTools.GameObjectFinder
 
             DrawHeader();
 
-            DrawSettings();
+            DrawAndReadSettings();
 
             EditorGUILayout.Space();
 
@@ -65,19 +78,19 @@ namespace CoreTools.GameObjectFinder
             {
                 alignment = TextAnchor.MiddleCenter
             };
-            EditorGUILayout.LabelField("Replacer Tool", headerStyle);
-            GUILayout.Label("Replace selected GameObjects with a Prefab.");
+            EditorGUILayout.LabelField(windowTitle.text, headerStyle);
+            GUILayout.Label(windowTitle.tooltip);
         }
 
-        private void DrawSettings()
+        private void DrawAndReadSettings()
         {
-            WillSelect = EditorGUILayout.Toggle("Auto Select New:", WillSelect);
-            WillKeepParent = EditorGUILayout.Toggle("Keep Parent:", WillKeepParent);
-            WontDestroyOld = EditorGUILayout.Toggle("Don't Destroy Old", WontDestroyOld);
-            AppliesRotation = EditorGUILayout.Toggle("Keep Rotation:", AppliesRotation);
-            AppliesScale = EditorGUILayout.Toggle("Keep Scale:", AppliesScale);
-            AppliesTag = EditorGUILayout.Toggle("Keep Tag:", AppliesTag);
-            OffsetVector = EditorGUILayout.Vector3Field("Offset All:", OffsetVector);
+            WillSelectNew   = EditorGUILayout.Toggle(WillSelectNewMessage, WillSelectNew);
+            WillKeepParent  = EditorGUILayout.Toggle(WillKeepParentMessage, WillKeepParent);
+            WontDestroyOld  = EditorGUILayout.Toggle(WontDestroyOldMessage, WontDestroyOld);
+            AppliesRotation = EditorGUILayout.Toggle(ApplyRotationMessage, AppliesRotation);
+            AppliesScale    = EditorGUILayout.Toggle(ApplyScaleMessage, AppliesScale);
+            AppliesTag      = EditorGUILayout.Toggle(ApplyTagMessage, AppliesTag);
+            OffsetVector    = EditorGUILayout.Vector3Field(OffsetMessage, OffsetVector);
         }
 
         private void DrawTargetObjectField()
@@ -119,7 +132,7 @@ namespace CoreTools.GameObjectFinder
                 newCreatedObjects.Add(CreateAndSetupNewGameObject(targetToReplace));
             }
 
-            if (WillSelect)
+            if (WillSelectNew)
                 Selection.objects = newCreatedObjects.ToArray();
         }
 
@@ -153,10 +166,10 @@ namespace CoreTools.GameObjectFinder
             {
                 PrefabAssetType pref = PrefabUtility.GetPrefabAssetType(TargetNewObject);
                 if (pref == PrefabAssetType.Regular || pref == PrefabAssetType.Model || pref == PrefabAssetType.Variant)
-                    return false;
+                    return true;
             }
 
-            return true;
+            return false;
         }
         private GameObject[] GetSelectedSceneGameObjects()
         {
