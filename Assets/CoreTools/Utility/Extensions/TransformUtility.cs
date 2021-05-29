@@ -3,25 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class TransformUtility
+namespace CoreTools
 {
-    public static void ResetPosition(this Transform t) => t.position = Vector3.zero;
-    public static void ResetLocalPosition(this Transform t) => t.localPosition = Vector3.zero;
-
-    public static void ResetRotation(this Transform t) => t.rotation = Quaternion.identity;
-    public static void ResetLocalRotation(this Transform t) => t.localRotation = Quaternion.identity;
-
-    public static void ResetScale(this Transform t) => t.localScale = Vector3.one;
-    public static void ResetLocalScale(this Transform t) => t.localScale = Vector3.one;
-
-    /// <summary>
-    /// Swappes both transforms positions
-    /// </summary>
-    public static void SwapPosition(this Transform t, Transform target)
+    public static class TransformUtility
     {
-        var pos1 = t.position;
-        var pos2 = target.position;
-        t.position = pos2;
-        target.position = pos1;
+        public static void ResetPosition(this Transform t) => t.position = Vector3.zero;
+        public static void ResetLocalPosition(this Transform t) => t.localPosition = Vector3.zero;
+
+        public static void ResetRotation(this Transform t) => t.rotation = Quaternion.identity;
+        public static void ResetLocalRotation(this Transform t) => t.localRotation = Quaternion.identity;
+
+        public static void ResetScale(this Transform t) => t.localScale = Vector3.one;
+        public static void ResetLocalScale(this Transform t) => t.localScale = Vector3.one;
+
+        /// <summary>
+        /// Swappes both transforms positions
+        /// </summary>
+        public static void SwapPosition(this Transform t, Transform target)
+        {
+            var pos1 = t.position;
+            var pos2 = target.position;
+            t.position = pos2;
+            target.position = pos1;
+        }
     }
 }
