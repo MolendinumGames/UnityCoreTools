@@ -15,7 +15,11 @@ namespace CoreTools.GameObjectFinder
     public class SwitcherTool : EditorWindow
     {
         Transform FirstTransform { get; set; }
+        const string firstTransfLabel = "Swap:";
+
         Transform SecondTransform { get; set; }
+        const string secondTransfLabel = "and:";
+
         bool WillDrawConnection { get; set; } = true;
 
         private Vector2 scrollPos;

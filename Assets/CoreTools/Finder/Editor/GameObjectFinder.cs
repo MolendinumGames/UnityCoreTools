@@ -67,6 +67,7 @@ namespace CoreTools.GameObjectFinder
             DrawFindByTagButton(selectedTag);
             GUILayout.EndHorizontal();
         }
+
         private void DrawTagSelection()
         {
             int newSelectedIndex = EditorGUILayout.Popup(
@@ -75,6 +76,7 @@ namespace CoreTools.GameObjectFinder
                 GUILayout.Width(.5f * EditorGUIUtility.currentViewWidth));
             SelectedIndex = newSelectedIndex;
         }
+
         private void DrawFindByTagButton(string selectedTag)
         {
             if (GUILayout.Button("Find By Tag"))
@@ -82,10 +84,11 @@ namespace CoreTools.GameObjectFinder
                 FindAndSelectGameObjectsByTag(selectedTag);
             }
         }
+
         private void FindAndSelectGameObjectsByTag(string selectedTag)
         {
-            var foundGameObjects = GameObject.FindGameObjectsWithTag(selectedTag);
-            Selection.objects = foundGameObjects;
+            var foundObjects = GameObject.FindGameObjectsWithTag(selectedTag);
+            Selection.objects = foundObjects;
         }
         #endregion
 
@@ -98,6 +101,7 @@ namespace CoreTools.GameObjectFinder
             DrawFindByNameButton();
             GUILayout.EndHorizontal();
         }
+
         private void DrawTargetNameField()
         {
             string newName = GUILayout.TextField(
@@ -105,6 +109,7 @@ namespace CoreTools.GameObjectFinder
                 GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
             TargetName = newName;
         }
+
         private void DrawFindByNameButton()
         {
             if (GUILayout.Button("Find By Name"))
@@ -112,6 +117,7 @@ namespace CoreTools.GameObjectFinder
                 FindAndSelectGameObjectByName(TargetName);
             }
         }
+
         private void FindAndSelectGameObjectByName(string gameObjectName)
         {
             Selection.objects = GameObject.FindObjectsOfType<Transform>()
