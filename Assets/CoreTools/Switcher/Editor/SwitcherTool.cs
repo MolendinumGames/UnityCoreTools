@@ -107,10 +107,9 @@ namespace CoreTools.GameObjectFinder
 
         private void SwapPositions()
         {
-            Vector3 first = FirstTransform.position;
-            Vector3 second = SecondTransform.position;
-            FirstTransform.position = second;
-            SecondTransform.position = first;
+            Vector3 firstPosition = FirstTransform.position;
+            FirstTransform.position = SecondTransform.position;
+            SecondTransform.position = firstPosition;
         }
 
         private void ClearTransformFields()
