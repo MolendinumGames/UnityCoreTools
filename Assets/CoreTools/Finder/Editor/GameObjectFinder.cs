@@ -7,64 +7,45 @@
  * https://sundiray.itch.io/
  */
 
-using System;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace CoreTools.CoreEditor
+namespace CoreTools.GameObjectFinder
 {
     public class GameObjectFinder : EditorWindow
     {
-        // Parameters
-        private string targetName = "";
-        private int selectedIndex = 0;
+        string TargetName { get; set; } = "";
+        int SelectedIndex { get; set; } = 0;
+        string[] TagOptions
+        {
+            get => UnityEditorInternal.InternalEditorUtility.tags;
+        }
 
-        // Viewport
         private Vector2 scrollPos = Vector2.zero;
-        private static readonly GUIContent header = new GUIContent("GO Finder", "Find GameObjects in the hierarchy.");
+        private static readonly GUIContent Header = new GUIContent("GO Finder", "Find GameObjects in the hierarchy.");
 
-        [MenuItem("Window/Finder")]
-        public static void Init()
+        [MenuItem("Tools/Finder")]
+        public static void OpenFinderWindow()
         {
             var window = GetWindow<GameObjectFinder>();
-            window.titleContent = header;
+            window.titleContent = Header;
             window.Show();
         }
 
         private void OnGUI()
         {
-            GUILayout.BeginScrollView(scrollPos);
+            scrollPos = GUILayout.BeginScrollView(scrollPos);
+
             DrawHeader();
 
-            GUILayout.Label("By Tag: ");
-            GUILayout.BeginHorizontal();
-            string[] tagOptions = UnityEditorInternal.InternalEditorUtility.tags;
-            selectedIndex = EditorGUILayout.Popup(selectedIndex, tagOptions, GUILayout.Width(.5f*EditorGUIUtility.currentViewWidth));
-            if (GUILayout.Button("Find By Tag"))
-            {
-                var results = GameObject.FindGameObjectsWithTag(tagOptions[selectedIndex]);
-                Selection.objects = results;
-            }
-            GUILayout.EndHorizontal();
+            DrawFindByTagSection();
 
-
-            GUILayout.Label("Name Contains: ");
-            GUILayout.BeginHorizontal();
-            targetName = GUILayout.TextField(targetName, GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
-            if (GUILayout.Button("Find By Name"))
-            {
-                Selection.objects = GameObject.FindObjectsOfType<Transform>()
-                    .Where(t => t.gameObject.name.Contains(targetName))
-                    .Select( t => t.gameObject)
-                    .ToArray();
-            }
-            GUILayout.EndHorizontal();
+            DrawFindByNameSection();
 
             GUILayout.EndScrollView();
         }
+
         private void DrawHeader()
         {
             GUIStyle headerStyle = new GUIStyle("WhiteLargeLabel")
@@ -75,5 +56,69 @@ namespace CoreTools.CoreEditor
 
             GUILayout.Label("Search scene hierarchy for GameObejcts.");
         }
+
+        #region Find By Tag
+        private void DrawFindByTagSection()
+        {
+            GUILayout.Label("By Tag: ");
+            GUILayout.BeginHorizontal();
+            DrawTagSelection();
+            string selectedTag = TagOptions[SelectedIndex];
+            DrawFindByTagButton(selectedTag);
+            GUILayout.EndHorizontal();
+        }
+        private void DrawTagSelection()
+        {
+            int newSelectedIndex = EditorGUILayout.Popup(
+                SelectedIndex, 
+                TagOptions, 
+                GUILayout.Width(.5f * EditorGUIUtility.currentViewWidth));
+            SelectedIndex = newSelectedIndex;
+        }
+        private void DrawFindByTagButton(string selectedTag)
+        {
+            if (GUILayout.Button("Find By Tag"))
+            {
+                FindAndSelectGameObjectsByTag(selectedTag);
+            }
+        }
+        private void FindAndSelectGameObjectsByTag(string selectedTag)
+        {
+            var foundGameObjects = GameObject.FindGameObjectsWithTag(selectedTag);
+            Selection.objects = foundGameObjects;
+        }
+        #endregion
+
+        #region Find By Name
+        private void DrawFindByNameSection()
+        {
+            GUILayout.Label("Name Contains: ");
+            GUILayout.BeginHorizontal();
+            DrawTargetNameField();
+            DrawFindByNameButton();
+            GUILayout.EndHorizontal();
+        }
+        private void DrawTargetNameField()
+        {
+            string newName = GUILayout.TextField(
+                TargetName,
+                GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
+            TargetName = newName;
+        }
+        private void DrawFindByNameButton()
+        {
+            if (GUILayout.Button("Find By Name"))
+            {
+                FindAndSelectGameObjectByName(TargetName);
+            }
+        }
+        private void FindAndSelectGameObjectByName(string gameObjectName)
+        {
+            Selection.objects = GameObject.FindObjectsOfType<Transform>()
+                                          .Where(t => t.gameObject.name.Contains(gameObjectName))
+                                          .Select(t => t.gameObject)
+                                          .ToArray();
+        }
+        #endregion
     }
 }
