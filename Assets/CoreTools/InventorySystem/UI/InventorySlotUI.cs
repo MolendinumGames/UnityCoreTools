@@ -51,7 +51,7 @@ namespace CoreTools.InventorySystem.UI
             inventory.RemoveFromSlot(slotID, amount);
 
         public void SetItem(T item, int amount) =>
-            inventory.TryAddItemToSlot(item, slotID, amount);
+            inventory.TryAddItemToSlot(item, slotID, amount); // WHAT??!?!?!?
 
         public int TryAddAmount(T item, int amount)
         {

@@ -13,7 +13,7 @@ public static class ClipboardHelper
     {
         if (string.IsNullOrEmpty(value))
         {
-            Debug.LogWarning($"Copied an empty string to clipboard.");
+            Debug.LogWarning($"Copied null string to clipboard.");
             GUIUtility.systemCopyBuffer = "";
             return;
         }

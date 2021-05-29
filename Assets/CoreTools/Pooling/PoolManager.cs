@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
-using CoreTools.Pooling;
 
-namespace CoreTools
+namespace CoreTools.Pooling
 {
     public class PoolManager : Singleton<PoolManager>
     {

@@ -1,11 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
-using CoreTools;
-using CoreTools.Pooling;
 
-namespace CoreTools.UI
+namespace CoreTools.Pooling
 {
     // !!! DEPRICATED !!!
     [CustomEditor(typeof(PoolManager))]
