@@ -7,36 +7,31 @@
  * https://sundiray.itch.io/
  */
 
-using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace CoreTools.CoreEditor
+namespace CoreTools.GameObjectFinder
 {
     public class ReplacerWindow : EditorWindow
     {
-        // Target Prefab
-        private GameObject newGO;
+        GameObject TargetNewObject { get; set; }
 
-        // Viewport
         private Vector2 scrollPos = Vector2.zero;
         static readonly GUIContent windowTitle = new GUIContent("Replacer Tool", 
                                                                 "Replace selected GameObjects with a Prefab.");
 
-        // Parameters
-        private bool moveToSelection = true;
-        private bool keepParents = true;
-        private bool dontDestory = false;
-        private bool applyRotation = false;
-        private bool applyScale = false;
-        private bool applyTag = false;
-        private Vector3 offset = Vector3.zero;
+        bool WillSelect { get; set; } = true;
+        bool WillKeepParent { get; set; } = true;
+        bool WontDestroyOld { get; set; } = false;
+        bool AppliesRotation { get; set; } = false;
+        bool AppliesScale { get; set; } = false;
+        bool AppliesTag { get; set; } = false;
+        Vector3 OffsetVector { get; set; } = Vector3.zero;
 
-        [MenuItem("Window/Replacer")]
-        static void Init()
+        [MenuItem("Tools/Replacer")]
+        public static void OpenReplacerWindow()
         {
             ReplacerWindow window = (ReplacerWindow)GetWindow(typeof(ReplacerWindow));
             window.titleContent = windowTitle;
@@ -51,13 +46,11 @@ namespace CoreTools.CoreEditor
 
             DrawHeader();
 
-            GUILayout.Label("Replace selected GameObjects with a Prefab.");
-
             DrawSettings();
 
             EditorGUILayout.Space();
 
-            newGO = EditorGUILayout.ObjectField("Replace With:", newGO, typeof(GameObject), false) as GameObject;
+            DrawTargetObjectField();
 
             EditorGUILayout.Space();
 
@@ -65,6 +58,7 @@ namespace CoreTools.CoreEditor
 
             GUILayout.EndScrollView();
         }
+
         private void DrawHeader()
         {
             GUIStyle headerStyle = new GUIStyle("WhiteLargeLabel")
@@ -72,82 +66,104 @@ namespace CoreTools.CoreEditor
                 alignment = TextAnchor.MiddleCenter
             };
             EditorGUILayout.LabelField("Replacer Tool", headerStyle);
+            GUILayout.Label("Replace selected GameObjects with a Prefab.");
         }
+
         private void DrawSettings()
         {
-            moveToSelection = EditorGUILayout.Toggle("Auto Select New:", moveToSelection);
-            keepParents = EditorGUILayout.Toggle("Keep Parent:", keepParents);
-            dontDestory = EditorGUILayout.Toggle("Don't Destroy Old", dontDestory);
-            applyRotation = EditorGUILayout.Toggle("Keep Rotation:", applyRotation);
-            applyScale = EditorGUILayout.Toggle("Keep Scale:", applyScale);
-            applyTag = EditorGUILayout.Toggle("Keep Tag: ", applyTag);
-            offset = EditorGUILayout.Vector3Field("Offset All:", offset);
+            WillSelect = EditorGUILayout.Toggle("Auto Select New:", WillSelect);
+            WillKeepParent = EditorGUILayout.Toggle("Keep Parent:", WillKeepParent);
+            WontDestroyOld = EditorGUILayout.Toggle("Don't Destroy Old", WontDestroyOld);
+            AppliesRotation = EditorGUILayout.Toggle("Keep Rotation:", AppliesRotation);
+            AppliesScale = EditorGUILayout.Toggle("Keep Scale:", AppliesScale);
+            AppliesTag = EditorGUILayout.Toggle("Keep Tag:", AppliesTag);
+            OffsetVector = EditorGUILayout.Vector3Field("Offset All:", OffsetVector);
+        }
+
+        private void DrawTargetObjectField()
+        {
+            TargetNewObject = EditorGUILayout.ObjectField("Replace With:", TargetNewObject, typeof(GameObject), false) as GameObject;
         }
 
         private void DrawReplaceButton()
         {
-            var targets = GetSelectedSceneGameObjects();
+            GameObject[] selectedGameObjects = GetSelectedSceneGameObjects();
 
-            EditorGUI.BeginDisabledGroup(PrefabCheck() || targets.Count == 0);
-            string buttonTag = "Replace " + targets.Count.ToString();
+            EditorGUI.BeginDisabledGroup(!ValidTargetedPrefab() || selectedGameObjects.Length == 0);
+            string buttonTag = $"Replace {selectedGameObjects.Length} Objects";
             if (GUILayout.Button(buttonTag))
             {
                 TryReplaceSelection();
             }
             EditorGUI.EndDisabledGroup();
         }
+
         private void TryReplaceSelection()
         {
-            var selection = GetSelectedSceneGameObjects();
-            if (selection.Count == 0)
+            GameObject[] selection = GetSelectedSceneGameObjects();
+            if (selection.Length == 0)
             {
                 Debug.LogWarning("No editable GameObjects are selected!");
-                return;
             }
-            List<GameObject> newSelectedObjects = new List<GameObject>();
-            foreach (var target in selection)
+            else
             {
-                GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(newGO);
-                Undo.RegisterCreatedObjectUndo(go, "Created Replacement Prefabs");
-                go.transform.position = target.transform.position + offset;
-
-                if (applyRotation)
-                    go.transform.localRotation = target.transform.localRotation;
-
-                if (applyScale)
-                    go.transform.localScale = target.transform.localScale;
-
-                if (keepParents && target.transform.parent != null)
-                    go.transform.SetParent(target.transform.parent);
-
-                if (applyTag)
-                    go.tag = target.tag;
-
-                if (!dontDestory)
-                    Undo.DestroyObjectImmediate(target);
-
-                if (moveToSelection)
-                    newSelectedObjects.Add(go);
+                ReplaceSelectedGameObjects(selection);
             }
-            if (moveToSelection)
-                Selection.objects = newSelectedObjects.ToArray();
         }
-        private bool PrefabCheck()
+
+        private void ReplaceSelectedGameObjects(GameObject[] selection)
         {
-            if (newGO != null)
+            List<GameObject> newCreatedObjects = new List<GameObject>();
+            foreach (var targetToReplace in selection)
             {
-                PrefabAssetType pref = PrefabUtility.GetPrefabAssetType(newGO);
+                newCreatedObjects.Add(CreateAndSetupNewGameObject(targetToReplace));
+            }
+
+            if (WillSelect)
+                Selection.objects = newCreatedObjects.ToArray();
+        }
+
+        private GameObject CreateAndSetupNewGameObject(GameObject targetToReplace)
+        {
+            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(TargetNewObject);
+            Undo.RegisterCreatedObjectUndo(go, "Created Replacement Prefabs");
+            go.transform.position = targetToReplace.transform.position + OffsetVector;
+
+            if (AppliesRotation)
+                go.transform.rotation = targetToReplace.transform.rotation;
+
+            if (WillKeepParent && targetToReplace.transform.parent != null)
+                go.transform.SetParent(targetToReplace.transform.parent);
+
+            if (AppliesScale)
+                go.transform.localScale = targetToReplace.transform.localScale;
+
+            if (AppliesTag)
+                go.tag = targetToReplace.tag;
+
+            if (!WontDestroyOld)
+                Undo.DestroyObjectImmediate(targetToReplace);
+
+            return go;
+        }
+
+        private bool ValidTargetedPrefab()
+        {
+            if (TargetNewObject != null)
+            {
+                PrefabAssetType pref = PrefabUtility.GetPrefabAssetType(TargetNewObject);
                 if (pref == PrefabAssetType.Regular || pref == PrefabAssetType.Model || pref == PrefabAssetType.Variant)
                     return false;
             }
+
             return true;
         }
-        private List<GameObject> GetSelectedSceneGameObjects()
+        private GameObject[] GetSelectedSceneGameObjects()
         {
             return Selection.GetTransforms(SelectionMode.OnlyUserModifiable | SelectionMode.Editable)
-                    .Where(t => t.gameObject.scene.IsValid())
-                    .Select(t => t.gameObject)
-                    .ToList();
+                            .Where(t => t.gameObject.scene.IsValid())
+                            .Select(t => t.gameObject)
+                            .ToArray();
         }
     }
 }
