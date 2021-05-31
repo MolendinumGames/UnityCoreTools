@@ -10,7 +10,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace CoreTools.GameObjectFinder
+namespace ProductivityTools.GameObjectFinder
 {
     public class SwitcherTool : EditorWindow
     {
@@ -20,7 +20,16 @@ namespace CoreTools.GameObjectFinder
         Transform SecondTransform { get; set; }
         const string secondTransfLabel = "and:";
 
-        bool WillDrawConnection { get; set; } = true;
+        bool willDrawConnection = true;
+        bool WillDrawConnection
+        {
+            get => willDrawConnection;
+            set
+            {
+                willDrawConnection = value;
+                IssueSceneRepaint();
+            }
+        }
 
         private Vector2 scrollPos;
         private static readonly GUIContent Header = new GUIContent("Switcher");
@@ -71,18 +80,24 @@ namespace CoreTools.GameObjectFinder
 
         private void DrawFirstTransformField()
         {
-            GUILayout.Label("Swap:", GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
+            GUILayout.Label(firstTransfLabel, GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
             Transform newFirstTransform = EditorGUILayout.ObjectField(FirstTransform, typeof(Transform), true) as Transform;
             if (newFirstTransform != FirstTransform && !EditorUtility.IsPersistent(newFirstTransform))
+            {
                 FirstTransform = newFirstTransform;
+                IssueSceneRepaint();
+            }
         }
 
         private void DrawSecondTransformField()
         {
-            GUILayout.Label("And: ");
+            GUILayout.Label(secondTransfLabel, GUILayout.Width(EditorGUIUtility.currentViewWidth * .5f));
             Transform secondNewTransform = EditorGUILayout.ObjectField(SecondTransform, typeof(Transform), true) as Transform;
             if (secondNewTransform != SecondTransform && !EditorUtility.IsPersistent(secondNewTransform))
+            {
                 SecondTransform = secondNewTransform;
+                IssueSceneRepaint();
+            }
         }
 
         private void DrawButtons()
@@ -120,7 +135,7 @@ namespace CoreTools.GameObjectFinder
         {
             FirstTransform = null;
             SecondTransform = null;
-            SceneView.RepaintAll();
+            IssueSceneRepaint();
         }
 
         private void DrawConnection(SceneView sceneView)
@@ -152,5 +167,7 @@ namespace CoreTools.GameObjectFinder
         {
             Handles.DrawLine(start, end, connectionLineWidth);
         }
+
+        private void IssueSceneRepaint() => SceneView.RepaintAll(); 
     }
 }

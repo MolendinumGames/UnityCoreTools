@@ -11,7 +11,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
-namespace CoreTools.GameObjectFinder
+namespace ProductivityTools.GameObjectFinder
 {
     public class GameObjectFinder : EditorWindow
     {
