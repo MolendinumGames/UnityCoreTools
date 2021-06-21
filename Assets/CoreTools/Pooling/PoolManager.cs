@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 namespace CoreTools.Pooling
 {
@@ -22,6 +23,17 @@ namespace CoreTools.Pooling
         bool onPoolLoaded = false;
         [SerializeField]
         bool onPoolUnloaded = true;
+
+        [MenuItem("MyTools/GetPoolManager")]
+        public static void GetOrCreatePoolManager()
+        {
+            PoolManager pool = FindObjectOfType<PoolManager>();
+            if (pool == null)
+            {
+                pool = new GameObject("PoolManager").AddComponent(typeof(PoolManager)) as PoolManager;
+            }
+            Selection.activeGameObject = pool.gameObject;
+        }
 
 
         protected override void Awake()

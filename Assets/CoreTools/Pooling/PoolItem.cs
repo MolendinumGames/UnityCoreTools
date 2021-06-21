@@ -5,6 +5,11 @@ namespace CoreTools.Pooling
     [System.Serializable]
     public class PoolItem
     {
+        /* The serialized backing fields are neccessary since
+         * Unity doesn't serialize properties and thus they 
+         * cannot be accessed by the PoolItem PropertyDrawer
+         */
+
         [SerializeField]
         string key;
         public string Key { get => key; }
@@ -35,6 +40,8 @@ namespace CoreTools.Pooling
             this.prefab = prefab;
             this.startingAmount = startingAmount;
             this.maxAmount = maxAmount;
+            this.reuseOnFull = false;
+            this.createOnStart = true;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace CoreTools.Console
     public class ConsoleScroller : MonoBehaviour
     {
         Scrollbar scrollbar;
+        WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
 
         private void Awake() => scrollbar = GetComponent<Scrollbar>();
 
@@ -14,7 +15,7 @@ namespace CoreTools.Console
 
         IEnumerator ResetScroll()
         {
-            yield return new WaitForEndOfFrame();
+            yield return waitForEndOfFrame;
             if (scrollbar)
                 scrollbar.value = 0;
         }

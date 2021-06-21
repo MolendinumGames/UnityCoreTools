@@ -4,7 +4,7 @@ using UnityEditor;
 namespace CoreTools.Pooling
 {
     // !!! DEPRICATED !!!
-    [CustomEditor(typeof(PoolManager))]
+    // [CustomEditor(typeof(PoolManager))]
     public class PoolEditor : Editor
     {
         [MenuItem("MyTools/GetPoolManager")]
