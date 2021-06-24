@@ -12,6 +12,7 @@
 /[Aa]ssets/ExampleAssets
 /[Aa]ssets/CoreTools/Dialogue/Testing
 /[Aa]ssets/CoreTools/DialogueSystem/Testing
+/[Aa]ssets/[Pp]lugins
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
