@@ -10,6 +10,8 @@
 /[Ll]ogs/
 /[Mm]emoryCaptures/
 /[Aa]ssets/ExampleAssets
+/[Aa]ssets/CoreTools/Dialogue/Testing
+/[Aa]ssets/CoreTools/DialogueSystem/Testing
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
