@@ -21,7 +21,13 @@ namespace CoreTools.DialogueSystem
         TextMeshProUGUI textField;
 
         [SerializeField]
-        EasyAudioSystem.EasyAudio textAudio;
+        AudioSource audioSource;
+
+        [SerializeField]
+        AudioClip textSound;
+
+        //[SerializeField]
+        //EasyAudioSystem.EasyAudio textAudio;
 
         [Header("Change last drawn:")]
         public bool bold = false;
@@ -88,8 +94,10 @@ namespace CoreTools.DialogueSystem
                 textField.text += endTags;
 
                 clipCounter++;
-                if (textAudio != null && clipCounter % 2 == 0)
-                    textAudio.Play();
+                //if (textAudio != null && clipCounter % 2 == 0)
+                //    textAudio.Play();
+                PlayTextSound();
+
 
                 yield return wait;
             }
@@ -125,8 +133,9 @@ namespace CoreTools.DialogueSystem
                                                        endTags);
                 textField.SetAllDirty();
 
-                if (textAudio != null)
-                    textAudio.Play();
+                //if (textAudio != null)
+                //    textAudio.Play();
+                PlayTextSound();
 
                 yield return wait;
             }
@@ -180,6 +189,14 @@ namespace CoreTools.DialogueSystem
                 counter += w.Length + 1; // +1 for whitespace used to split
             }
             return counter;
+        }
+        private void PlayTextSound()
+        {
+            if (audioSource != null && textSound != null)
+            {
+                audioSource.clip = textSound;
+                audioSource.Play();
+            }
         }
     }
 }
