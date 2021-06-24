@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using CoreTools;
 using CoreTools.NodeSystem;
+using CoreTools.DialogueSystem;
 
 public abstract class GraphDrawer
 {
