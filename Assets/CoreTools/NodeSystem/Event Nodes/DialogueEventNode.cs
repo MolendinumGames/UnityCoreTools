@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using CoreTools;
+using CoreTools.NodeSystem;
 
-namespace CoreTools.NodeSystem
+namespace CoreTools.DialogueSystem
 {
     public class DialogueEventNode : EventNode
     {
