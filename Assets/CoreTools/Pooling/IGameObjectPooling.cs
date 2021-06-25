@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IGameObjectPooling
+namespace CoreTools.Pooling
 {
+    public interface IGameObjectPooling
+    {
 
+    }
 }
