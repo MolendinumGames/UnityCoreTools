@@ -9,16 +9,18 @@ public class GlobalPoolManager : Singleton<GlobalPoolManager>
     protected override bool Persistent => false;
 
 #if UNITY_EDITOR
-    [MenuItem("Tools/GetPoolManager")]
+    [MenuItem("Tools/Global Pool Manager")]
     public static void GetOrCreatePoolManager()
     {
         GlobalPoolManager pool = FindObjectOfType<GlobalPoolManager>();
         if (pool == null)
         {
-            pool = new GameObject("PoolManager").AddComponent(typeof(GlobalPoolManager)) as GlobalPoolManager;
+            pool = new GameObject("GlobalPoolManager").AddComponent(typeof(GlobalPoolManager)) as GlobalPoolManager;
         }
         Selection.activeGameObject = pool.gameObject;
     }
 #endif
+
+    Dictionary<string, GameObjectPool> poolLookup = new();
 
 }
