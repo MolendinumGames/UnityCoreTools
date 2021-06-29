@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using CoreTools;
+using CoreTools.Pooling;
 
-namespace CoreTools.Pooling
+namespace CoreTools
 {
     public class GlobalPoolManager : Singleton<GlobalPoolManager>
     {

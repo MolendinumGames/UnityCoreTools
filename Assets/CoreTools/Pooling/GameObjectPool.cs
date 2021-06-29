@@ -71,8 +71,12 @@ namespace CoreTools.Pooling
                 if (HasRoom)
                     return CreateAndAdd();
 
-                if (reuseOnFull) // TODO
-                    throw new NotImplementedException("Reuse on full not implemented!");
+                if (reuseOnFull)
+                {
+                    go = pool[0];
+                    pool.RemoveAt(0);
+                    pool.Add(go);
+                }
             }
 
             return go;
@@ -134,7 +138,12 @@ namespace CoreTools.Pooling
             for (int i = 0; i < pool.Count; i++)
             {
                 if (!pool[i].activeInHierarchy)
-                    return pool[i];
+                {
+                    var go = pool[i];
+                    pool.RemoveAt(i);
+                    pool.Add(go);
+                    return go;
+                }
             }
             return null;
         }
