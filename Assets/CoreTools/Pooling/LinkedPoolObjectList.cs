@@ -9,16 +9,12 @@ namespace CoreTools.Pooling
 {
     class LinkedPoolObjectList
     {
-        // First
         LinkedPoolObjectNode First { get; set; } = null;
 
-        // Last
         LinkedPoolObjectNode Last { get; set; } = null;
 
-        // Empty
         public bool IsEmpty { get => First == null; }
 
-        // Count
         public int Count
         {
             get
@@ -37,7 +33,45 @@ namespace CoreTools.Pooling
             }
         }
 
-        // Prepend
+        public IEnumerable<LinkedPoolObjectNode> GetNodes()
+        {
+            if (IsEmpty)
+            {
+                yield return null;
+            }
+            else
+            {
+                var current = First;
+                do
+                {
+                    yield return current;
+                    current = current.Next;
+                }
+                while (current != null);
+            }
+        }
+
+        public IEnumerable<GameObject> GetGameObjects()
+        {
+            if (IsEmpty)
+            {
+                yield return null;
+            }
+            else
+            {
+                var current = First;
+                do
+                {
+                    yield return current.PooledObject;
+                    current = current.Next;
+                }
+                while (current != null);
+            }
+        }
+
+        /// <summary>
+        /// Add a new node to the beginning.
+        /// </summary>
         public void Prepend(LinkedPoolObjectNode node)
         {
             if (IsEmpty)
@@ -53,12 +87,18 @@ namespace CoreTools.Pooling
             }
         }
 
+        /// <summary>
+        /// Add a new node for the GameObject to the beginning.
+        /// </summary>
         public void PrependNew(GameObject go)
         {
             Prepend(new LinkedPoolObjectNode(go));
         }
 
-        // Append
+
+        /// <summary>
+        /// Add a node to the end.
+        /// </summary>
         public void Append(LinkedPoolObjectNode node)
         {
             if (IsEmpty)
@@ -74,16 +114,87 @@ namespace CoreTools.Pooling
             }
         }
 
+        /// <summary>
+        /// Add a new node for the GameObject to the end.
+        /// </summary>
         public void AppendNew(GameObject go)
         {
             Append(new LinkedPoolObjectNode(go));
         }
 
-        // Clear
+        /// <summary>
+        /// Clears the list but will not destroy the by the nodes referenced GameObjects.
+        /// </summary>
         public void Clear()
         {
             First = null;
             Last = null;
+        }
+
+        /// <summary>
+        /// Remove the node at index and returns its data.
+        /// </summary>
+        /// <returns>The referenced pooled GameObject of the removed node.</returns>
+        public GameObject RemoveAt(int index)
+        {
+            if (index < 0 ||
+                IsEmpty ||
+                index >= Count)
+            {
+                throw new IndexOutOfRangeException($"The LinkedPoolList is smaller than index {index}");
+            }
+
+            LinkedPoolObjectNode current = First;
+
+            // Get the node to remove
+            for (int i = 0; i < index; i++)
+                current = current.Next;
+
+            // Get back the GameObject of the removed node
+            GameObject orphantGameObject = Remove(current);
+            return orphantGameObject;
+        }
+
+        /// <summary>
+        /// Remove the given node from this linked list.
+        /// </summary>
+        /// <returns>The pooled GameObject from the removed node.</returns>
+        public GameObject Remove(LinkedPoolObjectNode node)
+        {
+            bool hasPrevious = node.Previous != null;
+            bool hasNext = node.Next != null;
+
+            // Relink the previous node
+            if (hasPrevious)
+                node.Previous = hasNext ? node.Next : null;
+
+            // Relink the next node
+            if (hasNext)
+                node.Next = hasPrevious ? node.Previous : null;
+
+            // Change First node
+            if (node == First)
+                First = hasNext ? node.Next : null;
+
+            // Change Last Node
+            if (node == Last)
+                Last = hasPrevious ? node.Previous : null;
+
+            return node.PooledObject;
+        }
+
+        public void MoveToEnd(LinkedPoolObjectNode node)
+        {
+            Remove(node);
+
+            Append(node);
+        }
+
+        public void MoveToStart(LinkedPoolObjectNode node)
+        {
+            Remove(node);
+
+            Prepend(node);
         }
 
         private void SetInitialNode(LinkedPoolObjectNode node)
@@ -91,7 +202,6 @@ namespace CoreTools.Pooling
             First = node;
             Last = node;
         }
-
 
     }
 }
