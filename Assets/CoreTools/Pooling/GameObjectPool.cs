@@ -8,8 +8,7 @@ namespace CoreTools.Pooling
 {
     public class GameObjectPool
     {
-        List<GameObject> pool = new();
-
+        LinkedPoolObjectList pool = new();
 
         // Serialized backing fields will let us edit the property in the Inspector
 
@@ -28,10 +27,6 @@ namespace CoreTools.Pooling
         [SerializeField]
         bool reuseOnFull = false;
         public bool ReuseOnFull { get => reuseOnFull; }
-
-        [SerializeField]
-        bool createOnStart = true;
-        public bool CreateOnStart { get => createOnStart; }
 
         private bool HasRoom { get => pool.Count < maxAmount; }
 
@@ -54,7 +49,10 @@ namespace CoreTools.Pooling
 
         public void Initialize()
         {
-            // verify pool settings
+            // TODO:
+            // Verify pool settings
+
+            pool.Clear();
 
             for (int i = 0; i < startingAmount; i++)
             {
@@ -66,55 +64,57 @@ namespace CoreTools.Pooling
         {
             var go = GetFirstInactive();
 
-            if (go == null)
-            {
-                if (HasRoom)
-                    return CreateAndAdd();
+            if (go == null && HasRoom)
+                go = CreateAndAdd();
+            
+            if (go == null && reuseOnFull)
+                go = GetReusedObject();
 
-                if (reuseOnFull)
-                {
-                    go = pool[0];
-                    pool.RemoveAt(0);
-                    pool.Add(go);
-                }
-            }
+            if (go != null)
+                go.SetActive(true);
 
             return go;
         }
 
+        /// <summary>
+        /// Destroy all pooled GameObjects and clear the pool. Use with caution!
+        /// </summary>
         public void UnloadPool()
         {
-            int lastAmount = pool.Count;
-            foreach (GameObject go in pool)
+            // This method should be slightly cheaper than using Remove(node) foreach node in the pool
+            // because we are not going to relink any nodes
+
+            int unloadedAmount = pool.Count;
+
+            // Remove all GameObjects from the pool
+            foreach (var go in pool.GetGameObjects())
                 UnityEngine.Object.Destroy(go);
+            
+            // Clear all nodes
             pool.Clear();
 
-            Debug.Log($"Pool {ToString()} has been cleared. {lastAmount} Objects destroyed.");
+            Debug.Log($"Pool {ToString()} has been cleared. {unloadedAmount} Objects destroyed.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void TryCullPoolOverhead()
         {
             int objectsCulled = 0;
-            while (pool.Count > StartingAmount)
+            foreach (var node in pool.GetNodes())
             {
-                int index = -1;
-                for (int i = 0; i < pool.Count; i++)
-                {
-                    if (pool[i] == null || !pool[i].activeInHierarchy)
-                    {
-                        index = i;
-                        UnityEngine.Object.Destroy(pool[index]);
-                        objectsCulled++;
-                        break;
-                    }
-                }
-                if (index < 0)
+                if (pool.Count <= StartingAmount)
                     break;
 
-                pool.RemoveAt(index);
+                if (NodeIsUnused(node))
+                {
+                    DestroyNode(node);
+                    objectsCulled++;
+                }
             }
 
-            Debug.Log($"{ToString()} pool force culled: {objectsCulled} objects destroyed.");
+            Debug.Log($"{ToString()} was culled: {objectsCulled} objects destroyed.");
         }
 
         public void ForceCullPoolOverhead()
@@ -124,36 +124,52 @@ namespace CoreTools.Pooling
             int objectsCulled = 0;
             while (pool.Count > StartingAmount)
             {
-                int lastIndex = pool.Count - 1;
-                UnityEngine.Object.Destroy(pool[lastIndex]);
+                DestroyNode(pool.First);
                 objectsCulled++;
-                pool.RemoveAt(lastIndex);
             }
 
-            Debug.Log($"{ToString()} pool force culled: {objectsCulled} objects destroyed.");
+            Debug.Log($"{ToString()} was force culled: {objectsCulled} objects destroyed.");
         }
 
         private GameObject GetFirstInactive()
         {
-            for (int i = 0; i < pool.Count; i++)
+            foreach (var node in pool.GetNodes())
             {
-                if (!pool[i].activeInHierarchy)
-                {
-                    var go = pool[i];
-                    pool.RemoveAt(i);
-                    pool.Add(go);
-                    return go;
-                }
+                if (NodeIsUnused(node))
+                    return TakeGameObjectFromNode(node);
             }
+
+            // No unused GameObject found:
             return null;
         }
 
         private GameObject CreateAndAdd()
         {
             var go = UnityEngine.Object.Instantiate(prefab);
-            pool.Add(go);
+            pool.AppendNew(go);
+            go.SetActive(false);
             return go;
         }
+
+        private GameObject TakeGameObjectFromNode(LinkedPoolObjectNode node)
+        {
+            pool.MoveToEnd(node);
+            var go = node.PooledObject;
+            return go;
+        }
+
+        private bool NodeIsUnused(LinkedPoolObjectNode node) => 
+            !node.PooledObject.activeInHierarchy;
+
+        private void DestroyNode(LinkedPoolObjectNode node)
+        {
+            var go = pool.Remove(node);
+            UnityEngine.Object.Destroy(go);
+        }
+
+        private GameObject GetReusedObject() =>
+            TakeGameObjectFromNode(pool.First);
+
 
     }
 }

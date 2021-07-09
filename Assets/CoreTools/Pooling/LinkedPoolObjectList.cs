@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace CoreTools.Pooling
 {
-    class LinkedPoolObjectList
+    [System.Serializable]
+    public class LinkedPoolObjectList
     {
-        LinkedPoolObjectNode First { get; set; } = null;
+        public LinkedPoolObjectNode First { get; set; } = null;
 
-        LinkedPoolObjectNode Last { get; set; } = null;
+        public LinkedPoolObjectNode Last { get; set; } = null;
 
         public bool IsEmpty { get => First == null; }
 

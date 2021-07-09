@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace CoreTools.Pooling
 {
-    class LinkedPoolObjectNode
+    [System.Serializable]
+    public class LinkedPoolObjectNode
     {
         public LinkedPoolObjectNode(GameObject pooledObject, LinkedPoolObjectNode previous, LinkedPoolObjectNode next)
         {
