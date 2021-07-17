@@ -6,6 +6,7 @@ using CoreTools;
 
 namespace CoreTools.Pooling
 {
+    [System.Serializable]
     public class GameObjectPool
     {
         LinkedPoolObjectList pool = new();
@@ -28,7 +29,7 @@ namespace CoreTools.Pooling
         bool reuseOnFull = false;
         public bool ReuseOnFull { get => reuseOnFull; }
 
-        private bool HasRoom { get => pool.Count < maxAmount; }
+        public bool HasRoom { get => pool.Count < maxAmount; }
 
 
         public GameObjectPool(GameObject prefab, int startingAmount, int maxAmount, bool reuseOnFull)

@@ -10,8 +10,13 @@ namespace CoreTools
     {
         protected override bool Persistent => false;
 
+        [SerializeField]
+        GlobalPoolDataSet[] globalPools = new GlobalPoolDataSet[0];
+
+        Dictionary<string, GameObjectPool> poolLookup = new();
+
 #if UNITY_EDITOR
-        [MenuItem("Tools/Global Pool Manager")]
+        [UnityEditor.MenuItem("Tools/Global Pool Manager")]
         public static void GetOrCreatePoolManager()
         {
             GlobalPoolManager pool = FindObjectOfType<GlobalPoolManager>();
@@ -23,7 +28,51 @@ namespace CoreTools
         }
 #endif
 
-        Dictionary<string, GameObjectPool> poolLookup = new();
+        protected override void Awake()
+        {
+            base.Awake();
+
+            foreach (var poolData in globalPools)
+            {
+                // TODO check pool validation, only init if pool is checked for create on start
+                poolData.Pool.Initialize();
+                poolLookup.Add(poolData.Key, poolData.Pool);
+            }
+        }
+
+        /// <summary>
+        /// Get a pooled GameObject. Can return null if pool settings limits reached. 
+        /// </summary>
+        /// <param name="key">Unique pool key as specified in the GlobalPoolManager</param>
+        public GameObject RequestObject(string key)
+        {
+            if (poolLookup.ContainsKey(key))
+            {
+                return poolLookup[key].RequestObject();
+            }
+            else
+            {
+                Debug.LogWarning($"No pool with key {key} has been found.");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get a reference to a GameObject pool.
+        /// </summary>
+        /// <param name="key">Unique pool key as specified in the GlobalPoolManager</param>
+        public GameObjectPool GetPool(string key)
+        {
+            if (poolLookup.ContainsKey(key))
+            {
+                return poolLookup[key];
+            }
+            else
+            {
+                Debug.LogWarning($"No pool with key {key} has been found.");
+                return null;
+            }
+        }
 
     }
 }
