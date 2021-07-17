@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace CoreTools.Pooling
 {
     [System.Serializable]
-    public class LinkedPoolObjectList
+    public class LinkedPoolObjectList :  IEnumerable<LinkedPoolObjectNode>
     {
         public LinkedPoolObjectNode First { get; set; } = null;
 
@@ -31,40 +32,37 @@ namespace CoreTools.Pooling
             }
         }
 
+        public IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable<LinkedPoolObjectNode>)this).GetEnumerator();
+        }
+
+        IEnumerator<LinkedPoolObjectNode> IEnumerable<LinkedPoolObjectNode>.GetEnumerator()
+        {
+            foreach (var node in GetNodes())
+                yield return node;
+        }
+
         public IEnumerable<LinkedPoolObjectNode> GetNodes()
         {
-            if (IsEmpty)
+            var current = First;
+            do
             {
-                yield return null;
+                yield return current;
+                current = current.Next;
             }
-            else
-            {
-                var current = First;
-                do
-                {
-                    yield return current;
-                    current = current.Next;
-                }
-                while (current != null);
-            }
+            while (current != null);
         }
 
         public IEnumerable<GameObject> GetGameObjects()
         {
-            if (IsEmpty)
+            var current = First;
+            do
             {
-                yield return null;
+                yield return current.PooledObject;
+                current = current.Next;
             }
-            else
-            {
-                var current = First;
-                do
-                {
-                    yield return current.PooledObject;
-                    current = current.Next;
-                }
-                while (current != null);
-            }
+            while (current != null);
         }
 
         /// <summary>
@@ -200,6 +198,5 @@ namespace CoreTools.Pooling
             First = node;
             Last = node;
         }
-
     }
 }
