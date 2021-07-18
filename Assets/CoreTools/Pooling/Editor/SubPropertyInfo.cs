@@ -1,4 +1,4 @@
-﻿namespace CoreTools.Pooling.Editor
+﻿namespace CoreTools.Pooling.CoreEditor
 {
     internal struct SubPropertyInfo
     {

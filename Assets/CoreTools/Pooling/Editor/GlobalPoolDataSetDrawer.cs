@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using CoreTools.Pooling;
 
-namespace CoreTools.Pooling.Editor
+namespace CoreTools.Pooling.CoreEditor
 {
     [CustomPropertyDrawer(typeof(GlobalPoolDataSet))]
     sealed internal class GlobalPoolDataSetDrawer : PropertyDrawer

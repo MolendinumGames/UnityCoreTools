@@ -900,18 +900,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   globalPools:
   - key: 
-    populateOnAwake: 0
+    populateOnAwake: 1
     Pool:
       prefab: {fileID: 0}
-      startingAmount: 11
-      maxAmount: 11111
+      startingAmount: 0
+      maxAmount: 0
       reuseOnFull: 0
   - key: 
-    populateOnAwake: 0
+    populateOnAwake: 1
     Pool:
       prefab: {fileID: 0}
-      startingAmount: 11
-      maxAmount: 11111
+      startingAmount: 0
+      maxAmount: 999
+      reuseOnFull: 0
+  - key: 
+    populateOnAwake: 1
+    Pool:
+      prefab: {fileID: 0}
+      startingAmount: 0
+      maxAmount: 999
+      reuseOnFull: 0
+  - key: 
+    populateOnAwake: 1
+    Pool:
+      prefab: {fileID: 0}
+      startingAmount: 0
+      maxAmount: 999
       reuseOnFull: 0
 --- !u!4 &1910868211
 Transform:

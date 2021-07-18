@@ -11,7 +11,7 @@ namespace CoreTools
         protected override bool Persistent => false;
 
         [SerializeField]
-        GlobalPoolDataSet[] globalPools = new GlobalPoolDataSet[0];
+        List<GlobalPoolDataSet> globalPools = new(1);
 
         Dictionary<string, GameObjectPool> poolLookup = new();
 
@@ -73,6 +73,16 @@ namespace CoreTools
                 return null;
             }
         }
+
+#if UNITY_EDITOR
+        public void AddPool()
+        {
+            globalPools.Add(new GlobalPoolDataSet()
+            {
+                Pool = new GameObjectPool(null, 0, 999, false),
+            });
+        }
+#endif
 
     }
 }
