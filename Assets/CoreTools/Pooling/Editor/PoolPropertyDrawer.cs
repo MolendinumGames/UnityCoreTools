@@ -23,7 +23,7 @@ namespace CoreTools.Pooling.CoreEditor
 
             SetLabelWidth(PropertyLabelWidth);
             Rect contentPos = position;
-            //contentPos.height /= 3;
+            contentPos.height = EditorGUIUtility.singleLineHeight;
 
             DrawFirstRow(property, contentPos);
             NextLine(ref contentPos);
