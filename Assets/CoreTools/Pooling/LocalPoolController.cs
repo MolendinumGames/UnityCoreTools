@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CoreTools.Pooling
 {
-    public class GameObjectPoolController : MonoBehaviour
+    public class LocalPoolController : MonoBehaviour
     {
         [SerializeField]
         bool createOnAwake = true;
