@@ -59,6 +59,9 @@ namespace CoreTools.Pooling
             var current = First;
             do
             {
+                if (current.PooledObject == null)
+                    throw new NullReferenceException("LinkedPoolObjectNode doesn't have a valid GameObject reference.");
+
                 yield return current.PooledObject;
                 current = current.Next;
             }
@@ -137,7 +140,7 @@ namespace CoreTools.Pooling
                 IsEmpty ||
                 index >= Count)
             {
-                throw new IndexOutOfRangeException($"The LinkedPoolList is smaller than index {index}");
+                throw new IndexOutOfRangeException($"LinkedPoolList doesn't have an index: {index}");
             }
 
             LinkedPoolObjectNode current = First;
@@ -160,14 +163,6 @@ namespace CoreTools.Pooling
             bool hasPrevious = node.Previous != null;
             bool hasNext = node.Next != null;
 
-            // Relink the previous node
-            if (hasPrevious)
-                node.Previous = hasNext ? node.Next : null;
-
-            // Relink the next node
-            if (hasNext)
-                node.Next = hasPrevious ? node.Previous : null;
-
             // Change First node
             if (node == First)
                 First = hasNext ? node.Next : null;
@@ -175,6 +170,14 @@ namespace CoreTools.Pooling
             // Change Last Node
             if (node == Last)
                 Last = hasPrevious ? node.Previous : null;
+
+            // Relink the previous node
+            if (hasPrevious)
+                node.Previous = hasNext ? node.Next : null;
+
+            // Relink the next node
+            if (hasNext)
+                node.Next = hasPrevious ? node.Previous : null;
 
             return node.PooledObject;
         }
