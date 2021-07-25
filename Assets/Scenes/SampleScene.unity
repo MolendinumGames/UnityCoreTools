@@ -970,13 +970,6 @@ MonoBehaviour:
       startingAmount: 0
       maxAmount: 999
       reuseOnFull: 0
-  - key: 
-    populateOnAwake: 1
-    Pool:
-      prefab: {fileID: 0}
-      startingAmount: 0
-      maxAmount: 999
-      reuseOnFull: 0
 --- !u!4 &1910868211
 Transform:
   m_ObjectHideFlags: 0

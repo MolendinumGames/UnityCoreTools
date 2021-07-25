@@ -1,37 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using CoreTools.Pooling;
 
-namespace CoreTools
+namespace CoreTools.Pooling
 {
-    public class GlobalPoolManager : Singleton<GlobalPoolManager>, IPoolManager
+    public class LocalPoolManager : MonoBehaviour, IPoolManager
     {
-        protected override bool Persistent => false;
 
         [SerializeField]
         List<GlobalPoolDataSet> globalPools = new(1);
 
         public Dictionary<string, GameObjectPool> PoolLookup { get; set; } = new();
 
-#if UNITY_EDITOR
-        [UnityEditor.MenuItem("Tools/Global Pool Manager")]
-        public static void GetOrCreatePoolManager()
+        private void Awake()
         {
-            GlobalPoolManager pool = FindObjectOfType<GlobalPoolManager>();
-            if (pool == null)
-            {
-                pool = new GameObject("GlobalPoolManager").AddComponent(typeof(GlobalPoolManager)) as GlobalPoolManager;
-            }
-            Selection.activeGameObject = pool.gameObject;
-        }
-#endif
-
-        protected override void Awake()
-        {
-            base.Awake();
-
             foreach (var poolData in globalPools)
             {
                 // TODO check pool validation, only init if pool is checked for create on start
