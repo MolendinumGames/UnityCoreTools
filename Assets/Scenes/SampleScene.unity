@@ -1982,7 +1982,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea161e8f00bf60940b98c3a3f7caf8e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  globalPools: []
+  globalPools:
+  - key: 
+    populateOnAwake: 1
+    Pool:
+      prefab: {fileID: 0}
+      startingAmount: 0
+      maxAmount: 999
+      reuseOnFull: 0
 --- !u!4 &1910868211
 Transform:
   m_ObjectHideFlags: 0

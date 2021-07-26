@@ -25,18 +25,6 @@ namespace CoreTools.Console
 
         private void Awake()
         {
-            List<IConsoleCommand> commands = new()
-            {
-                new RestartCommand(),
-                new ClearCommand(),
-                new HelpCommand(),
-                new ExitCommand(),
-                new CloseAppCommand(),
-                new LoadSceneCommand()
-            };
-
-            console = new DeveloperConsole(prefix, commands);
-
             scrollController = GetComponentInChildren<ConsoleScroller>();
         }
 
@@ -48,11 +36,15 @@ namespace CoreTools.Console
             SubEvents();
             SetUpInputField();
         }
+
         private void OnDisable()
         {
             isClosing = true;
             UnsubEvents();
         }
+
+        public void Setup(IEnumerable<IConsoleCommand> commands) =>
+            console = new DeveloperConsole(prefix, commands);
 
         void SubEvents()
         {
@@ -60,6 +52,7 @@ namespace CoreTools.Console
             ClearConsole += ClearLog;
             ConsoleHelp += PrintConsoleHelp;
         }
+
         private void UnsubEvents()
         {
             inputArea.onSubmit.RemoveAllListeners();
