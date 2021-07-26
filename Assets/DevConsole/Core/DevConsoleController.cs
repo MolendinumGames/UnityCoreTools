@@ -38,7 +38,7 @@ namespace CoreTools.Console
                 SwapConsoleState();
 #else
 #if ENABLE_INPUT_SYSTEM
-            if (Keyboard.current.f10Key.wasPressedThisFrame)
+            if (Keyboard.current.tabKey.wasPressedThisFrame)
                 SwapConsoleState();
 #endif
 #endif

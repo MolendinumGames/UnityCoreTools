@@ -5,32 +5,40 @@ namespace CoreTools.Console
 {
     public class LoadSceneCommand : ConsoleCommand
     {
-        readonly string wrongAmountMsg = "This command takes only one input.";
-        readonly string notFoundMsg = "No scene with that index or name found";
-        string wrongInputMsg = "";
+        const string wrongAmountMsg = "This command takes only one input.";
+        const string notFoundMsg = "No scene with that index or name found";
+        string currentWrongMessage = "";
+
+        string currentSuccessMessage = "";
 
         public override string Command => "loadscene";
 
-        public override string[] WrongInputMessage => new string[] { wrongInputMsg };
+        public override string WrongInputMessage => currentWrongMessage;
 
-        public override string[] SuccessMessage => null;
+        public override string SuccessMessage => currentSuccessMessage;
 
         public override bool Process(string[] args)
         {
             if (args.Length != 1)
             {
-                wrongInputMsg = wrongAmountMsg;
+                currentWrongMessage = wrongAmountMsg;
                 return false;
             }
 
             string sceneArg = args[0];
 
             if (TryLoadByIndex(sceneArg))
+            {
+                currentSuccessMessage = BuildSuccessMessage(sceneArg);
                 return true;
+            }
             else if (TryLoadByName(sceneArg))
+            {
+                currentSuccessMessage = BuildSuccessMessage(sceneArg);
                 return true;
+            }
 
-            wrongInputMsg = notFoundMsg;
+            currentWrongMessage = notFoundMsg;
             return false;
         }
 
@@ -44,6 +52,7 @@ namespace CoreTools.Console
             }
             return false;
         }
+
         bool TryLoadByName(string sceneArg)
         {
             if (SceneManager.GetSceneByName(sceneArg) != null)
@@ -53,5 +62,8 @@ namespace CoreTools.Console
             }
             return false;
         }
+
+        string BuildSuccessMessage(string sceneName) =>
+            $"Scene {sceneName} loaded.";
     }
 }

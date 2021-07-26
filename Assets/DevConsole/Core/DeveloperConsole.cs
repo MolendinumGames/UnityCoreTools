@@ -6,92 +6,83 @@ namespace CoreTools.Console
 {
     public class DeveloperConsole
     {
-        readonly string prefix;
-        readonly IEnumerable<IConsoleCommand> commands;
+        public string Prefix { get; }
+        public List<IConsoleCommand> Commands { get; }
+
+        const string ErrorPrefix = "<color=\"red\">ERROR: </color>";
+        const string NotFoundMessage = "No such command found.";
+        const string InvalidCommandMessage = "Not a valid command syntax.";
+        const string WrongInputFallbackMessage = "Wrong input args given.";
+        const string SuccessFallbackMessage = "Done.";
+
         public DeveloperConsole(string prefix, IEnumerable<IConsoleCommand> commands)
         {
-            this.prefix = prefix;
-            this.commands = commands;
+            this.Prefix = prefix;
+            this.Commands = commands.ToList();
         }
 
-        public Action<string[]> PushMessage;
-        public IEnumerable<IConsoleCommand> GetAllCommands() => commands;
-
-        public void ProcessInput(string userInput)
+        public string ProcessInput(string userInput)
         {
-            PrintUserInput(userInput);
-
             var inputs = userInput.Split(' ');
             string commandInput = inputs[0];
             string[] args = inputs.Skip(1).ToArray();
 
             if (InputMatchesCommandPattern(commandInput))
-                TryExecuteUserCommand(commandInput, args);
+            {
+                return TryExecuteUserCommand(commandInput, args);
+            }
             else
-                PrintError(new string[] { "Not a valid command!" });
+            {
+                return BuildErrorMessage(InvalidCommandMessage);
+            }
         }
 
-        bool InputMatchesCommandPattern(string userInput) => !string.IsNullOrWhiteSpace(userInput) && userInput.StartsWith("/");
+        bool InputMatchesCommandPattern(string userInput) =>
+            !string.IsNullOrWhiteSpace(userInput)
+            && userInput.StartsWith("/");
 
-        #region User Command Processing
-        void TryExecuteUserCommand(string userCommandInput, string[] args)
+        string TryExecuteUserCommand(string userCommandInput, string[] args)
         {
-            userCommandInput = userCommandInput.Remove('/');
+            userCommandInput = userCommandInput.Remove(0, 1); // Remove the '/'
             IConsoleCommand targetCommand = FindMatchingCommand(userCommandInput);
 
             if (targetCommand != null)
-                CallCommand(targetCommand, args);
+                return CallCommand(targetCommand, args);
             else
-                PrintError(new string[] { "Command not found!" });
+                return BuildErrorMessage(NotFoundMessage);
         }
+
         IConsoleCommand FindMatchingCommand(string userCommandInput)
         {
-            foreach (IConsoleCommand consoleCommand in GetAllCommands())
+            foreach (IConsoleCommand consoleCommand in Commands)
             {
                 if (userCommandInput.Equals(consoleCommand.Command, System.StringComparison.OrdinalIgnoreCase))
                     return consoleCommand;
             }
             return null;
         }
-        void CallCommand(IConsoleCommand command, string[] args)
+
+        string CallCommand(IConsoleCommand command, string[] args)
         {
-            if (!command.Process(args))
+            if (command.Process(args))
             {
-                if (command.WrongInputMessage != null)
-                    PrintError(command.WrongInputMessage);
+                // Succesfull command execution
+                if (command.SuccessMessage != null)
+                    return command.SuccessMessage;
                 else
-                    PrintError(new string[] { "Input arguments don't match command!" });
+                    return SuccessFallbackMessage;
             }
-            else if (command.SuccessMessage != null) // Input succesfully processed
+            else
             {
-                Print(command.SuccessMessage);
+                // Correct command but wrong input args given
+                if (command.WrongInputMessage != null)
+                    return BuildErrorMessage(command.WrongInputMessage);
+                else
+                    return BuildErrorMessage(WrongInputFallbackMessage);
             }
         }
-        #endregion
 
-        #region Print Functions
-        void Print(string[] messages)
-        {
-            messages = AddPrefixes(messages);
-            PushMessage?.Invoke(messages);
-        }
-        void PrintError(string[] messages)
-        {
-            string errorMsg = "<color=\"red\">ERROR: </color>";
-            messages[0] = errorMsg + messages[0];
-            messages = AddPrefixes(messages);
-            PushMessage?.Invoke(messages);
-        }
-        void PrintUserInput(string userInput) =>
-            Print(new string[] { "<color=\"yellow\">" + userInput + "</color>" });
-
-        string[] AddPrefixes(string[] messages)
-        {
-            string[] newMessages = new string[messages.Length];
-            for (int i = 0; i < messages.Length; i++)
-                newMessages[i] = prefix + messages[i];
-            return newMessages;
-        }
-        #endregion
+        string BuildErrorMessage(string message) =>
+            ErrorPrefix + message;
     }
 }

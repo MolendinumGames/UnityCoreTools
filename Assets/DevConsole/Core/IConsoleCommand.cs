@@ -4,7 +4,7 @@ namespace CoreTools.Console
     {
         string Command { get; }
         bool Process(string[] args);
-        string[] WrongInputMessage { get; }
-        string[] SuccessMessage { get; }
+        string WrongInputMessage { get; }
+        string SuccessMessage { get; }
     }
 }

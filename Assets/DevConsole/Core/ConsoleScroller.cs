@@ -9,9 +9,19 @@ namespace CoreTools.Console
         Scrollbar scrollbar;
         WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
 
+        bool isClosing = false;
+
         private void Awake() => scrollbar = GetComponent<Scrollbar>();
 
-        public void MoveDown() => StartCoroutine(ResetScroll());
+        private void OnEnable() => isClosing = false;
+
+        private void OnDisable() => isClosing = true;
+
+        public void MoveDown()
+        {
+            if (!isClosing)
+                StartCoroutine(ResetScroll());
+        }
 
         IEnumerator ResetScroll()
         {

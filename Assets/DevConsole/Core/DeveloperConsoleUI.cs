@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,24 +21,28 @@ namespace CoreTools.Console
 
         ConsoleScroller scrollController;
 
+        bool isClosing = false;
+
         private void Awake()
         {
-            console = new DeveloperConsole(
-            prefix,
-            new List<IConsoleCommand>()
+            List<IConsoleCommand> commands = new()
             {
-                // Add commands here
                 new RestartCommand(),
                 new ClearCommand(),
                 new HelpCommand(),
                 new ExitCommand(),
                 new CloseAppCommand(),
                 new LoadSceneCommand()
-            });
+            };
+
+            console = new DeveloperConsole(prefix, commands);
+
             scrollController = GetComponentInChildren<ConsoleScroller>();
         }
+
         private void OnEnable()
         {
+            isClosing = false;
             ClearLog();
             ClearInput();
             SubEvents();
@@ -47,19 +50,18 @@ namespace CoreTools.Console
         }
         private void OnDisable()
         {
+            isClosing = true;
             UnsubEvents();
         }
 
         void SubEvents()
         {
             inputArea.onSubmit.AddListener(ProcessInput);
-            console.PushMessage += LogText;
             ClearConsole += ClearLog;
             ConsoleHelp += PrintConsoleHelp;
         }
         private void UnsubEvents()
         {
-            console.PushMessage -= LogText;
             inputArea.onSubmit.RemoveAllListeners();
             ClearConsole -= ClearLog;
             ConsoleHelp -= PrintConsoleHelp;
@@ -73,44 +75,60 @@ namespace CoreTools.Console
 
         void ProcessInput(string userInput)
         {
-            console.ProcessInput(userInput);
+            LogText(GetFormattedUserInput(userInput));
+
+            string processedMessage = console.ProcessInput(userInput);
+            LogText(processedMessage);
 
             ResetInputField();
         }
 
-        void LogText(IEnumerable<string> messages)
+        void LogText(string message)
         {
-            foreach (string line in messages)
-                logArea.text += line + "<br>";
+            logArea.text += message + "<br>";
             scrollController.MoveDown();
         }
 
         void ClearLog()
         {
             logArea.text = "";
-            PrintExitCommand();
-            PrintHelpInfo();
+            PrintInitialInfo();
         }
+
         void ResetInputField()
         {
             ClearInput();
-            StartCoroutine(SelectInputField());
+
+            if (!isClosing)
+                StartCoroutine(SelectInputField());
         }
-        void ClearInput() => inputArea.text = "";
-        void PrintExitCommand() => LogText(new string[] { $"{prefix}Close with F10 or \"<color=\"yellow\">/exit</color>\"." });
-        void PrintHelpInfo() => LogText(new string[] { $"{prefix}Type \"<color=\"yellow\">/help</color>\" for commands list" });
+
+        void ClearInput() =>
+            inputArea.text = "";
+
+        void PrintInitialInfo()
+        {
+            LogText($"{prefix}Close with F10 or \"<color=\"yellow\">/exit</color>\".");
+            LogText($"{prefix}Type \"<color=\"yellow\">/help</color>\" for commands list");
+        }
+
         void PrintConsoleHelp()
         {
             var builder = new StringBuilder();
-            foreach (var comm in console.GetAllCommands())
+            foreach (var comm in console.Commands)
                 builder.Append('/'+comm.Command+' ');
-            LogText(new string[] { prefix + builder.ToString().TrimEnd(' ') });
+            LogText(prefix + builder.ToString().TrimEnd(' '));
         }
+
         IEnumerator SelectInputField()
         {
+            // Wait 1 frame because the input area is not selectable the frame it is created
             yield return new WaitForEndOfFrame();
             inputArea.ActivateInputField();
             inputArea.Select();
         }
+
+        string GetFormattedUserInput(string userInput) =>
+            $"{console.Prefix}  <color=\"yellow\">{userInput}</color>";
     }
 }

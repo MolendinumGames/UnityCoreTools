@@ -10,7 +10,7 @@ namespace CoreTools.Console
 
         public abstract bool Process(string[] args);
 
-        public abstract string[] WrongInputMessage { get; }
-        public abstract string[] SuccessMessage { get; }
+        public abstract string WrongInputMessage { get; }
+        public abstract string SuccessMessage { get; }
     }
 }
