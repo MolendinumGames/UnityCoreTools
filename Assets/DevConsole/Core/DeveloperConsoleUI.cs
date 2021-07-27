@@ -78,6 +78,10 @@ namespace CoreTools.Console
 
         void LogText(string message)
         {
+            // Wont print empty messages but accepts whitespace only
+            if (string.IsNullOrEmpty(message))
+                return;
+
             logArea.text += message + "<br>";
             scrollController.MoveDown();
         }
@@ -101,8 +105,8 @@ namespace CoreTools.Console
 
         void PrintInitialInfo()
         {
-            LogText($"{prefix}Close with F10 or \"<color=\"yellow\">/exit</color>\".");
-            LogText($"{prefix}Type \"<color=\"yellow\">/help</color>\" for commands list");
+            LogText($"Close with F10 or \"<color=\"yellow\">/exit</color>\".");
+            LogText($"Type \"<color=\"yellow\">/help</color>\" for commands list.");
         }
 
         void PrintConsoleHelp()
@@ -110,7 +114,7 @@ namespace CoreTools.Console
             var builder = new StringBuilder();
             foreach (var comm in console.Commands)
                 builder.Append('/'+comm.Command+' ');
-            LogText(prefix + builder.ToString().TrimEnd(' '));
+            LogText(builder.ToString().TrimEnd(' '));
         }
 
         IEnumerator SelectInputField()
@@ -122,6 +126,6 @@ namespace CoreTools.Console
         }
 
         string GetFormattedUserInput(string userInput) =>
-            $"{console.Prefix}  <color=\"yellow\">{userInput}</color>";
+            $"{console.Prefix} <color=\"yellow\">{userInput}</color>";
     }
 }

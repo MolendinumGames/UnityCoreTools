@@ -20,14 +20,15 @@ namespace CoreTools.Console
         public void MoveDown()
         {
             if (!isClosing)
+            {
                 StartCoroutine(ResetScroll());
+            }
         }
 
         IEnumerator ResetScroll()
         {
             yield return waitForEndOfFrame;
-            if (scrollbar)
-                scrollbar.value = 0;
+            scrollbar.value = 0;
         }
     }
 }
