@@ -30,6 +30,7 @@ namespace CoreTools.Console
         {
             var prefab = LoadDevConsolePrefab();
             var go = GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity, null);
+            go.name = prefab.name;
             Selection.activeGameObject = go;
         }
 
