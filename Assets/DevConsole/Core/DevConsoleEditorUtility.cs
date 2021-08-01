@@ -9,7 +9,7 @@ namespace CoreTools.Console
     {
         const string prefabPath = "DeveloperConsole";
 
-        [MenuItem("Tools/Add DeveloperConsole")]
+        [MenuItem("Tools/Add Developer Console")]
         public static void DevConsoleCreator()
         {
             // CoreTools.Console.DeveloperConsole is not a MonoBehaviour so we search for the Controller instead.
