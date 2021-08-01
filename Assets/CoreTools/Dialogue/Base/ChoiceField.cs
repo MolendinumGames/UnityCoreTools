@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using CoreTools.NodeSystem;
 
@@ -8,9 +6,10 @@ namespace CoreTools.DialogueSystem
     [System.Serializable]
     public class ChoiceField : ISingleChild
     {
+        // (!) Undo is handled in choice node
+
         public string text;
 
-        // UNDO IN CHOICE NODE
         [SerializeField]
         private string childId;
         public virtual string ChildID
@@ -24,8 +23,10 @@ namespace CoreTools.DialogueSystem
                     childId = value;
                 }
             }
+#endif
         }
 
+#if UNITY_EDITOR
         public void ClearChild()
         {
             ChildID = null;
@@ -38,6 +39,7 @@ namespace CoreTools.DialogueSystem
         }
 #endif
 
-        public bool HasChild() => !string.IsNullOrWhiteSpace(childId);
+        public bool HasChild() =>
+            !string.IsNullOrWhiteSpace(childId);
     }
 }
