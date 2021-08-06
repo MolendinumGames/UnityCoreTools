@@ -1,4 +1,4 @@
-﻿namespace CoreTools.Console
+﻿namespace CoreTools.Console.Commands
 {
     public class ExitCommand : ConsoleCommand
     {

@@ -1,5 +1,6 @@
 ﻿using UnityEngine.SceneManagement;
-namespace CoreTools.Console
+
+namespace CoreTools.Console.Commands
 {
     public class RestartCommand : ConsoleCommand
     {
