@@ -105,17 +105,41 @@ namespace CoreTools.Console
 
         void PrintInitialInfo()
         {
-            LogText($"Close with F10 or \"<color=\"yellow\">/exit</color>\".");
-            LogText($"Type \"<color=\"yellow\">/help</color>\" for commands list.");
+            LogText($"To close type \"<color=\"yellow\">/exit</color>\" or press console key.");
+            LogText($"Type \"<color=\"yellow\">/help</color>\" for list of commands.");
         }
 
         void PrintConsoleHelp()
         {
             var builder = new StringBuilder();
+            int counter = 0;
             foreach (var comm in console.Commands)
-                builder.Append('/'+comm.Command+' ');
+            {
+                counter++;
+                string commandWord = '/' + comm.Command;
+                if (counter % 3 == 0)
+                {
+                    builder.Append(commandWord + "<br>");
+                }
+                else
+                {
+                    int fillingSpaceAmount = 20 - commandWord.Length;
+                    builder.Append(commandWord + GetFillingSpaces(fillingSpaceAmount));
+                }
+            }
             LogText(builder.ToString().TrimEnd(' '));
         }
+
+        string GetFillingSpaces(int count)
+        {
+            StringBuilder builder = new();
+            for (int i = 0; i < count; i++)
+            {
+                builder.Append(' ');
+            }
+            return builder.ToString();
+        }
+            
 
         IEnumerator SelectInputField()
         {
