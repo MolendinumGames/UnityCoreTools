@@ -7,7 +7,7 @@ namespace CoreTools.Console
     // If an instance of a DeveloperConsole is already in the scene, the root GameObject will be selected instead.
     public static class DevConsoleEditorUtility
     {
-        const string prefabPath = "DeveloperConsole";
+        const string prefabPath = "ConsolePrefabs/DeveloperConsole";
 
         [MenuItem("Tools/Add Developer Console")]
         public static void DevConsoleCreator()

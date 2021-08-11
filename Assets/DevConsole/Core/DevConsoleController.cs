@@ -1,4 +1,13 @@
-﻿using System;
+﻿/* Copyright (c) 2021 - Christoph Römer. All rights reserved. 
+ * 
+ * For support, feedback and suggestions please conact me under:
+ * contactsundiray@gmail.com
+ * 
+ * Check out my other content:
+ * https://sundiray.itch.io/
+ */
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -30,6 +39,11 @@ namespace CoreTools.Console
         }
 #endif
 #endif
+
+        static Action ConsoleOpened;
+        public static Action OnConsoleOpened => ConsoleOpened;
+        static Action ConsoleClosed;
+        public static Action OnConsoleClosed => ConsoleClosed;
 
         static Action ExitConsole;
         public static void RaiseExitConsole() => ExitConsole?.Invoke();
@@ -95,10 +109,28 @@ namespace CoreTools.Console
 #endif
         }
 
-        void SwapConsoleState() => consoleObject.SetActive(!consoleObject.activeInHierarchy);
+        void SwapConsoleState()
+        {
+            if (consoleObject == null)
+                throw new NullReferenceException("No Console Object set in the DevConsoleController!");
 
-        void OpenConsole() => consoleObject.SetActive(true);
+            bool isOpen = consoleObject.activeInHierarchy;
+            if (isOpen)
+                CloseConsole();
+            else
+                OpenConsole();
+        }
 
-        void CloseConsole() => consoleObject.SetActive(false);
+        void OpenConsole()
+        {
+            consoleObject.SetActive(true);
+            ConsoleOpened?.Invoke();
+        }
+
+        void CloseConsole()
+        {
+            consoleObject.SetActive(false);
+            ConsoleClosed?.Invoke();
+        }
     }
 }
