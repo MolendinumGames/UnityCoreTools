@@ -8,6 +8,9 @@ https://sundiray.itch.io/
 
 _______________________________________________________________
 
+Requires Unity 2020 LTS or newer. May work on older version but no guarantee.
+(!) This asset requires TextMeshPro plugin by Unity!
+
 Version 0.1b
 	Initial beta test
 
@@ -24,27 +27,29 @@ _______________________________________________________________
 	There is a small list of simple commands to get started.
 
 >>> Adding Custom Commands:
-	Add new C# file to Assets/DevConsole/Commands
-	Add it to the namespace CoreTools.Console.Commands
-	Get rid if the Start and Update function
-	Inherit from ConsoleCommand instead
+	Add new C# filen and change namespace to CoreTools.Console.Commands
+	Remove the Start and Update function
+	Inherit from ConsoleCommand instead of MonoBehaviour
 	Let your IDE implement the abstract class
-	'Command'
+	string 'Command'
 		is the command word you will type in the console
 		(note that you will not have to include a '/')
-	'WrongInputMessage'
+	string 'WrongInputMessage'
 		will be displayed if the user given input arguments
 		don't match requirements. Leave empty at will. You can change the
 		message during the processing at runtime if you need to.
-	'SuccessMessage'
+	string 'SuccessMessage'
 		prints on successful processing of user input. Can be
 		left empty or changed during runtime based on input.
-	'bool Process args[]'
+	bool 'Process' args[]
 		will return you all the user input after (!) the matching command.
 		This array will not include the inital command as first entry and may be empty.
 		Arguments are split by whitespace.
 		Use this function to execute your desired command functionality after
 		validating the args.
+	Add your newly created command to the the GetCommands() Function inside
+	Assets/DevConsole/Core/DevConsoleController at line 51. It is also marked with a comment.
+	(!) Without this step your command will not work!
 
 	I recommend taking a look at the initially provided command files to help getting started!
 

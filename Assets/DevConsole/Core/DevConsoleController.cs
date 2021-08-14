@@ -48,21 +48,18 @@ namespace CoreTools.Console
         static Action ExitConsole;
         public static void RaiseExitConsole() => ExitConsole?.Invoke();
 
-        List<IConsoleCommand> Commands
+        List<IConsoleCommand> GetCommands()
         {
-            get
+            return new List<IConsoleCommand>
             {
-                return new List<IConsoleCommand>
-                {
-                    new RestartCommand(),
-                    new ClearCommand(),
-                    new HelpCommand(),
-                    new ExitCommand(),
-                    new CloseAppCommand(),
-                    new LoadSceneCommand()
-                    // Add your new commands here
-                };
-            }
+                new RestartCommand(),
+                new ClearCommand(),
+                new HelpCommand(),
+                new ExitCommand(),
+                new CloseAppCommand(),
+                new LoadSceneCommand()
+                // Add your new commands here
+            };
         }
 
         private void Awake()
@@ -93,7 +90,7 @@ namespace CoreTools.Console
         private void SetupConsoleComponents()
         {
             var consoleUI = consoleObject.GetComponentInChildren<DeveloperConsoleUI>();
-            consoleUI.Setup(Commands);
+            consoleUI.Setup(GetCommands());
         }
 
         void ReadKeyInput()
