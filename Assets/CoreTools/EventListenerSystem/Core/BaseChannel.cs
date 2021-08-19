@@ -23,7 +23,7 @@ namespace CoreTools
         protected virtual void LogNoListener()
         {
             if (logOnNoListener)
-                Debug.Log($"{name} event has been raised but there are no listeners for this channel. Notes: {description}");
+                Debug.Log($"{name} event has been raised but there are no listeners for this channel. EventNotes: {description}");
         }
     }
 }

@@ -28,6 +28,7 @@ namespace CoreTools
             if (channel)
                 channel.OnEventRaised -= Respond;
         }
+
         private void Respond(float value) => OnEventRaised?.Invoke(value);
     }
 }
