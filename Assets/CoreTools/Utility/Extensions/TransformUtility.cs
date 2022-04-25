@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CoreTools
 {
@@ -17,13 +14,13 @@ namespace CoreTools
         public static void ResetLocalScale(this Transform t) => t.localScale = Vector3.one;
 
         /// <summary>
-        /// Swappes both transforms positions
+        /// Swap both transforms positions
         /// </summary>
-        public static void SwapPosition(this Transform t, Transform target)
+        public static void SwapPosition(this Transform current, Transform target)
         {
-            var pos1 = t.position;
-            var pos2 = target.position;
-            t.position = pos2;
+            Vector3 pos1 = current.position;
+            Vector3 pos2 = target.position;
+            current.position = pos2;
             target.position = pos1;
         }
     }

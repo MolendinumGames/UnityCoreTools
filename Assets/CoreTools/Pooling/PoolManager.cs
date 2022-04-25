@@ -24,7 +24,7 @@ namespace CoreTools.Pooling
         [SerializeField]
         bool onPoolUnloaded = true;
 
-        [MenuItem("MyTools/GetPoolManager")]
+        [MenuItem("Tools/Get PoolManager")]
         public static void GetOrCreatePoolManager()
         {
             PoolManager pool = FindObjectOfType<PoolManager>();

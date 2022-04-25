@@ -173,7 +173,7 @@ namespace ProductivityTools.GameObjectFinder
         }
         private GameObject[] GetSelectedSceneGameObjects()
         {
-            return Selection.GetTransforms(SelectionMode.OnlyUserModifiable | SelectionMode.Editable)
+            return Selection.GetTransforms(SelectionMode.Editable)
                             .Where(t => t.gameObject.scene.IsValid())
                             .Select(t => t.gameObject)
                             .ToArray();

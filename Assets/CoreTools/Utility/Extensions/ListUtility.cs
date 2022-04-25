@@ -22,6 +22,7 @@ namespace CoreTools
 				list[n] = storedValue;
             }
         }
+
 		/// <summary>
 		/// Reinsert item from one index to another.
 		/// </summary>

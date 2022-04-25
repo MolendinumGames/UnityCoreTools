@@ -67,7 +67,7 @@ namespace CoreTools.DialogueSystem
             textField.text = t;
             textField.maxVisibleCharacters = 0;
 
-            string cleanedText = t.StripHTMLLazy();
+            string cleanedText = StringUtility.StripHTMLLazy(t);
             WaitForSeconds wait = new WaitForSeconds(waitAmount);
             (string frontTags, string endTags) = GetHighligthTags();
 
@@ -168,7 +168,7 @@ namespace CoreTools.DialogueSystem
                     // The array is used to calculate the visible characters per loop so
                     // tags have to be stripped to get the correct number.
                     // However the final TMPro field will ignore tags for visible count.
-                    words[i] = words[i].StripHTMLLazy();
+                    words[i] = StringUtility.StripHTMLLazy(words[i]);
                 }
             return words;
         }

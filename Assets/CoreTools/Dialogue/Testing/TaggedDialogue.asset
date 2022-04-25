@@ -1,5 +1,98 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7064088114089650135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dbc2c829e177546bd46f4c933e9e10, type: 3}
+  m_Name: 25477717-feb7-483d-805c-ce711929d8db
+  m_EditorClassIdentifier: 
+  uniqueID: 25477717-feb7-483d-805c-ce711929d8db
+  childID: 1319b3af-a260-4348-8a86-ba887bc6f7ac
+  children: []
+  rect:
+    serializedVersion: 2
+    x: 852
+    y: 364
+    width: 250
+    height: 95
+  channel: {fileID: 11400000, guid: ee3e4e5fe693ff74ea26ab7337ea63a6, type: 2}
+  value: 100
+--- !u!114 &-4676972245897764880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003576829ee10f144a4ff48b71d72031, type: 3}
+  m_Name: e9938f1b-de0c-4ad0-812e-60de9dacb8e6
+  m_EditorClassIdentifier: 
+  uniqueID: e9938f1b-de0c-4ad0-812e-60de9dacb8e6
+  childID: 1319b3af-a260-4348-8a86-ba887bc6f7ac
+  children: []
+  rect:
+    serializedVersion: 2
+    x: 854
+    y: 464
+    width: 250
+    height: 95
+  channel: {fileID: 11400000, guid: 8d8601fb1515ac8438ae88e02d8700c8, type: 2}
+--- !u!114 &-3608792919482226665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: b3cee2b9-949e-40a1-8a5a-a045c35adc57
+  m_EditorClassIdentifier: 
+  uniqueID: b3cee2b9-949e-40a1-8a5a-a045c35adc57
+  text: Thank you for helping us!
+  portrait: {fileID: 21300000, guid: 75cecafc90904c94cb143dd258e4fe17, type: 3}
+  speaker: Friendly Frog
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 136
+    y: 75
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: b2f46d65-e22c-4339-8686-226b2c2c4671
+--- !u!114 &-3486074059037834392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8424a263d7934f047956264a552651f9, type: 3}
+  m_Name: 8614b08f-0922-4162-ad9b-3db2acd86b18
+  m_EditorClassIdentifier: 
+  uniqueID: 8614b08f-0922-4162-ad9b-3db2acd86b18
+  childID: 1319b3af-a260-4348-8a86-ba887bc6f7ac
+  children: []
+  rect:
+    serializedVersion: 2
+    x: 851
+    y: 262
+    width: 250
+    height: 95
+  channel: {fileID: 11400000, guid: 8dc989d0e3e968447baf6ee35348185e, type: 2}
+  value: Dagger_02
 --- !u!114 &-3417147925078814505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13,7 +106,7 @@ MonoBehaviour:
   m_Name: EntryNode
   m_EditorClassIdentifier: 
   uniqueID: 250eed16-4a2e-43d7-b793-1b8b2f8c300c
-  childID: 1bf49508-57fc-462d-8808-c70aca0fd333
+  childID: b3cee2b9-949e-40a1-8a5a-a045c35adc57
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28,9 +121,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allNodes:
   - {fileID: -3417147925078814505}
-  - {fileID: 452127318144083146}
+  - {fileID: -3608792919482226665}
+  - {fileID: 374688362336359956}
+  - {fileID: -7064088114089650135}
+  - {fileID: -4676972245897764880}
+  - {fileID: -3486074059037834392}
+  - {fileID: 4138047414788247908}
   entryNode: {fileID: -3417147925078814505}
---- !u!114 &452127318144083146
+--- !u!114 &374688362336359956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f635f02dffdf2b94e91f84a241e5243e, type: 3}
+  m_Name: b2f46d65-e22c-4339-8686-226b2c2c4671
+  m_EditorClassIdentifier: 
+  uniqueID: b2f46d65-e22c-4339-8686-226b2c2c4671
+  text: What would you like as reward?
+  portrait: {fileID: 21300000, guid: 79cdaaba0a4169d41b21c12522ffc096, type: 3}
+  speaker: Annoying Elf
+  orientation: 1
+  rect:
+    serializedVersion: 2
+    x: 10
+    y: 10
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  choices:
+  - text: Small dagger
+    childId: 8614b08f-0922-4162-ad9b-3db2acd86b18
+  - text: 100 gold
+    childId: 25477717-feb7-483d-805c-ce711929d8db
+  - text: Heal me!
+    childId: e9938f1b-de0c-4ad0-812e-60de9dacb8e6
+  choiceRect:
+    serializedVersion: 2
+    x: 466
+    y: 208
+    width: 300
+    height: 200
+--- !u!114 &4138047414788247908
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,18 +175,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
-  m_Name: 1bf49508-57fc-462d-8808-c70aca0fd333
+  m_Name: 1319b3af-a260-4348-8a86-ba887bc6f7ac
   m_EditorClassIdentifier: 
-  uniqueID: 1bf49508-57fc-462d-8808-c70aca0fd333
-  text: <b>Does this</b> <i>even work</i> <b>Does this</b> <i>even work</i> <b>Does
-    this</b> <i>even work</i>
-  portrait: {fileID: 0}
-  speaker: 
+  uniqueID: 1319b3af-a260-4348-8a86-ba887bc6f7ac
+  text: Awesome, see you soon!
+  portrait: {fileID: 21300000, guid: 79cdaaba0a4169d41b21c12522ffc096, type: 3}
+  speaker: Annoying Elf
   orientation: 0
   rect:
     serializedVersion: 2
-    x: 334
-    y: 79
+    x: 1197
+    y: 322
     width: 300
     height: 180
   boxScroll: {x: 0, y: 0}
