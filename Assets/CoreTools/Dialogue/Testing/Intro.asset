@@ -1,0 +1,427 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8572077239749523492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 6a7a15e0-18a5-4ef3-8ffe-e8f1a34abf95
+  m_EditorClassIdentifier: 
+  uniqueID: 6a7a15e0-18a5-4ef3-8ffe-e8f1a34abf95
+  text: The end!
+  portrait: {fileID: 0}
+  speaker: 
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 2562
+    y: 188
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 
+--- !u!114 &-8110007009651225932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f635f02dffdf2b94e91f84a241e5243e, type: 3}
+  m_Name: 71927d71-8f2e-42d9-8e3d-9963795d0f74
+  m_EditorClassIdentifier: 
+  uniqueID: 71927d71-8f2e-42d9-8e3d-9963795d0f74
+  text: For a choice node it is ok for this textfield to be empty
+  portrait: {fileID: 21300000, guid: 373773b6623f4fb4c89ed91602df42dd, type: 3}
+  speaker: Optional speaker
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 10
+    y: 10
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  choices:
+  - text: option a
+    childId: 6c5ddbee-b779-4926-8cef-5390b933c80e
+  - text: option b
+    childId: 6c5ddbee-b779-4926-8cef-5390b933c80e
+  - text: option c
+    childId: 6c5ddbee-b779-4926-8cef-5390b933c80e
+  choiceRect:
+    serializedVersion: 2
+    x: 626
+    y: 14
+    width: 300
+    height: 200
+--- !u!114 &-6876762767276743720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 35aecaec-d5b5-403c-8582-8982a6a24b35
+  m_EditorClassIdentifier: 
+  uniqueID: 35aecaec-d5b5-403c-8582-8982a6a24b35
+  text: I will try to make something more in depth for event nodes! (Or let mercy
+    explain :P)
+  portrait: {fileID: 21300000, guid: 53f59e0f1e337114a9de3d4cdfae9210, type: 3}
+  speaker: 
+  orientation: 1
+  rect:
+    serializedVersion: 2
+    x: 2246
+    y: 250
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 6a7a15e0-18a5-4ef3-8ffe-e8f1a34abf95
+--- !u!114 &-5680082759728909096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: c44bf5cb-0737-4abe-9a83-9033b7a25e59
+  m_EditorClassIdentifier: 
+  uniqueID: c44bf5cb-0737-4abe-9a83-9033b7a25e59
+  text: 
+  portrait: {fileID: 21300000, guid: cd2d3b7c92a45224a8d94844d823abb3, type: 3}
+  speaker: Can't see me!
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 1396
+    y: 45
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 984f7935-546f-42db-8bfa-aaa2edbb51d9
+--- !u!114 &-3481036728378200296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 6c5ddbee-b779-4926-8cef-5390b933c80e
+  m_EditorClassIdentifier: 
+  uniqueID: 6c5ddbee-b779-4926-8cef-5390b933c80e
+  text: If this box would be empty in a text node (not choice) the node will be skipped!
+  portrait: {fileID: 21300000, guid: aba0f700d91d4fc4fa8c724899ab04ab, type: 3}
+  speaker: A red potion
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 1030
+    y: 49
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: c44bf5cb-0737-4abe-9a83-9033b7a25e59
+--- !u!114 &-2445064949840951214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb2449119fd224e4ba0b83b0f3fcef2c, type: 3}
+  m_Name: EntryNode
+  m_EditorClassIdentifier: 
+  uniqueID: 70fda730-e32c-4a54-8c6e-cc1a9b0e4b13
+  childID: fe8c5575-8d63-4288-844b-07d1a98ed579
+--- !u!114 &-928796181410777123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 984f7935-546f-42db-8bfa-aaa2edbb51d9
+  m_EditorClassIdentifier: 
+  uniqueID: 984f7935-546f-42db-8bfa-aaa2edbb51d9
+  text: However the speaker field and the portrait can be empty!
+  portrait: {fileID: 0}
+  speaker: 
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 1738
+    y: 66
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 3105716b-a915-4b5b-95d7-ef904fd3567a
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 409a154bab8cd094dac06f7d56892fad, type: 3}
+  m_Name: Intro
+  m_EditorClassIdentifier: 
+  allNodes:
+  - {fileID: -2445064949840951214}
+  - {fileID: 8245699504876979373}
+  - {fileID: -8110007009651225932}
+  - {fileID: -3481036728378200296}
+  - {fileID: 8762094198543896664}
+  - {fileID: -928796181410777123}
+  - {fileID: 7475872357296953556}
+  - {fileID: 6008664851000652588}
+  - {fileID: -8572077239749523492}
+  - {fileID: 8320586183117627536}
+  - {fileID: 8242052493773796847}
+  - {fileID: 3756431470634021126}
+  - {fileID: -6876762767276743720}
+  - {fileID: -5680082759728909096}
+  - {fileID: 6147399476979031154}
+  entryNode: {fileID: -2445064949840951214}
+--- !u!114 &3756431470634021126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f635f02dffdf2b94e91f84a241e5243e, type: 3}
+  m_Name: 7478f1c0-3312-42d3-b620-bf1c70c38587
+  m_EditorClassIdentifier: 
+  uniqueID: 7478f1c0-3312-42d3-b620-bf1c70c38587
+  text: 
+  portrait: {fileID: 0}
+  speaker: 2D Sprite
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 10
+    y: 10
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  choices:
+  - text: Ok
+    childId: 71927d71-8f2e-42d9-8e3d-9963795d0f74
+  - text: Where do I get that?
+    childId: e9763da7-3e0f-441e-bbc4-3552cf06295e
+  choiceRect:
+    serializedVersion: 2
+    x: 329
+    y: 369
+    width: 300
+    height: 200
+--- !u!114 &6008664851000652588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 6d198512-a81b-40ee-8e7c-5104d59fb33e
+  m_EditorClassIdentifier: 
+  uniqueID: 6d198512-a81b-40ee-8e7c-5104d59fb33e
+  text: Any number of nodes can lead to the same child node however each node can
+    only have 1 child so there is a clear path to traverse
+  portrait: {fileID: 0}
+  speaker: 
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 1925
+    y: 279
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 35aecaec-d5b5-403c-8582-8982a6a24b35
+--- !u!114 &6147399476979031154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: b57a51cb-f470-4573-ad07-2dea8d496472
+  m_EditorClassIdentifier: 
+  uniqueID: b57a51cb-f470-4573-ad07-2dea8d496472
+  text: To create a  new dialogue just right click inside the project panel/asset
+    folder and click Create/Dialogue. Open the window by double clicking on it
+  portrait: {fileID: 0}
+  speaker: Create
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 1320
+    y: 433
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 5}
+  childID: 8080e783-820d-45d2-88b0-538a2c385636
+--- !u!114 &7475872357296953556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 8080e783-820d-45d2-88b0-538a2c385636
+  m_EditorClassIdentifier: 
+  uniqueID: 8080e783-820d-45d2-88b0-538a2c385636
+  text: To create a new node in a dialogue just rightclick within the window
+  portrait: {fileID: 21300000, guid: 59978945fc1457543bb49e4fd88a1f11, type: 3}
+  speaker: 
+  orientation: 1
+  rect:
+    serializedVersion: 2
+    x: 1631
+    y: 309
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 6d198512-a81b-40ee-8e7c-5104d59fb33e
+--- !u!114 &8242052493773796847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: e9763da7-3e0f-441e-bbc4-3552cf06295e
+  m_EditorClassIdentifier: 
+  uniqueID: e9763da7-3e0f-441e-bbc4-3552cf06295e
+  text: To get the sprite editor look within the package manager under unity registry
+    for "2D Sprite" and import
+  portrait: {fileID: 0}
+  speaker: 
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 663
+    y: 383
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 71927d71-8f2e-42d9-8e3d-9963795d0f74
+--- !u!114 &8245699504876979373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: fe8c5575-8d63-4288-844b-07d1a98ed579
+  m_EditorClassIdentifier: 
+  uniqueID: fe8c5575-8d63-4288-844b-07d1a98ed579
+  text: 'This is the main dialogue text display.
+
+    On the left (or right) is the
+    portrait.'
+  portrait: {fileID: 21300000, guid: a1ec2c0ddc0da634b85f0f465fec2d0d, type: 3}
+  speaker: This is the speaker field
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 194
+    y: 48
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: cf97a0cb-ef0d-40f4-9e14-bcb0c84f9d1e
+--- !u!114 &8320586183117627536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: cf97a0cb-ef0d-40f4-9e14-bcb0c84f9d1e
+  m_EditorClassIdentifier: 
+  uniqueID: cf97a0cb-ef0d-40f4-9e14-bcb0c84f9d1e
+  text: You can change the image for each area within the inpector! When using your
+    own sprites just remember to set the partitioning correctly within the sprite
+    edior so they will be scaled/expanded nicely!
+  portrait: {fileID: 0}
+  speaker: Customize!
+  orientation: 0
+  rect:
+    serializedVersion: 2
+    x: 3
+    y: 323
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: 7478f1c0-3312-42d3-b620-bf1c70c38587
+--- !u!114 &8762094198543896664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48be01494004b54db08e6e1dac2d5d5, type: 3}
+  m_Name: 3105716b-a915-4b5b-95d7-ef904fd3567a
+  m_EditorClassIdentifier: 
+  uniqueID: 3105716b-a915-4b5b-95d7-ef904fd3567a
+  text: If enabled in the dialoguecontroller the speaker field can be orientated
+    just like the portrait
+  portrait: {fileID: 21300000, guid: f1dd815974b2d4240a6bc912d6585497, type: 3}
+  speaker: A blue potion
+  orientation: 1
+  rect:
+    serializedVersion: 2
+    x: 1013
+    y: 266
+    width: 300
+    height: 180
+  boxScroll: {x: 0, y: 0}
+  childID: b57a51cb-f470-4573-ad07-2dea8d496472
