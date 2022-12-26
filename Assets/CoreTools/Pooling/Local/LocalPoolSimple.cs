@@ -8,8 +8,6 @@
  * coretools@molendinumgames.com
  */
 
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using CoreTools.Pooling;
 
@@ -29,10 +27,10 @@ namespace CoreTools
         [SerializeField]
         GameObjectPool pool;
 
-        void Start()
+        void Awake()
         {
             if (CreateOnAwake)
-            InitializePool();
+                InitializePool();
         }
 
         public void InitializePool()
@@ -45,5 +43,12 @@ namespace CoreTools
             pool.RequestObject();
 
         public GameObjectPool GetPool() => pool;
+
+#if UNITY_EDITOR
+        public void AddPool()
+        {
+            throw new System.NotImplementedException("Cannot add Pool to LocalPoolSimple");
+        }
+#endif
     }
 }
