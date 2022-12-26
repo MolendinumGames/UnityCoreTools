@@ -9,7 +9,9 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
-/[Tt]esting/
+
+# Ignore the Folder for all things needed for testing and debugging
+/[Aa]ssets/[Tt]esting/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
