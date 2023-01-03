@@ -35,8 +35,13 @@ namespace CoreTools.SaveSystem
         #region Public
         public void Save(string saveFile)
         {
+            // Load already existing save file otherwise create a new one
             Dictionary<string, object> saveState = LoadFile(saveFile);
+
+            // Fill the dictionary with all saveable entities currently active in all scenes
             CaptureSaveState(saveState);
+
+            // Overwrite the savefile
             SaveFile(saveFile, saveState);
         }
 
@@ -51,6 +56,7 @@ namespace CoreTools.SaveSystem
             if (!saveEntities.Contains(e))
                 saveEntities.Add(e);
         }
+
         public void DeregisterSaveEntity(SaveableEntity e)
         {
             if (saveEntities.Contains(e))
