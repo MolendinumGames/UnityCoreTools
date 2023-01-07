@@ -4,9 +4,6 @@
 <p>An easy to use ingame console to help managing the flow of testing gameplay featues and debugging.
 <br>
 
-![Developer Console Header Image](https://github.com/MolendinumGames/UnityCoreTools/blob/main/Assets/DevConsole/DevConsoleHeaderShowcase_440x250.png?raw=true)
-<br>
-
 ## Features & Usage
 - **Simply** Add the console to a scene by selecting the menu item
 - Write your **own customized** commands
