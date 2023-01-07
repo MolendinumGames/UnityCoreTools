@@ -10,8 +10,8 @@
 - Select **any button** to toggle the console
 - **Log or raise** game states
 
-![DevConsole Header Image](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/DevConsole/DevConsoleScreenshot_Wide.png)
-
+<img src="https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/DevConsole/DevConsoleScreenshot_Wide.png" alt="DevConsole Header Image" style="float: left; margin-right: 10px;" />
+<br>
 
 ## Table of contents
 - <a href="#Installation">Installation</a>
