@@ -1,6 +1,10 @@
 
 <h1 style="text-align:center;">Delevoper Console</h1>
+
 <p>An easy to use ingame console to help managing the flow of testing gameplay featues and debugging.
+<br>
+
+![Developer Console Header Image](https://github.com/MolendinumGames/UnityCoreTools/blob/main/Assets/DevConsole/DevConsoleHeaderShowcase_440x250.png?raw=true)
 <br>
 
 ## Features & Usage
@@ -9,9 +13,6 @@
 - Try or get started with a few already **included commands**
 - Select **any button** to toggle the console
 - **Log or raise** game states
-
-<img src="https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/DevConsole/DevConsoleScreenshot_Wide.png" alt="DevConsole Header Image" style="float: left; margin-right: 10px;" />
-<br>
 
 ## Table of contents
 - <a href="#Installation">Installation</a>
