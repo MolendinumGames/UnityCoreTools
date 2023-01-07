@@ -2,8 +2,10 @@
 
 <p> Construct your games dialogues within the unity editor using a node based system!
 <br>
+<hr>
 
-![Dialogue Editor Showcase]()
+![Dialogue Editor Showcase](https://github.com/MolendinumGames/UnityCoreTools/blob/main/Assets/CoreTools/Dialogue/Images/DialogueEditorShowCase_01.png?raw=true)
+<hr>
 
 ## Table of contents
 - <a href="#Installation">Installation</a>
