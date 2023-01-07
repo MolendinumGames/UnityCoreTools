@@ -1,13 +1,24 @@
-<h1 style="text-align:center;font-weight:bold;">Delevoper Console</h1>
-An easy to use ingame console to help managing the flow of testing gameplay featues and debugging.
+<p style="text-align:center; font-weight:bold;font-size:40px">Delevoper Console</p>
+<p>An easy to use ingame console to help managing the flow of testing gameplay featues and debugging.
+<br>
 
 ## Features & Usage
+<table>
+<tr>
+<th>
 
 - **Simply** Add the console to a scene by selecting the menu item
 - Write your **own customized** commands
 - Try or get started with a few already **included commands**
 - Select **any button** to toggle the console
 - **Log or raise** game states
+
+</th>
+<th>
+![DevConsole Header Image](/DevConsoleScreenshot_Wide.png)
+</th>
+</tr>
+</table>
 
 ## Table of contents
 - <a href="#Installation">Installation</a>
@@ -73,7 +84,7 @@ namespace CoreTools.Console.Commands
 
 <hr>
 
-/You can create a backdrop field and use logic within the _Process(...)_ function to alter the output based on the mistake in the input.<br>
+You can create a backdrop field and use logic within the _Process(...)_ function to alter the output based on the mistake in the input.<br>
 <b>For example:</b>
 
 <hr>
