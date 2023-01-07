@@ -1,5 +1,5 @@
 
-<p style="text-align:center; font-weight:bold; font-size:40px">Delevoper Console</p>
+<h1 style="text-align:center;">Delevoper Console</h1>
 <p>An easy to use ingame console to help managing the flow of testing gameplay featues and debugging.
 <br>
 
@@ -10,7 +10,7 @@
 - Select **any button** to toggle the console
 - **Log or raise** game states
 
-![DevConsole Header Image](/DevConsoleScreenshot_Wide.png)
+![DevConsole Header Image](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/DevConsole/DevConsoleScreenshot_Wide.png)
 
 
 ## Table of contents
