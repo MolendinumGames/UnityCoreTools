@@ -14,6 +14,7 @@
 
 # Ignore the Folder for all things needed for testing and debugging
 /[Tt]esting/
+/[Aa]ssets/**/[Tt]esting
 /[Aa]ssets/[Tt]esting/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
