@@ -30,7 +30,7 @@ compile times.
 
 ## Gameobject Finder
 
-![Finder_Preview](https://github.com/MolendinumGames/UnityCoreTools/main/Assets/ProductivityTools/Images/GoFinder_Preview.png)
+![Finder_Preview](https://github.com/MolendinumGames/UnityCoreTools/blob/main/Assets/ProductivityTools/Images/GoFinder_Preview.png?raw=true)
 <br>
 - Find GameObjects in your hierarchy by tag or by name
 - Results will be selected in the hierarchy
@@ -38,7 +38,7 @@ compile times.
 
 ## Gameobject Replacer
 
-![Replacer_Preview](https://github.com/MolendinumGames/UnityCoreTools/main/Assets/ProductivityTools/Images/Replacer_Preview.png)
+![Replacer_Preview](https://github.com/MolendinumGames/UnityCoreTools/main/Assets/ProductivityTools/Images/Replacer_Preview.png?raw=true)
 <br>
 - Replace any amount of GameObjects in your hierarchy with a prefab
 - Choose of a wide array of properties for the new objects to keep.
@@ -46,7 +46,7 @@ compile times.
 
 ## Gameobject Switcher
 
-![Switcher_Preview](https://github.com/MolendinumGames/UnityCoreTools/main/Assets/ProductivityTools/Images/Switcher_Preview.png)
+![Switcher_Preview](https://github.com/MolendinumGames/UnityCoreTools/main/Assets/ProductivityTools/Images/Switcher_Preview.png?raw=true)
 <br>
 - Swap positions of two GameObjects in your scene with 1 click
 - No hassle of remembering positions or manually edit the transform
