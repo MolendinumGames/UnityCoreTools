@@ -4,7 +4,7 @@ Various in-editor tools and extentions for the Unity3D game engine to help devel
 
 ## Table of contents
 1. Event-Listener-System
-2. Node-Editor-System
+2. [Node-Editor-System](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/CoreTools/NodeSystem)
 3. [Dialogue Editor](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/CoreTools/Dialogue)
 4. Poolmanager
 5. [Developer Console](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/DevConsole)
