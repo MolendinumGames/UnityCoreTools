@@ -1,7 +1,7 @@
 
 <h1 style="text-align:center;">Node System</h1>
 
-<p>Fundamentals to create a node based editor workflow using Unity's Scricptable Objects. This system was also used to create the [Dialogue Editor](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/CoreTools/Dialogue) that you can find within this project.
+Fundamentals to create a node based editor workflow using Unity's Scricptable Objects. This system was also used to create the [Dialogue Editor](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/CoreTools/Dialogue) that you can find within this project.
 <br>
 
 
