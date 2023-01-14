@@ -14,46 +14,62 @@ using UnityEngine.EventSystems;
 
 namespace CoreTools.UI
 {
-	public abstract class TooltipSpawner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
-	{
-        [Tooltip("Generic UIPrefab for tooltips. Will be resused after creation.")]
+    // Currently spawning only for 2D UI elements
+    public abstract class TooltipSpawner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    {
+        [Tooltip("Prefab for tooltips. Will be resused after creation.")]
         [SerializeField]
         GameObject tooltipPrefab = null;
 
         [Range(0f, 2f)]
         [SerializeField]
         float delay = .5f;
-        bool hovering = false;
-        float counter = 0f;
+        bool courserIsHovering = false;
+        float timeCounter = 0f;
 
         bool isOpen = false;
 
         // Child ref
-        GameObject tooltip = null;
+        GameObject tooltipChild = null;
 
         private enum RelativeScreenPosition { UpLeft, UpRigth, DownLeft, DownRight }
 
         public abstract bool CanSpawnToolTip();
         public abstract void UpdateTooltip(GameObject tipObject);
 
-        private void OnEnable() => ClearTooltip();
-
-        private void OnDisable() => ClearTooltip();
-
-        private void Update() => HandleDelay();
-
-        public void OnPointerEnter(PointerEventData eventData) => 
-            hovering = true;
-
-        public void OnPointerExit(PointerEventData eventData) => 
-            ClearTooltip();
-
-        private void HandleDelay()
+        #region Unity Event Functions
+        private void OnEnable()
         {
-            if (hovering && !isOpen)
+            ClearTooltip();
+        }
+
+        private void OnDisable()
+        {
+            ClearTooltip();
+        }
+
+        private void Update()
+        {
+            HandleDelayToOpen();
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            courserIsHovering = true;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            ClearTooltip();
+        }
+        #endregion
+
+        private void HandleDelayToOpen()
+        {
+            if (courserIsHovering && !isOpen)
             {
-                counter += Time.deltaTime;
-                if (counter >= delay)
+                timeCounter += Time.deltaTime;
+                if (timeCounter >= delay)
                 {
                     OpenTooltip();
                 }
@@ -68,29 +84,31 @@ namespace CoreTools.UI
                 return;
             }
 
-            if (!tooltip) // No Child
+            if (!tooltipChild) // No Child
             {
                 if (tooltipPrefab)
-                    tooltip = Instantiate(tooltipPrefab, GetComponentInParent<Canvas>().transform);
+                    tooltipChild = Instantiate(tooltipPrefab, GetComponentInParent<Canvas>().transform);
                 else return;
             }
             isOpen = true;
-            tooltip.SetActive(true);
-            UpdateTooltip(tooltip);
-            PositionTooltip(tooltip);
+            tooltipChild.SetActive(true);
+            UpdateTooltip(tooltipChild);
+            PositionTooltip(tooltipChild);
         }
 
         private void ClearTooltip()
         {
-            hovering = false;
-            counter = 0f;
+            courserIsHovering = false;
+            timeCounter = 0f;
             isOpen = false;
-            if (tooltip)
-                Destroy(tooltip);
+            if (tooltipChild)
+                Destroy(tooltipChild);
         }
+
         private void PositionTooltip(GameObject tooltip)
         {
-            if (!tooltip) return;
+            if (!tooltip)
+                return;
 
             Canvas.ForceUpdateCanvases();
 

@@ -27,7 +27,7 @@ namespace CoreTools.UI
             anim = GetComponent<TooltipAnimator>();
         }
 
-        public void Initialitze(string header, string body)
+        public void Initialise(string header, string body)
         {
 			headerText.text = header;
 			bodyText.text = body;
