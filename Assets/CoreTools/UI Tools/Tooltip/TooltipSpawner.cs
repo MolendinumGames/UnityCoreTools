@@ -11,7 +11,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
 using UnityEngine.UI;
 
 namespace CoreTools.UI
@@ -25,16 +24,15 @@ namespace CoreTools.UI
         [SerializeField]
         private GameObject tooltipPrefab = null;
 
+        // Tooltip Date
         public string tooltipHeader = string.Empty;
         [TextArea(1, 10)]
         public string tooltipBody = string.Empty;
 
-        // Note that the duration of the tooltip spawning animation is handled
-        // by the tooltip animation controller.
-        // The delay is left public to that system can be implemented in case
+        // Left public so that a system can be implemented in case
         // the player is meant to set the delay time in the settings
         /// <summary>
-        /// The timeframe until the tooltip opens.
+        /// The timeframe until the tooltip opens. Does not affect animations.
         /// </summary>
         [Range(0f, 2f)]
         public float delay = .5f;
@@ -47,10 +45,16 @@ namespace CoreTools.UI
         GameObject tooltipInstance = null;
         TooltipController tooltipControllerInstance = null;
 
-        private enum RelativeScreenPosition { UpLeft, UpRigth, DownLeft, DownRight }
+        private enum ReparentingOption { Spawner, Canvas, Other }
+        [Space(10)]
+        [Header("Reparenting")]
+        [SerializeField]
+        private ReparentingOption reparentingOption = ReparentingOption.Spawner;
+        [Tooltip("Will only be parented to NewParent if option 'Other' is selected as ReparentingOption")]
+        [SerializeField]
+        private GameObject newParent = null;
 
-        // public abstract bool CanSpawnToolTip();
-        // public abstract void UpdateTooltip(GameObject tipObject);
+        private enum RelativeScreenPosition { UpLeft, UpRigth, DownLeft, DownRight }
 
         #region Unity Event Functions
         private void OnEnable()
@@ -97,9 +101,11 @@ namespace CoreTools.UI
             {
                 if (tooltipPrefab)
                 {
+                    // Create the tooltip gameobject and set it up correctly
                     tooltipInstance = Instantiate(tooltipPrefab, GetComponentInParent<Canvas>().transform);
                     DeactivateAllRaycastTargets(tooltipInstance);
-                    // TODO: Reparent options
+                    HandleParenting(tooltipInstance);
+
                     tooltipControllerInstance = tooltipInstance.GetComponent<TooltipController>();
 
                     // if the is no tooltip controller then do not display anything to avoid showing an empty UI element
@@ -125,7 +131,17 @@ namespace CoreTools.UI
             PositionTooltip(tooltipInstance);
         }
 
-          
+        private void HandleParenting(GameObject tooltipInstance)
+        {
+            tooltipInstance.transform.SetParent(reparentingOption switch
+            {
+                ReparentingOption.Spawner => this.gameObject.transform,
+                ReparentingOption.Canvas => this.gameObject.GetComponentInParent<Canvas>().transform,
+                ReparentingOption.Other => newParent ? newParent.transform : this.gameObject.GetComponentInParent<Canvas>().transform,
+                _ => throw new NotImplementedException("Unkown case of ReparentingOption.")
+            });
+        }
+
         private void DeactivateAllRaycastTargets(GameObject tooltipInstance)
         {
             foreach (Graphic target in tooltipInstance.transform.GetComponentsInChildren<Graphic>())
@@ -158,6 +174,9 @@ namespace CoreTools.UI
         {
             if (!tooltip)
                 return;
+
+            Transform oldTooltipParent = tooltip.transform.parent;
+            tooltip.transform.SetParent(this.gameObject.GetComponentInParent<Canvas>().transform, true);
 
             Canvas.ForceUpdateCanvases();
 
@@ -199,6 +218,8 @@ namespace CoreTools.UI
                 RelativeScreenPosition.DownRight => tooltip.transform.position + (topRightSlot - bottomRightTooltip),
                 _ => throw new NotImplementedException("Tooltip couldn't determine relative screen position.")
             };
+
+            tooltip.transform.SetParent(oldTooltipParent, true);
         }
     }	
 }
