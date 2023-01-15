@@ -15,27 +15,39 @@ using UnityEngine.EventSystems;
 namespace CoreTools.UI
 {
     // Currently spawning only for 2D UI elements
-    public abstract class TooltipSpawner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class TooltipSpawner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        // Reusing the tooltip after creation does not mean the text cannot be changed.
+        // The information the tooltip displays is updated everytime it is opened.
         [Tooltip("Prefab for tooltips. Will be resused after creation.")]
         [SerializeField]
-        GameObject tooltipPrefab = null;
+        private GameObject tooltipPrefab = null;
 
+        public string tooltipHeader = string.Empty;
+        public string tooltipBody = string.Empty;
+
+        // Note that the duration of the tooltip spawning animation is handled
+        // by the tooltip animation controller.
+        // The delay is left public to that system can be implemented in case
+        // the player is meant to set the delay time in the settings
+        /// <summary>
+        /// The timeframe until the tooltip opens.
+        /// </summary>
         [Range(0f, 2f)]
-        [SerializeField]
-        float delay = .5f;
-        bool courserIsHovering = false;
-        float timeCounter = 0f;
+        public float delay = .5f;
+        private float timeCounter = 0f;
 
-        bool isOpen = false;
+        private bool courserIsHovering = false;
+        private bool isOpen = false;
 
-        // Child ref
-        GameObject tooltipChild = null;
+        // References to the created tooltip object
+        GameObject tooltipInstance = null;
+        TooltipController tooltipControllerInstance = null;
 
         private enum RelativeScreenPosition { UpLeft, UpRigth, DownLeft, DownRight }
 
-        public abstract bool CanSpawnToolTip();
-        public abstract void UpdateTooltip(GameObject tipObject);
+        // public abstract bool CanSpawnToolTip();
+        // public abstract void UpdateTooltip(GameObject tipObject);
 
         #region Unity Event Functions
         private void OnEnable()
@@ -78,22 +90,44 @@ namespace CoreTools.UI
 
         private void OpenTooltip()
         {
-            if (!CanSpawnToolTip()) // Not allowed to show
-            {
-                ClearTooltip();
-                return;
-            }
-
-            if (!tooltipChild) // No Child
+            if (!tooltipInstance)
             {
                 if (tooltipPrefab)
-                    tooltipChild = Instantiate(tooltipPrefab, GetComponentInParent<Canvas>().transform);
-                else return;
+                {
+                    tooltipInstance = Instantiate(tooltipPrefab, GetComponentInParent<Canvas>().transform);
+                    tooltipControllerInstance = tooltipInstance.GetComponent<TooltipController>();
+
+                    // if the is no tooltip controller then do not display anything to avoid showing an empty UI element
+                    if (tooltipControllerInstance == null)
+                    {
+                        tooltipInstance.SetActive(false);
+                        Debug.LogWarning("Trying to show tooltip but the referenced tooltipPrefab had no controller attached. Not showing tooltip instead.");
+                        return;
+                    }
+                }
+                else
+                {
+                    // There is no reference to a current instance of a tooltip gameobject and no prefab is referenced
+                    Debug.LogWarning("TooltipSpawner is not able to create a tooltip because the prefab is missing.");
+                    return;
+                }
             }
+
+            tooltipInstance.SetActive(true);
             isOpen = true;
-            tooltipChild.SetActive(true);
-            UpdateTooltip(tooltipChild);
-            PositionTooltip(tooltipChild);
+
+            UpdateTooltip();
+            PositionTooltip(tooltipInstance);
+        }
+
+
+        public void UpdateTooltip()
+        {
+            // Feed the tooltip the data
+            // This will also start any animations of the tooltip
+            tooltipControllerInstance.Initialise(
+                header: tooltipHeader,
+                body: tooltipBody);
         }
 
         private void ClearTooltip()
@@ -101,8 +135,10 @@ namespace CoreTools.UI
             courserIsHovering = false;
             timeCounter = 0f;
             isOpen = false;
-            if (tooltipChild)
-                Destroy(tooltipChild);
+            if (tooltipInstance)
+            {
+                tooltipInstance.SetActive(false);
+            }
         }
 
         private void PositionTooltip(GameObject tooltip)
