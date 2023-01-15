@@ -12,6 +12,8 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+using UnityEngine.UI;
+
 namespace CoreTools.UI
 {
     // Currently spawning only for 2D UI elements
@@ -24,6 +26,7 @@ namespace CoreTools.UI
         private GameObject tooltipPrefab = null;
 
         public string tooltipHeader = string.Empty;
+        [TextArea(1, 10)]
         public string tooltipBody = string.Empty;
 
         // Note that the duration of the tooltip spawning animation is handled
@@ -95,6 +98,8 @@ namespace CoreTools.UI
                 if (tooltipPrefab)
                 {
                     tooltipInstance = Instantiate(tooltipPrefab, GetComponentInParent<Canvas>().transform);
+                    DeactivateAllRaycastTargets(tooltipInstance);
+                    // TODO: Reparent options
                     tooltipControllerInstance = tooltipInstance.GetComponent<TooltipController>();
 
                     // if the is no tooltip controller then do not display anything to avoid showing an empty UI element
@@ -120,6 +125,14 @@ namespace CoreTools.UI
             PositionTooltip(tooltipInstance);
         }
 
+          
+        private void DeactivateAllRaycastTargets(GameObject tooltipInstance)
+        {
+            foreach (Graphic target in tooltipInstance.transform.GetComponentsInChildren<Graphic>())
+            {
+                target.raycastTarget = false;
+            }
+        }
 
         public void UpdateTooltip()
         {
