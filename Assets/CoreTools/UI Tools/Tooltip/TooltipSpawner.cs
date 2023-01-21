@@ -177,6 +177,7 @@ namespace CoreTools.UI
 
             Transform oldTooltipParent = tooltip.transform.parent;
             tooltip.transform.SetParent(this.gameObject.GetComponentInParent<Canvas>().transform, true);
+            tooltip.transform.position = Vector3.zero;
 
             Canvas.ForceUpdateCanvases();
 
@@ -196,23 +197,17 @@ namespace CoreTools.UI
             Vector3 topRightTooltip    = tooltipCorners[2];
             Vector3 bottomRightTooltip = tooltipCorners[3];
 
-            // Find position relative to screen
-            Vector3 pos = transform.position;
-            float halfWidth = Screen.width * .5f;
-            float halfHeight = Screen.height * .5f;
-            RelativeScreenPosition relativePos = 
-                (pos.x > halfWidth, pos.y > halfHeight) switch
-            {
-                (true,  true)  => RelativeScreenPosition.UpRigth,
-                (true,  false) => RelativeScreenPosition.DownRight,
-                (false, true)  => RelativeScreenPosition.UpLeft,
-                (false, false) => RelativeScreenPosition.DownLeft
-            };
+            // Find position relative to screen of the parent
+            RelativeScreenPosition relativePos = GetRelativeScreenPosition(transform.position);
 
             // Set position of tooltip
+            float parentWidth = ((RectTransform)transform).rect.width;
+            float parentHeight = ((RectTransform)transform).rect.height;
+            float tooltipWidth = ((RectTransform)tooltip.transform).rect.width;
+            float tooltipHeight = ((RectTransform)tooltip.transform).rect.height;
             tooltip.transform.position = relativePos switch
             {
-                RelativeScreenPosition.UpLeft    => tooltip.transform.position + (bottomLeftSlot - topLeftTooltip),
+                RelativeScreenPosition.UpLeft    => transform.position + Vector3.right * 0.5f * (parentWidth + tooltipWidth)  + Vector3.down * .5f * (parentHeight + tooltipHeight),
                 RelativeScreenPosition.UpRigth   => tooltip.transform.position + (bottomRightSlot - topRightTooltip),
                 RelativeScreenPosition.DownLeft  => tooltip.transform.position + (topLeftSlot - bottomLeftTooltip),
                 RelativeScreenPosition.DownRight => tooltip.transform.position + (topRightSlot - bottomRightTooltip),
@@ -220,6 +215,20 @@ namespace CoreTools.UI
             };
 
             tooltip.transform.SetParent(oldTooltipParent, true);
+        }
+
+        RelativeScreenPosition GetRelativeScreenPosition(Vector3 position)
+        {
+            float halfWidth = Screen.width * .5f;
+            float halfHeight = Screen.height * .5f;
+
+            return (position.x > halfWidth, position.y > halfHeight) switch
+            {
+                (true, true) => RelativeScreenPosition.UpRigth,
+                (true, false) => RelativeScreenPosition.DownRight,
+                (false, true) => RelativeScreenPosition.UpLeft,
+                (false, false) => RelativeScreenPosition.DownLeft
+            };
         }
     }	
 }
