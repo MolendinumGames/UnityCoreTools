@@ -183,7 +183,7 @@ namespace CoreTools.UI
             Rect tooltipRect = tooltipRectTransform.rect;
 
             // Find position relative to screen of the spawner
-            RelativeScreenPosition relativePos = GetRelativeScreenPosition(parentRectTransform.anchoredPosition);
+            RelativeScreenPosition relativePos = GetRelativeScreenPosition(parentRectTransform.position);
 
             // Set position of tooltip
             Vector2 offSetMovement = GetOffsetMovement(parentRect, tooltipRect, relativePos);
