@@ -175,59 +175,44 @@ namespace CoreTools.UI
             if (!tooltip)
                 return;
 
-            Transform oldTooltipParent = tooltip.transform.parent;
-            tooltip.transform.SetParent(this.gameObject.GetComponentInParent<Canvas>().transform, true);
-            tooltip.transform.position = Vector3.zero;
-
             Canvas.ForceUpdateCanvases();
 
-            // Find cornerpoints of this (parent) RectTransfrom
-            Vector3[] slotCorners = new Vector3[4];
-            ((RectTransform)transform).GetWorldCorners(slotCorners);
-            Vector3 topLeftSlot     = slotCorners[1];
-            Vector3 topRightSlot    = slotCorners[2];
-            Vector3 bottomLeftSlot  = slotCorners[0];
-            Vector3 bottomRightSlot = slotCorners[3];
-
-            // Find croners of tooltip
-            Vector3[] tooltipCorners = new Vector3[4];
-            ((RectTransform)tooltip.transform).GetWorldCorners(tooltipCorners);
-            Vector3 bottomLeftTooltip  = tooltipCorners[0];
-            Vector3 topLeftTooltip     = tooltipCorners[1];
-            Vector3 topRightTooltip    = tooltipCorners[2];
-            Vector3 bottomRightTooltip = tooltipCorners[3];
+            RectTransform parentRectTransform = (RectTransform)transform;
+            RectTransform tooltipRectTransform = (RectTransform)tooltip.transform;
+            Rect parentRect = parentRectTransform.rect;
+            Rect tooltipRect = tooltipRectTransform.rect;
 
             // Find position relative to screen of the parent
-            RelativeScreenPosition relativePos = GetRelativeScreenPosition(transform.position);
+            RelativeScreenPosition relativePos = GetRelativeScreenPosition(parentRectTransform.anchoredPosition);
 
             // Set position of tooltip
-            float parentWidth = ((RectTransform)transform).rect.width;
-            float parentHeight = ((RectTransform)transform).rect.height;
-            float tooltipWidth = ((RectTransform)tooltip.transform).rect.width;
-            float tooltipHeight = ((RectTransform)tooltip.transform).rect.height;
-            tooltip.transform.position = relativePos switch
+            float combinedHalfWidth = 0.5f * (parentRect.width + tooltipRect.width);
+            float combinedHalfHeight = 0.5f * (parentRect.height + tooltipRect.height);
+            Debug.Log(parentRectTransform.anchoredPosition + Vector2.right * combinedHalfWidth + Vector2.up * combinedHalfHeight);
+            Vector2 newPos = relativePos switch
             {
-                RelativeScreenPosition.UpLeft    => transform.position + Vector3.right * 0.5f * (parentWidth + tooltipWidth)  + Vector3.down * .5f * (parentHeight + tooltipHeight),
-                RelativeScreenPosition.UpRigth   => tooltip.transform.position + (bottomRightSlot - topRightTooltip),
-                RelativeScreenPosition.DownLeft  => tooltip.transform.position + (topLeftSlot - bottomLeftTooltip),
-                RelativeScreenPosition.DownRight => tooltip.transform.position + (topRightSlot - bottomRightTooltip),
+                RelativeScreenPosition.UpLeft => Vector2.right * combinedHalfWidth + Vector2.down * 0.5f * (tooltipRect.height - parentRect.height),
+                RelativeScreenPosition.UpRigth => Vector2.left * combinedHalfWidth + Vector2.down * 0.5f * (tooltipRect.height - parentRect.height),
+                RelativeScreenPosition.DownLeft => Vector2.right * combinedHalfWidth + Vector2.up * 0.5f * (tooltipRect.height - parentRect.height),
+                RelativeScreenPosition.DownRight => Vector2.left * combinedHalfWidth + Vector2.up * 0.5f * (tooltipRect.height - parentRect.height),
                 _ => throw new NotImplementedException("Tooltip couldn't determine relative screen position.")
             };
-
-            tooltip.transform.SetParent(oldTooltipParent, true);
+            
+            tooltipRectTransform.anchoredPosition = newPos;
         }
+
 
         RelativeScreenPosition GetRelativeScreenPosition(Vector3 position)
         {
-            float halfWidth = Screen.width * .5f;
+            float halfWidth  = Screen.width  * .5f;
             float halfHeight = Screen.height * .5f;
 
             return (position.x > halfWidth, position.y > halfHeight) switch
             {
-                (true, true) => RelativeScreenPosition.UpRigth,
-                (true, false) => RelativeScreenPosition.DownRight,
-                (false, true) => RelativeScreenPosition.UpLeft,
-                (false, false) => RelativeScreenPosition.DownLeft
+                (  true,  true)   => RelativeScreenPosition.UpRigth,
+                (  true, false)  => RelativeScreenPosition.DownRight,
+                ( false,  true)  => RelativeScreenPosition.UpLeft,
+                ( false, false) => RelativeScreenPosition.DownLeft
             };
         }
     }	
