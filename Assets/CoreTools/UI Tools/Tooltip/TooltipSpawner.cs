@@ -182,26 +182,18 @@ namespace CoreTools.UI
             Rect parentRect = parentRectTransform.rect;
             Rect tooltipRect = tooltipRectTransform.rect;
 
-            // Find position relative to screen of the parent
+            // Find position relative to screen of the spawner
             RelativeScreenPosition relativePos = GetRelativeScreenPosition(parentRectTransform.anchoredPosition);
 
             // Set position of tooltip
-            float combinedHalfWidth = 0.5f * (parentRect.width + tooltipRect.width);
-            float combinedHalfHeight = 0.5f * (parentRect.height + tooltipRect.height);
-            Debug.Log(parentRectTransform.anchoredPosition + Vector2.right * combinedHalfWidth + Vector2.up * combinedHalfHeight);
-            Vector2 newPos = relativePos switch
-            {
-                RelativeScreenPosition.UpLeft => Vector2.right * combinedHalfWidth + Vector2.down * 0.5f * (tooltipRect.height - parentRect.height),
-                RelativeScreenPosition.UpRigth => Vector2.left * combinedHalfWidth + Vector2.down * 0.5f * (tooltipRect.height - parentRect.height),
-                RelativeScreenPosition.DownLeft => Vector2.right * combinedHalfWidth + Vector2.up * 0.5f * (tooltipRect.height - parentRect.height),
-                RelativeScreenPosition.DownRight => Vector2.left * combinedHalfWidth + Vector2.up * 0.5f * (tooltipRect.height - parentRect.height),
-                _ => throw new NotImplementedException("Tooltip couldn't determine relative screen position.")
-            };
-            
-            tooltipRectTransform.anchoredPosition = newPos;
+            Vector2 offSetMovement = GetOffsetMovement(parentRect, tooltipRect, relativePos);
+            Vector2 relativePositioningToParent = GetRelativePositionToParent(); 
+            Vector2 newTooltipPosition = relativePositioningToParent + offSetMovement;
+
+            tooltipRectTransform.anchoredPosition = newTooltipPosition;
         }
 
-
+        
         RelativeScreenPosition GetRelativeScreenPosition(Vector3 position)
         {
             float halfWidth  = Screen.width  * .5f;
@@ -209,11 +201,44 @@ namespace CoreTools.UI
 
             return (position.x > halfWidth, position.y > halfHeight) switch
             {
-                (  true,  true)   => RelativeScreenPosition.UpRigth,
-                (  true, false)  => RelativeScreenPosition.DownRight,
-                ( false,  true)  => RelativeScreenPosition.UpLeft,
+                (  true,  true) => RelativeScreenPosition.UpRigth,
+                (  true, false) => RelativeScreenPosition.DownRight,
+                ( false,  true) => RelativeScreenPosition.UpLeft,
                 ( false, false) => RelativeScreenPosition.DownLeft
             };
+        }
+
+        Vector2 GetOffsetMovement(Rect spawnerRect, Rect tooltipRect, RelativeScreenPosition relativePos)
+        {
+            float combinedHalfWidth = 0.5f * (spawnerRect.width + tooltipRect.width);
+            Vector2 leftMovement    = Vector2.left  * combinedHalfWidth;
+            Vector2 rightMovement   = Vector2.right * combinedHalfWidth;
+            Vector2 upMovement      = Vector2.up    * 0.5f * (tooltipRect.height - spawnerRect.height);
+            Vector2 downMovement    = Vector2.down  * 0.5f * (tooltipRect.height - spawnerRect.height);
+
+            Vector2 offsetMovement = relativePos switch
+            {
+                RelativeScreenPosition.UpLeft    => rightMovement + downMovement,
+                RelativeScreenPosition.UpRigth   => leftMovement  + downMovement,
+                RelativeScreenPosition.DownLeft  => rightMovement + upMovement,
+                RelativeScreenPosition.DownRight => leftMovement  + upMovement,
+                _ => throw new NotImplementedException("Tooltip couldn't determine relative screen position.")
+            };
+
+            return offsetMovement;
+        }
+
+        Vector2 GetRelativePositionToParent()
+        {
+            Vector2 relativePos = reparentingOption switch
+            {
+                ReparentingOption.Spawner => Vector2.zero,
+                ReparentingOption.Canvas  => throw new NotImplementedException(),
+                ReparentingOption.Other   => throw new NotImplementedException(),
+                _ => throw new NotImplementedException()
+            };
+
+            return relativePos;
         }
     }	
 }
