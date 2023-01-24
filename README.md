@@ -8,9 +8,9 @@ Various in-editor tools and extentions for the Unity3D game engine to help devel
 3. [Dialogue Editor](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/CoreTools/Dialogue)
 4. [Poolmanager](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/CoreTools/Pooling)
 5. [Developer Console](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/DevConsole)
-6. UI Tools
+6. [UI Tools](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/CoreTools/UI%20Tools)
 7. [Productivity Tools](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/ProductivityTools)
-8. Save System
+8. [Save System](https://github.com/MolendinumGames/UnityCoreTools/tree/main/Assets/CoreTools/SaveSystem)
 9. Collection of Extention functions
 
 ## Legal
